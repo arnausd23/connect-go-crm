@@ -1,11 +1,9 @@
-import { Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { trpc } from '../utils/trpc';
+import Navbar from '../components/navbar/navbar';
 
 const Home: NextPage = () => {
-  const { data } = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
-
   return (
     <>
       <Head>
@@ -13,7 +11,10 @@ const Home: NextPage = () => {
         <meta name='description' content='Connect CRM' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Box>{data ? <p>{data.greeting}</p> : <p>Loading...</p>}</Box>
+      <Flex bgColor={'background'} h={'100vh'} w={'100%'}>
+        <Navbar />
+        body
+      </Flex>
     </>
   );
 };
