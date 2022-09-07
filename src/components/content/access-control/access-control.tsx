@@ -8,6 +8,9 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { FiClock, FiUserCheck } from 'react-icons/fi';
+import { ACCESS_CONTROL_TAB_LABELS } from '../../../utils/constants';
+import AccessControlTab from './access-control-tab';
+import AccessControlTabPanel from './access-control-tab-panel';
 import AccessHistory from './access-history';
 import ClientAuthentication from './client-authentication';
 
@@ -16,50 +19,18 @@ const AccessControl = () => {
     <Flex h={'100%'} w={'100%'}>
       <Tabs variant={'enclosed'} w={'100%'}>
         <TabList border={'none'}>
-          <Tab
-            color={'white'}
-            border={'2px solid'}
-            borderColor={'dark'}
-            _selected={{ bg: 'dark', border: '2px solid dark' }}
-          >
-            <Flex alignItems={'center'}>
-              <FiUserCheck />
-              <Text ml={'0.5rem'}>{'Autenticación de clientes'}</Text>
-            </Flex>
-          </Tab>
-          <Tab
-            color={'white'}
-            border={'2px solid'}
-            borderColor={'dark'}
-            _selected={{ bg: 'dark', border: '2px solid dark' }}
-          >
-            <Flex alignItems={'center'}>
-              <FiClock />
-              <Text ml={'0.5rem'}>{'Historial de accesos'}</Text>
-            </Flex>
-          </Tab>
+          <AccessControlTab
+            icon={<FiUserCheck />}
+            label={ACCESS_CONTROL_TAB_LABELS.ClientAuthentication}
+          />
+          <AccessControlTab
+            icon={<FiClock />}
+            label={ACCESS_CONTROL_TAB_LABELS.AccessHistory}
+          />
         </TabList>
         <TabPanels h={'calc(100% - 3rem)'}>
-          <TabPanel
-            bgColor={'dark'}
-            borderRightRadius={'lg'}
-            borderBottomLeftRadius={'lg'}
-            h={'100%'}
-            p={'1.5rem'}
-            w={'100%'}
-          >
-            <ClientAuthentication />
-          </TabPanel>
-          <TabPanel
-            bgColor={'dark'}
-            borderRightRadius={'lg'}
-            borderBottomLeftRadius={'lg'}
-            h={'100%'}
-            p={'1.5rem'}
-            w={'100%'}
-          >
-            <AccessHistory />
-          </TabPanel>
+          <AccessControlTabPanel body={<ClientAuthentication />} />
+          <AccessControlTabPanel body={<AccessHistory />} />
         </TabPanels>
       </Tabs>
     </Flex>

@@ -31,13 +31,13 @@ const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
         <NavbarButton
           active={currentSection === SECTIONS.AccessControl}
           handleSectionChange={handleSectionChange}
-          icon={<FiKey size={'1.5rem'} />}
+          icon={<FiKey size={'1.25rem'} />}
           label={SECTIONS.AccessControl}
         />
         <NavbarButton
           active={currentSection === SECTIONS.Plans}
           handleSectionChange={handleSectionChange}
-          icon={<FiArchive size={'1.5rem'} />}
+          icon={<FiArchive size={'1.25rem'} />}
           label={SECTIONS.Plans}
         />
       </Flex>

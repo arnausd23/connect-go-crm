@@ -30,7 +30,9 @@ const NavbarButton = ({
       _hover={{ bgColor: 'blue.400', color: 'white' }}
     >
       {icon}
-      <Text ml={'0.5rem'}>{label}</Text>
+      <Text ml={'0.5rem'} fontSize={'sm'}>
+        {label}
+      </Text>
     </Flex>
   );
 };
