@@ -1,12 +1,19 @@
 import { Flex, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import { SECTIONS } from '../../utils/constants';
 
 type NavbarProps = {
   active: boolean;
+  handleSectionChange: (section: SECTIONS) => void;
   icon: ReactNode;
-  label: string;
+  label: SECTIONS;
 };
-const NavbarButton = ({ active, icon, label }: NavbarProps) => {
+const NavbarButton = ({
+  active,
+  handleSectionChange,
+  icon,
+  label,
+}: NavbarProps) => {
   return (
     <Flex
       alignItems={'center'}
@@ -15,6 +22,7 @@ const NavbarButton = ({ active, icon, label }: NavbarProps) => {
       color={active ? 'white' : 'background'}
       h={'3rem'}
       m={'0.125rem 0'}
+      onClick={() => handleSectionChange(label)}
       p={'0 1rem'}
       shadow={active ? 'md' : undefined}
       _hover={{ bgColor: 'blue.400', color: 'white' }}

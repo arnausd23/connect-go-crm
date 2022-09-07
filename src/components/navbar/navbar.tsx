@@ -1,11 +1,21 @@
 import { Divider, Flex } from '@chakra-ui/react';
+import { Dispatch, SetStateAction } from 'react';
 import { FiArchive, FiKey } from 'react-icons/fi';
-import { NAV_BAR_WIDTH } from '../../utils/constants';
+import { NAV_BAR_WIDTH, SECTIONS } from '../../utils/constants';
 import NavbarActionBar from './navbar-action-bar';
 import NavbarButton from './navbar-button';
 import NavbarPrimaryActionButton from './navbar-primary-action-button';
 
-const Navbar = () => {
+type NavbarProps = {
+  currentSection: SECTIONS;
+  setCurrentSection: Dispatch<SetStateAction<SECTIONS>>;
+};
+
+const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
+  const handleSectionChange = (section: SECTIONS) => {
+    if (currentSection !== section) setCurrentSection(section);
+  };
+
   return (
     <Flex
       bgColor={'light'}
@@ -19,14 +29,16 @@ const Navbar = () => {
       <Flex flexDir={'column'}>
         <Divider bgColor={'gray.300'} m={'1rem 0'} h={'1px'} />
         <NavbarButton
-          icon={<FiKey size={'1.5rem'} color={'white'} />}
-          label={'Control de acceso'}
-          active={true}
+          active={currentSection === SECTIONS.AccessControl}
+          handleSectionChange={handleSectionChange}
+          icon={<FiKey size={'1.5rem'} />}
+          label={SECTIONS.AccessControl}
         />
         <NavbarButton
+          active={currentSection === SECTIONS.Plans}
+          handleSectionChange={handleSectionChange}
           icon={<FiArchive size={'1.5rem'} />}
-          label={'Planes'}
-          active={false}
+          label={SECTIONS.Plans}
         />
       </Flex>
       <Flex flexDir={'column'}>
