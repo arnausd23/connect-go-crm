@@ -7,4 +7,10 @@ const colors = {
   select: '#ecedf1',
 };
 
-export const theme = extendTheme({ colors });
+export const theme = extendTheme({
+  colors,
+  fonts: {
+    headings: `'Poppins', sans-serif`,
+    body: `'Poppins', sans-serif`,
+  },
+});

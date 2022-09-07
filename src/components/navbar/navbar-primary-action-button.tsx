@@ -32,7 +32,7 @@ const NavbarPrimaryActionButton = () => {
             >
               <FiPlus size={'1.5rem'} />
             </Flex>
-            <Text mt={'0.5rem'}>Crear nuevo cliente</Text>
+            <Text mt={'1rem'}>Crear nuevo cliente</Text>
           </Flex>
         }
         variant={'ghost'}
