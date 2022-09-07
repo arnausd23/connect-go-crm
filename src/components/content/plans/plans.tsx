@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 
-const ContentPlans = () => {
+const Plans = () => {
   return (
     <Flex h={'100%'} w={'100%'}>
       plans
@@ -8,4 +8,4 @@ const ContentPlans = () => {
   );
 };
 
-export default ContentPlans;
+export default Plans;
