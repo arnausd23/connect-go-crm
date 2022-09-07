@@ -1,5 +1,7 @@
-import { Flex, IconButton } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { FiFilePlus, FiLogOut, FiSettings, FiUserPlus } from 'react-icons/fi';
+import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
+import NavbarActionBarButton from './navbar-action-bar-button';
 
 const NavbarActionBar = () => {
   return (
@@ -13,25 +15,21 @@ const NavbarActionBar = () => {
       p={'0 1rem'}
       shadow={'md'}
     >
-      <IconButton
-        aria-label='Assign plan'
+      <NavbarActionBarButton
+        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.AssignPlan}
         icon={<FiUserPlus size={'1.25rem'} />}
-        variant={'ghost'}
       />
-      <IconButton
-        aria-label='Create new plan'
+      <NavbarActionBarButton
+        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreatePlan}
         icon={<FiFilePlus size={'1.25rem'} />}
-        variant={'ghost'}
       />
-      <IconButton
-        aria-label='Settings'
+      <NavbarActionBarButton
+        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.Settings}
         icon={<FiSettings size={'1.25rem'} />}
-        variant={'ghost'}
       />
-      <IconButton
-        aria-label='Sign out'
+      <NavbarActionBarButton
+        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.SignOut}
         icon={<FiLogOut size={'1.25rem'} />}
-        variant={'ghost'}
       />
     </Flex>
   );

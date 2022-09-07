@@ -7,3 +7,10 @@ export const enum ACCESS_CONTROL_TAB_LABELS {
   ClientAuthentication = 'Autenticación de clientes',
   AccessHistory = 'Historial de accesos',
 }
+
+export const enum NAVBAR_ACTION_BAR_BUTTON_LABELS {
+  AssignPlan = 'Asignar plan',
+  CreatePlan = 'Crear plan',
+  Settings = 'Configuración',
+  SignOut = 'Cerrar sesión',
+}
