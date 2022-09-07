@@ -20,11 +20,13 @@ const NavbarButton = ({
       bgColor={active ? 'blue.400' : undefined}
       borderRadius={'lg'}
       color={active ? 'white' : 'background'}
+      cursor={'pointer'}
       h={'3rem'}
       m={'0.125rem 0'}
       onClick={() => handleSectionChange(label)}
       p={'0 1rem'}
       shadow={active ? 'md' : undefined}
+      userSelect={'none'}
       _hover={{ bgColor: 'blue.400', color: 'white' }}
     >
       {icon}

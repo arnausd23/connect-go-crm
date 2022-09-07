@@ -11,7 +11,7 @@ const NavbarActionBar = () => {
       h={'3rem'}
       justifyContent={'space-between'}
       p={'0 1rem'}
-      shadow={'sm'}
+      shadow={'md'}
     >
       <IconButton
         aria-label='Assign plan'

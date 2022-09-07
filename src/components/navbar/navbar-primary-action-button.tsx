@@ -1,31 +1,43 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, IconButton, Text } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
 
 const NavbarPrimaryActionButton = () => {
   return (
     <Flex
-      alignItems={'center'}
       bgColor={'white'}
       borderRadius={'lg'}
       color={'background'}
-      flexDir={'column'}
+      cursor={'pointer'}
       h={'10rem'}
-      justifyContent={'center'}
-      p={'0 1rem'}
-      shadow={'sm'}
+      p={'1rem'}
+      shadow={'md'}
     >
-      <Flex
-        alignItems={'center'}
-        bgColor={'blue.400'}
-        borderRadius={'full'}
-        color={'white'}
-        h={'3rem'}
-        justifyContent={'center'}
-        w={'3rem'}
-      >
-        <FiPlus size={'1.5rem'} />
-      </Flex>
-      <Text mt={'0.5rem'}>Crear nuevo cliente</Text>
+      <IconButton
+        aria-label={'Create new client'}
+        h={'100%'}
+        icon={
+          <Flex
+            alignItems={'center'}
+            justifyContent={'center'}
+            flexDir={'column'}
+          >
+            <Flex
+              alignItems={'center'}
+              bgColor={'blue.400'}
+              borderRadius={'full'}
+              color={'white'}
+              h={'3rem'}
+              justifyContent={'center'}
+              w={'3rem'}
+            >
+              <FiPlus size={'1.5rem'} />
+            </Flex>
+            <Text mt={'0.5rem'}>Crear nuevo cliente</Text>
+          </Flex>
+        }
+        variant={'ghost'}
+        w={'100%'}
+      />
     </Flex>
   );
 };
