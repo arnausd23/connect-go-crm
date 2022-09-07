@@ -10,7 +10,8 @@ export const enum ACCESS_CONTROL_TAB_LABELS {
 
 export const enum NAVBAR_ACTION_BAR_BUTTON_LABELS {
   AssignPlan = 'Asignar plan',
-  CreatePlan = 'Crear plan',
+  CreateClient = 'Nuevo cliente',
+  CreatePlan = 'Nuevo plan',
   Settings = 'Configuración',
   SignOut = 'Cerrar sesión',
 }

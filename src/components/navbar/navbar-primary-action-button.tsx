@@ -1,7 +1,11 @@
-import { Flex, IconButton, Text } from '@chakra-ui/react';
+import { Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
+import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
+import NavbarActionBarButtonModal from '../modals/navbar-action-bar-button-modal';
 
 const NavbarPrimaryActionButton = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Flex
       bgColor={'white'}
@@ -13,7 +17,7 @@ const NavbarPrimaryActionButton = () => {
       shadow={'md'}
     >
       <IconButton
-        aria-label={'Create new client'}
+        aria-label={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient}
         h={'100%'}
         icon={
           <Flex
@@ -37,8 +41,15 @@ const NavbarPrimaryActionButton = () => {
             </Text>
           </Flex>
         }
+        onClick={() => onOpen()}
         variant={'ghost'}
         w={'100%'}
+      />
+      <NavbarActionBarButtonModal
+        title={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient}
+        isOpen={isOpen}
+        onClose={onClose}
+        body={<div>body</div>}
       />
     </Flex>
   );
