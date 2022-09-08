@@ -31,6 +31,9 @@ const NavbarActionBarButtonModal = ({
       isOpen={isOpen}
       onClose={onClose}
       trapFocus={false}
+      size={
+        title === NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient ? '2xl' : 'md'
+      }
     >
       <ModalOverlay />
       <ModalContent bgColor={'background'} color={'white'}>

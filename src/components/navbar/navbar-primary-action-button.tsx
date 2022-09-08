@@ -1,6 +1,8 @@
 import { Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
 import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
+import CreateClientModalBody from '../modals/create-client/create-client-modal-body';
+import CreateClientModalFooter from '../modals/create-client/create-client-modal-footer';
 import NavbarActionBarButtonModal from '../modals/navbar-action-bar-button-modal';
 
 const NavbarPrimaryActionButton = () => {
@@ -49,8 +51,8 @@ const NavbarPrimaryActionButton = () => {
         title={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient}
         isOpen={isOpen}
         onClose={onClose}
-        body={<div>body</div>}
-        footer={<div>footer</div>}
+        body={<CreateClientModalBody />}
+        footer={<CreateClientModalFooter />}
       />
     </Flex>
   );

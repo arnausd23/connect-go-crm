@@ -29,6 +29,7 @@ const AssignPlanModalBody = () => {
         <Input
           bgColor={'white'}
           color={'background'}
+          type={'number'}
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
         />

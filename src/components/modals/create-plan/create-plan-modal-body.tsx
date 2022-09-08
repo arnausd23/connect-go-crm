@@ -43,9 +43,9 @@ const CreatePlanModalBody = () => {
         <Input
           bgColor={'white'}
           color={'background'}
+          type={'number'}
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
-          type={'number'}
         />
       </FormControl>
     </Flex>
