@@ -37,7 +37,7 @@ const NavbarPrimaryActionButton = () => {
               <FiPlus size={'1.5rem'} />
             </Flex>
             <Text mt={'1rem'} fontSize={'sm'}>
-              Crear nuevo cliente
+              {'Crear nuevo cliente'}
             </Text>
           </Flex>
         }
@@ -50,6 +50,7 @@ const NavbarPrimaryActionButton = () => {
         isOpen={isOpen}
         onClose={onClose}
         body={<div>body</div>}
+        footer={<div>footer</div>}
       />
     </Flex>
   );

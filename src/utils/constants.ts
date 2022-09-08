@@ -1,4 +1,5 @@
 export const NAV_BAR_WIDTH: number = 320;
+
 export const enum SECTIONS {
   AccessControl = 'Control de acceso',
   Plans = 'Planes',
@@ -14,4 +15,10 @@ export const enum NAVBAR_ACTION_BAR_BUTTON_LABELS {
   CreatePlan = 'Nuevo plan',
   Settings = 'Configuración',
   SignOut = 'Cerrar sesión',
+}
+
+export const enum PLANS {
+  Daily = 'Diario',
+  Monthly = 'Mensual',
+  ThreePerWeek = '3 x Semana',
 }
