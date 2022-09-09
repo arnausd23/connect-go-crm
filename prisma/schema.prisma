@@ -37,12 +37,13 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    ci            String    @unique
-    name          String
-    phoneNumber   String
-    accounts      Account[]
-    sessions      Session[]
+    id          String    @id @default(cuid())
+    ci          String    @unique
+    name        String
+    phoneNumber String
+    accounts    Account[]
+    sessions    Session[]
+    plans       Plan[]
 }
 
 model VerificationToken {
@@ -51,4 +52,12 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Plan {
+    id     String @id @default(cuid())
+    name   String
+    type   String
+    price  Int
+    users  User[]
 }
