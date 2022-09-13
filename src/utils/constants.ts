@@ -25,6 +25,7 @@ export const enum PLANS {
 
 export const enum ERROR_MESSAGES {
   DuplicateClient = 'Ya existe un cliente con ese CI.',
+  EmptyName = 'Porfavor ingresa un nombre.',
   InvalidCredentials = 'Credenciales inválidos.',
   NotFound = 'Usuario no encontrado.',
   SomethingWentWrong = 'Algo salió mal.',
@@ -32,4 +33,5 @@ export const enum ERROR_MESSAGES {
 
 export const enum SUCCESS_MESSAGES {
   ClientCreated = 'Cliente creado exitosamente.',
+  PlanCreated = 'Plan creado exitosamente.',
 }

@@ -1,4 +1,4 @@
-import { createClientSchema } from '../common/validation/client';
+import { createClientSchema } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 import * as trpc from '@trpc/server';
 import { ERROR_MESSAGES } from '../../utils/constants';

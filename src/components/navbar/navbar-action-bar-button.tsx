@@ -1,4 +1,4 @@
-import { IconButton, useDisclosure } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { ReactElement, ReactNode } from 'react';
 import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
 import NavbarActionBarButtonModal from '../modals/navbar-action-bar-button-modal';
@@ -6,13 +6,19 @@ import NavbarActionBarButtonModal from '../modals/navbar-action-bar-button-modal
 type NavbarActionBarButtonProps = {
   ariaLabel: NAVBAR_ACTION_BAR_BUTTON_LABELS;
   icon: ReactElement;
+  isOpen: boolean;
   modalBody: ReactNode;
+  onClose: () => void;
+  onOpen: () => void;
 };
 const NavbarActionBarButton = ({
   ariaLabel,
   icon,
   isLoading,
+  isOpen,
   modalBody,
+  onClose,
+  onOpen,
   actionButtonLabel,
   onActionClick,
 }: NavbarActionBarButtonProps & {
@@ -20,8 +26,6 @@ const NavbarActionBarButton = ({
   isLoading: boolean;
   onActionClick: () => void;
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   return (
     <>
       <IconButton

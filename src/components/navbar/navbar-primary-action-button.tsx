@@ -7,7 +7,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import { ICreateClient } from '../../server/common/validation/client';
+import { ICreateClient } from '../../server/common/validation/schemas';
 import {
   NAVBAR_ACTION_BAR_BUTTON_LABELS,
   SUCCESS_MESSAGES,

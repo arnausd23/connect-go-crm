@@ -60,7 +60,10 @@ const CreatePlanModal = ({
             color={'background'}
             disabled={isLoading}
             onChange={({ target }) =>
-              setData!({ ...data, price: target.value })
+              setData!({
+                ...data,
+                price: target.value,
+              })
             }
             type={'number'}
             value={data.price}

@@ -10,7 +10,7 @@ import type { NextPage } from 'next';
 import { signIn } from 'next-auth/react';
 import router from 'next/router';
 import { useState } from 'react';
-import { ISignIn } from '../server/common/validation/auth';
+import { ISignIn } from '../server/common/validation/schemas';
 import { ERROR_MESSAGES } from '../utils/constants';
 
 const SignIn: NextPage = () => {

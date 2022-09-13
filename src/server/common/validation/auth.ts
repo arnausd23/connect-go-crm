@@ -3,13 +3,7 @@ import { verify } from 'argon2';
 import * as trpc from '@trpc/server';
 import { prisma } from '../../../server/db/client';
 import { ERROR_MESSAGES } from '../../../utils/constants';
-
-export const signInSchema = z.object({
-  username: z.string(),
-  password: z.string(),
-});
-
-export type ISignIn = z.infer<typeof signInSchema>;
+import { signInSchema } from './schemas';
 
 export const authorizeSignIn = async (
   credentials: Record<never, string> | undefined
