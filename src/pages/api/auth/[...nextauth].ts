@@ -1,30 +1,43 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
-
-// Prisma adapter for NextAuth, optional and can be removed
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "../../../server/db/client";
-import { env } from "../../../env/server.mjs";
+import NextAuth, { type NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { prisma } from '../../../server/db/client';
+import { authorizeSignIn } from '../../../server/common/validation/auth';
 
 export const authOptions: NextAuthOptions = {
-  // Include user.id on session
+  adapter: PrismaAdapter(prisma),
   callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.email = null;
+        token.picture = null;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      if (token) {
+        session.id = token.id;
       }
       return session;
     },
   },
-  // Configure one or more authentication providers
-  adapter: PrismaAdapter(prisma),
+  pages: {
+    signIn: '/sign-in',
+    error: '/sign-in',
+  },
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    CredentialsProvider({
+      type: 'credentials',
+      credentials: {},
+      async authorize(credentials, _) {
+        return await authorizeSignIn(credentials);
+      },
     }),
-    // ...add more providers here
   ],
+  session: {
+    strategy: 'jwt',
+  },
 };
 
 export default NextAuth(authOptions);

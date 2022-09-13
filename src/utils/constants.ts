@@ -22,3 +22,9 @@ export const enum PLANS {
   Monthly = 'Mensual',
   ThreePerWeek = '3 x Semana',
 }
+
+export const enum ERROR_MESSAGES {
+  InvalidCredentials = 'Credenciales inválidos.',
+  NotFound = 'Usuario no encontrado.',
+  SomethingWentWrong = 'Algo salió mal.',
+}
