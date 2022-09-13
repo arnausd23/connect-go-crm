@@ -9,7 +9,7 @@ export const signInSchema = z.object({
   password: z.string(),
 });
 
-export type IAuth = z.infer<typeof signInSchema>;
+export type ISignIn = z.infer<typeof signInSchema>;
 
 export const authorizeSignIn = async (
   credentials: Record<never, string> | undefined

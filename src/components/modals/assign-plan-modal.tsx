@@ -1,11 +1,4 @@
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-} from '@chakra-ui/react';
+import { Flex, FormControl, FormLabel, Input, Select } from '@chakra-ui/react';
 import { PLANS } from '../../utils/constants';
 import CustomDatePicker from '../custom-date-picker';
 import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
@@ -28,9 +21,9 @@ const AssignPlanModal = ({
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
         >
-          <option value={PLANS.Monthly}>{PLANS.Monthly}</option>
+          <option value={PLANS.Everyday}>{PLANS.Everyday}</option>
           <option value={PLANS.ThreePerWeek}>{PLANS.ThreePerWeek}</option>
-          <option value={PLANS.Daily}>{PLANS.Daily}</option>
+          <option value={PLANS.OneSession}>{PLANS.OneSession}</option>
         </Select>
       </FormControl>
       <FormControl mb={'0.5rem'}>

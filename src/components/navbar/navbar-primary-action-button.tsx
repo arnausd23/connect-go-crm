@@ -1,26 +1,58 @@
-import { Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
+import {
+  Flex,
+  IconButton,
+  Text,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
+import { ICreateClient } from '../../server/common/validation/client';
+import {
+  NAVBAR_ACTION_BAR_BUTTON_LABELS,
+  SUCCESS_MESSAGES,
+} from '../../utils/constants';
+import { trpc } from '../../utils/trpc';
 import CreateClientModal from '../modals/create-client-modal';
 import NavbarActionBarButtonModal from '../modals/navbar-action-bar-button-modal';
 
 const NavbarPrimaryActionButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [createClientData, setCreateClientData] = useState({
+  const toast = useToast();
+  const [createClientData, setCreateClientData] = useState<ICreateClient>({
     ci: '',
     name: '',
     phoneNumber: '',
   });
+  const { mutate, isLoading } = trpc.useMutation('client.create', {
+    onSuccess: () => {
+      toast({
+        description: SUCCESS_MESSAGES.ClientCreated,
+        duration: 3000,
+        isClosable: true,
+        status: 'success',
+        variant: 'top-accent',
+      });
+      setCreateClientData({
+        ci: '',
+        name: '',
+        phoneNumber: '',
+      });
+      onClose();
+    },
+    onError: ({ message }) => {
+      toast({
+        description: message,
+        duration: 3000,
+        isClosable: true,
+        status: 'error',
+        variant: 'top-accent',
+      });
+    },
+  });
 
   const handleCreateClient = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      console.log(createClientData);
-      setIsLoading(false);
-      onClose();
-    }, 3000);
+    mutate(createClientData);
   };
 
   return (

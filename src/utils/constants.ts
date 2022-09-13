@@ -18,13 +18,18 @@ export const enum NAVBAR_ACTION_BAR_BUTTON_LABELS {
 }
 
 export const enum PLANS {
-  Daily = 'Diario',
-  Monthly = 'Mensual',
-  ThreePerWeek = '3 x Semana',
+  Everyday = 'Todos los días',
+  OneSession = 'Una sesión',
+  ThreePerWeek = '3 por semana',
 }
 
 export const enum ERROR_MESSAGES {
+  DuplicateClient = 'Ya existe un cliente con ese CI.',
   InvalidCredentials = 'Credenciales inválidos.',
   NotFound = 'Usuario no encontrado.',
   SomethingWentWrong = 'Algo salió mal.',
+}
+
+export const enum SUCCESS_MESSAGES {
+  ClientCreated = 'Cliente creado exitosamente.',
 }

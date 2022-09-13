@@ -14,11 +14,11 @@ const NavbarActionBar = () => {
   const [assignPlanData, setAssignPlanData] = useState({
     ci: '',
     endingDate: new Date(),
-    name: PLANS.Monthly,
+    name: PLANS.Everyday,
     startingDate: new Date(),
   });
   const [createPlanData, setCreatePlanData] = useState({
-    accessType: PLANS.Monthly,
+    accessType: PLANS.Everyday,
     name: '',
     price: '',
   });

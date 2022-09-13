@@ -30,19 +30,21 @@ const CreatePlanModal = ({
         />
       </FormControl>
       <FormControl mb={'0.5rem'}>
-        <FormLabel>{'Plan'}</FormLabel>
+        <FormLabel>{'Tipo de acceso'}</FormLabel>
         <Select
           bgColor={'white'}
           color={'background'}
           disabled={isLoading}
-          onChange={({ target }) => setData!({ ...data, type: target.value })}
+          onChange={({ target }) =>
+            setData!({ ...data, accessType: target.value })
+          }
           value={data.type}
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
         >
-          <option value={PLANS.Monthly}>{PLANS.Monthly}</option>
+          <option value={PLANS.Everyday}>{PLANS.Everyday}</option>
           <option value={PLANS.ThreePerWeek}>{PLANS.ThreePerWeek}</option>
-          <option value={PLANS.Daily}>{PLANS.Daily}</option>
+          <option value={PLANS.OneSession}>{PLANS.OneSession}</option>
         </Select>
       </FormControl>
       <FormControl mb={'0.5rem'}>
