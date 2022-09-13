@@ -1,12 +1,27 @@
 import { Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
+import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
-import CreateClientModalBody from '../modals/create-client/create-client-modal-body';
-import CreateClientModalFooter from '../modals/create-client/create-client-modal-footer';
+import CreateClientModal from '../modals/create-client-modal';
 import NavbarActionBarButtonModal from '../modals/navbar-action-bar-button-modal';
 
 const NavbarPrimaryActionButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [createClientData, setCreateClientData] = useState({
+    ci: '',
+    name: '',
+    phoneNumber: '',
+  });
+
+  const handleCreateClient = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      console.log(createClientData);
+      setIsLoading(false);
+      onClose();
+    }, 3000);
+  };
 
   return (
     <Flex
@@ -49,10 +64,18 @@ const NavbarPrimaryActionButton = () => {
       />
       <NavbarActionBarButtonModal
         title={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient}
+        isLoading={isLoading}
         isOpen={isOpen}
         onClose={onClose}
-        body={<CreateClientModalBody />}
-        footer={<CreateClientModalFooter />}
+        body={
+          <CreateClientModal
+            data={createClientData}
+            isLoading={isLoading}
+            setData={setCreateClientData}
+          />
+        }
+        actionButtonLabel={'Crear'}
+        onActionClick={handleCreateClient}
       />
     </Flex>
   );

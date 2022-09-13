@@ -5,6 +5,7 @@ import { loggerLink } from '@trpc/client/links/loggerLink';
 import { withTRPC } from '@trpc/next';
 import { SessionProvider } from 'next-auth/react';
 import type { AppType } from 'next/dist/shared/lib/utils';
+import Head from 'next/head';
 import superjson from 'superjson';
 import type { AppRouter } from '../server/router';
 import '../styles/globals.css';
@@ -17,6 +18,21 @@ const MyApp: AppType = ({
   return (
     <SessionProvider session={session}>
       <ChakraProvider theme={theme}>
+        <Head>
+          <title>Connect CRM</title>
+          <meta name='description' content='Connect CRM' />
+          <link rel='icon' href='/favicon.ico' />
+          <link rel='preconnect' href='https://fonts.googleapis.com' />
+          <link
+            rel='preconnect'
+            href='https://fonts.gstatic.com'
+            crossOrigin='anonymous'
+          />
+          <link
+            href='https://fonts.googleapis.com/css2?family=Poppins&display=swap'
+            rel='stylesheet'
+          />
+        </Head>
         <Component {...pageProps} />
       </ChakraProvider>
     </SessionProvider>

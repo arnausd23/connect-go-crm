@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 
-const SettingsModalBody = () => {
+const SettingsModal = () => {
   return <Flex></Flex>;
 };
 
-export default SettingsModalBody;
+export default SettingsModal;

@@ -7,14 +7,19 @@ type NavbarActionBarButtonProps = {
   ariaLabel: NAVBAR_ACTION_BAR_BUTTON_LABELS;
   icon: ReactElement;
   modalBody: ReactNode;
-  modalFooter: ReactNode;
 };
 const NavbarActionBarButton = ({
   ariaLabel,
   icon,
+  isLoading,
   modalBody,
-  modalFooter,
-}: NavbarActionBarButtonProps) => {
+  actionButtonLabel,
+  onActionClick,
+}: NavbarActionBarButtonProps & {
+  actionButtonLabel: string;
+  isLoading: boolean;
+  onActionClick: () => void;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -27,10 +32,12 @@ const NavbarActionBarButton = ({
       />
       <NavbarActionBarButtonModal
         title={ariaLabel}
+        isLoading={isLoading}
         isOpen={isOpen}
         onClose={onClose}
         body={modalBody}
-        footer={modalFooter}
+        actionButtonLabel={actionButtonLabel}
+        onActionClick={onActionClick}
       />
     </>
   );

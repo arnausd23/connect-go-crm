@@ -1,17 +1,48 @@
 import { Flex } from '@chakra-ui/react';
 import { FiFilePlus, FiLogOut, FiSettings, FiUserPlus } from 'react-icons/fi';
-import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
-import AssignPlanModalFooter from '../modals/assign-plan/assign-plan-modal-footer';
-import AssignPlanModalBody from '../modals/assign-plan/assign-plan-modal-body';
-import CreatePlanModalBody from '../modals/create-plan/create-plan-modal-body';
-import SettingsModalBody from '../modals/settings/settings-modal-body';
-import SignOutModalBody from '../modals/sign-out/sign-out-modal-body';
+import { NAVBAR_ACTION_BAR_BUTTON_LABELS, PLANS } from '../../utils/constants';
+import AssignPlanModal from '../modals/assign-plan-modal';
+import CreatePlanModal from '../modals/create-plan-modal';
+import SettingsModal from '../modals/settings-modal';
+import SignOutModal from '../modals/sign-out-modal';
 import NavbarActionBarButton from './navbar-action-bar-button';
-import SignOutModalFooter from '../modals/sign-out/sign-out-modal-footer';
-import CreatePlanModalFooter from '../modals/create-plan/create-plan-modal-footer';
-import SettingsModalFooter from '../modals/settings/settings-modal-footer';
+import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 
 const NavbarActionBar = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [assignPlanData, setAssignPlanData] = useState({
+    ci: '',
+    endingDate: new Date(),
+    name: PLANS.Monthly,
+    startingDate: new Date(),
+  });
+  const [createPlanData, setCreatePlanData] = useState({
+    accessType: PLANS.Monthly,
+    name: '',
+    price: '',
+  });
+
+  const handleAssignPlan = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      console.log(assignPlanData);
+      setIsLoading(false);
+    }, 3000);
+  };
+
+  const handleCreatePlan = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      console.log(createPlanData);
+      setIsLoading(false);
+    }, 3000);
+  };
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/sign-in' });
+  };
+
   return (
     <Flex
       alignItems={'center'}
@@ -26,26 +57,46 @@ const NavbarActionBar = () => {
       <NavbarActionBarButton
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.AssignPlan}
         icon={<FiUserPlus size={'1.25rem'} />}
-        modalBody={<AssignPlanModalBody />}
-        modalFooter={<AssignPlanModalFooter />}
+        isLoading={isLoading}
+        modalBody={
+          <AssignPlanModal
+            data={assignPlanData}
+            isLoading={isLoading}
+            setData={setAssignPlanData}
+          />
+        }
+        onActionClick={handleAssignPlan}
+        actionButtonLabel={'Asignar'}
       />
       <NavbarActionBarButton
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreatePlan}
         icon={<FiFilePlus size={'1.25rem'} />}
-        modalBody={<CreatePlanModalBody />}
-        modalFooter={<CreatePlanModalFooter />}
+        isLoading={isLoading}
+        modalBody={
+          <CreatePlanModal
+            data={createPlanData}
+            isLoading={isLoading}
+            setData={setCreatePlanData}
+          />
+        }
+        onActionClick={handleCreatePlan}
+        actionButtonLabel={'Crear'}
       />
       <NavbarActionBarButton
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.Settings}
         icon={<FiSettings size={'1.25rem'} />}
-        modalBody={<SettingsModalBody />}
-        modalFooter={<SettingsModalFooter />}
+        isLoading={isLoading}
+        modalBody={<SettingsModal />}
+        onActionClick={() => {}}
+        actionButtonLabel={'Guardar'}
       />
       <NavbarActionBarButton
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.SignOut}
         icon={<FiLogOut size={'1.25rem'} />}
-        modalBody={<SignOutModalBody />}
-        modalFooter={<SignOutModalFooter />}
+        isLoading={isLoading}
+        modalBody={<SignOutModal />}
+        onActionClick={handleSignOut}
+        actionButtonLabel={'Cerrar'}
       />
     </Flex>
   );
