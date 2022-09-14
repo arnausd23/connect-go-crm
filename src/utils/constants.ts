@@ -24,14 +24,18 @@ export const enum PLANS {
 }
 
 export const enum ERROR_MESSAGES {
+  ClientNotFound = 'Cliente no encontrado.',
   DuplicateClient = 'Ya existe un cliente con ese CI.',
   EmptyName = 'Porfavor ingresa un nombre.',
+  InvalidCI = 'Porfavor ingresa un carnet válido.',
   InvalidCredentials = 'Credenciales inválidos.',
-  NotFound = 'Usuario no encontrado.',
+  PlanNotFound = 'Plan no encontrado.',
   SomethingWentWrong = 'Algo salió mal.',
+  UserNotFound = 'Usuario no encontrado.',
 }
 
 export const enum SUCCESS_MESSAGES {
   ClientCreated = 'Cliente creado exitosamente.',
+  PlanAssigned = 'Plan asignado exitosamente.',
   PlanCreated = 'Plan creado exitosamente.',
 }

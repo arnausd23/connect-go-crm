@@ -1,7 +1,7 @@
 import { createRouter } from './context';
-import { signInSchema } from '../common/validation/auth';
 import * as trpc from '@trpc/server';
 import { hash } from 'argon2';
+import { signInSchema } from '../common/validation/schemas';
 
 export const userRouter = createRouter().mutation('signUp', {
   input: signInSchema,

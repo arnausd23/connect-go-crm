@@ -40,7 +40,7 @@ const NavbarActionBar = () => {
   const [assignPlanData, setAssignPlanData] = useState({
     ci: '',
     endingDate: new Date(),
-    name: PLANS.Everyday,
+    name: '',
     startingDate: new Date(),
   });
   const [createPlanData, setCreatePlanData] = useState<ICreatePlan>({
@@ -48,6 +48,48 @@ const NavbarActionBar = () => {
     name: '',
     price: '',
   });
+  const { mutate: assignPlanMutate, isLoading: assignPlanIsLoading } =
+    trpc.useMutation('client.assignPlan', {
+      onSuccess: () => {
+        toast({
+          description: SUCCESS_MESSAGES.PlanAssigned,
+          duration: 3000,
+          isClosable: true,
+          status: 'success',
+          variant: 'top-accent',
+        });
+        setAssignPlanData({
+          ci: '',
+          endingDate: new Date(),
+          name: '',
+          startingDate: new Date(),
+        });
+        assignPlanOnClose();
+      },
+      onError: (error) => {
+        if (error.data?.zodError?.fieldErrors) {
+          for (const [_, value] of Object.entries(
+            error.data?.zodError?.fieldErrors
+          )) {
+            toast({
+              description: value,
+              duration: 3000,
+              isClosable: true,
+              status: 'error',
+              variant: 'top-accent',
+            });
+          }
+        } else {
+          toast({
+            description: error.message,
+            duration: 3000,
+            isClosable: true,
+            status: 'error',
+            variant: 'top-accent',
+          });
+        }
+      },
+    });
   const { mutate: createPlanMutate, isLoading: createPlanIsLoading } =
     trpc.useMutation('plan.create', {
       onSuccess: () => {
@@ -91,9 +133,7 @@ const NavbarActionBar = () => {
     });
 
   const handleAssignPlan = () => {
-    setTimeout(() => {
-      console.log(assignPlanData);
-    }, 3000);
+    assignPlanMutate(assignPlanData);
   };
 
   const handleCreatePlan = () => {
@@ -119,12 +159,12 @@ const NavbarActionBar = () => {
         actionButtonLabel={'Asignar'}
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.AssignPlan}
         icon={<FiUserPlus size={'1.25rem'} />}
-        isLoading={false}
+        isLoading={assignPlanIsLoading}
         isOpen={assignPlanIsOpen}
         modalBody={
           <AssignPlanModal
             data={assignPlanData}
-            isLoading={false}
+            isLoading={assignPlanIsLoading}
             setData={setAssignPlanData}
           />
         }

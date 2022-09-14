@@ -20,7 +20,7 @@ model User {
 model Plan {
     id         String      @id @default(cuid())
     accessType String      @default("Todos los días")
-    name       String
+    name       String      @unique
     price      Int
     users      UserPlans[]
 }

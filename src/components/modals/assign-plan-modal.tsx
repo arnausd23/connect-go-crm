@@ -1,5 +1,5 @@
 import { Flex, FormControl, FormLabel, Input, Select } from '@chakra-ui/react';
-import { PLANS } from '../../utils/constants';
+import { trpc } from '../../utils/trpc';
 import CustomDatePicker from '../custom-date-picker';
 import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
 
@@ -8,6 +8,14 @@ const AssignPlanModal = ({
   isLoading,
   setData,
 }: NavbarActionBarModalProps) => {
+  const { data: getAllPlansData, isLoading: getAllPlansIsLoading } =
+    trpc.useQuery(['plan.getAll'], {
+      onSuccess: (result) => {
+        if (data.name === '' || !data.name)
+          setData!({ ...data, name: result?.at(0)?.name });
+      },
+    });
+
   return (
     <Flex flexDir={'column'}>
       <FormControl mb={'0.5rem'}>
@@ -15,19 +23,21 @@ const AssignPlanModal = ({
         <Select
           bgColor={'white'}
           color={'background'}
-          disabled={isLoading}
+          disabled={isLoading || getAllPlansIsLoading}
           onChange={({ target }) => setData!({ ...data, name: target.value })}
-          value={data.type}
+          value={data.name}
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
         >
-          <option value={PLANS.Everyday}>{PLANS.Everyday}</option>
-          <option value={PLANS.ThreePerWeek}>{PLANS.ThreePerWeek}</option>
-          <option value={PLANS.OneSession}>{PLANS.OneSession}</option>
+          {getAllPlansData?.map((plan) => (
+            <option key={plan.id} value={plan.name}>
+              {plan.name}
+            </option>
+          ))}
         </Select>
       </FormControl>
       <FormControl mb={'0.5rem'}>
-        <FormLabel>{'CI'}</FormLabel>
+        <FormLabel>{'CI cliente'}</FormLabel>
         <Input
           bgColor={'white'}
           color={'background'}

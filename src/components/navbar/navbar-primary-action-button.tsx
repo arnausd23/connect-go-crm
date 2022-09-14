@@ -40,14 +40,28 @@ const NavbarPrimaryActionButton = () => {
       });
       onClose();
     },
-    onError: ({ message }) => {
-      toast({
-        description: message,
-        duration: 3000,
-        isClosable: true,
-        status: 'error',
-        variant: 'top-accent',
-      });
+    onError: (error) => {
+      if (error.data?.zodError?.fieldErrors) {
+        for (const [_, value] of Object.entries(
+          error.data?.zodError?.fieldErrors
+        )) {
+          toast({
+            description: value,
+            duration: 3000,
+            isClosable: true,
+            status: 'error',
+            variant: 'top-accent',
+          });
+        }
+      } else {
+        toast({
+          description: error.message,
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          variant: 'top-accent',
+        });
+      }
     },
   });
 

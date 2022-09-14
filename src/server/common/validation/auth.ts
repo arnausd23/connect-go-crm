@@ -16,7 +16,7 @@ export const authorizeSignIn = async (
   if (!user) {
     throw new trpc.TRPCError({
       code: 'NOT_FOUND',
-      message: ERROR_MESSAGES.NotFound,
+      message: ERROR_MESSAGES.UserNotFound,
     });
   }
 
