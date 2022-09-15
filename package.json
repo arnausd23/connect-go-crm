@@ -23,6 +23,7 @@
     "chakra-dayzed-datepicker": "^0.2.3",
     "date-fns": "^2.29.2",
     "dayzed": "^3.2.3",
+    "face-api.js": "^0.22.2",
     "framer-motion": "^6",
     "next": "12.2.5",
     "next-auth": "^4.10.3",
