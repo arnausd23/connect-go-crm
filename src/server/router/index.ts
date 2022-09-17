@@ -1,14 +1,14 @@
 import { createRouter } from './context';
 import superjson from 'superjson';
 
-import { userRouter } from './user';
+import { protectedAuthRouter } from './protected-auth-router';
 import { protectedClientRouter } from './protected-client-router';
 import { protectedPlanRouter } from './protected-plan-router';
 import { ZodError } from 'zod';
 
 export const appRouter = createRouter()
   .transformer(superjson)
-  .merge('user.', userRouter)
+  .merge('auth.', protectedAuthRouter)
   .merge('client.', protectedClientRouter)
   .merge('plan.', protectedPlanRouter)
   .formatError(({ shape, error }) => {

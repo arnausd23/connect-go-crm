@@ -1,7 +1,8 @@
-import { Divider, Flex } from '@chakra-ui/react';
+import { Button, Divider, Flex } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 import { FiArchive, FiKey } from 'react-icons/fi';
 import { NAV_BAR_WIDTH, SECTIONS } from '../../utils/constants';
+import { trpc } from '../../utils/trpc';
 import NavbarActionBar from './navbar-action-bar';
 import NavbarButton from './navbar-button';
 import NavbarPrimaryActionButton from './navbar-primary-action-button';
@@ -12,6 +13,10 @@ type NavbarProps = {
 };
 
 const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
+  // const { mutate } = trpc.useMutation('auth.signUp');
+  // const handleSignUp = () => {
+  //   mutate({ username: 'Mateo.Altamirano', password: 'C0NN3CTmateo' });
+  // };
   const handleSectionChange = (section: SECTIONS) => {
     if (currentSection !== section) setCurrentSection(section);
   };
@@ -46,6 +51,13 @@ const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
         <NavbarActionBar />
         <Divider bgColor={'gray.300'} m={'1rem 0'} h={'1px'} />
         <NavbarPrimaryActionButton />
+        {/* <Button
+          colorScheme={'blue'}
+          onClick={() => handleSignUp()}
+          variant={'solid'}
+        >
+          {'Sign Up'}
+        </Button> */}
       </Flex>
     </Flex>
   );

@@ -1,9 +1,9 @@
-import { createRouter } from './context';
 import * as trpc from '@trpc/server';
 import { hash } from 'argon2';
 import { signInSchema } from '../common/validation/schemas';
+import { createProtectedRouter } from './protected-router';
 
-export const userRouter = createRouter().mutation('signUp', {
+export const protectedAuthRouter = createProtectedRouter().mutation('signUp', {
   input: signInSchema,
   async resolve({ input, ctx }) {
     const { username, password } = input;
