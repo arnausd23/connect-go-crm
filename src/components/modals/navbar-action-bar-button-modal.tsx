@@ -45,7 +45,7 @@ const NavbarActionBarButtonModal = ({
       onClose={onClose}
       trapFocus={false}
       size={
-        title === NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient ? '2xl' : 'md'
+        title === NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient ? 'xl' : 'md'
       }
     >
       <ModalOverlay />

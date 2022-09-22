@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { ICreateClient } from '../../server/common/validation/schemas';
 import {
+  ERROR_MESSAGES,
   NAVBAR_ACTION_BAR_BUTTON_LABELS,
   SUCCESS_MESSAGES,
 } from '../../utils/constants';
@@ -23,6 +24,8 @@ const NavbarPrimaryActionButton = () => {
     ci: '',
     name: '',
     phoneNumber: '',
+    photoSrc: undefined,
+    photoTaken: false,
   });
   const { mutate, isLoading } = trpc.useMutation('client.create', {
     onSuccess: () => {
@@ -37,6 +40,8 @@ const NavbarPrimaryActionButton = () => {
         ci: '',
         name: '',
         phoneNumber: '',
+        photoSrc: undefined,
+        photoTaken: false,
       });
       onClose();
     },
@@ -65,8 +70,38 @@ const NavbarPrimaryActionButton = () => {
     },
   });
 
-  const handleCreateClient = () => {
-    mutate(createClientData);
+  const handleCreateClient = async () => {
+    try {
+      const formData = new FormData();
+      const img = await fetch(createClientData.photoSrc!);
+      const blob = await img.blob();
+      formData.append('file', blob);
+      formData.append('upload_preset', 'connect-crm');
+      const result = await fetch(
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL!,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+      if (result.ok) mutate(createClientData);
+      else
+        toast({
+          description: ERROR_MESSAGES.SomethingWentWrong,
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          variant: 'top-accent',
+        });
+    } catch (error) {
+      toast({
+        description: ERROR_MESSAGES.SomethingWentWrong,
+        duration: 3000,
+        isClosable: true,
+        status: 'error',
+        variant: 'top-accent',
+      });
+    }
   };
 
   return (

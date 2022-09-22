@@ -1,4 +1,14 @@
-import { Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import {
+  Flex,
+  FormControl,
+  FormLabel,
+  IconButton,
+  Input,
+  Image,
+} from '@chakra-ui/react';
+import { useRef } from 'react';
+import { FiCamera, FiRotateCcw } from 'react-icons/fi';
+import Webcam from 'react-webcam';
 import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
 
 const CreateClientModal = ({
@@ -6,9 +16,20 @@ const CreateClientModal = ({
   isLoading,
   setData,
 }: NavbarActionBarModalProps) => {
+  const webCamRef = useRef<Webcam>(null);
+
+  const handleTakePhoto = () => {
+    const screenshotSrc = webCamRef.current!.getScreenshot();
+    setData!({
+      ...data,
+      photoSrc: screenshotSrc ? screenshotSrc : undefined,
+      photoTaken: screenshotSrc ? true : false,
+    });
+  };
+
   return (
     <Flex>
-      <Flex flexDir={'column'} w={'40%'}>
+      <Flex flexDir={'column'} justifyContent={'space-between'} w={'40%'}>
         <FormControl mb={'0.5rem'}>
           <FormLabel>{'Nombre'}</FormLabel>
           <Input
@@ -53,10 +74,51 @@ const CreateClientModal = ({
       <FormControl mb={'0.5rem'} ml={'1.5rem'} w={'60%'}>
         <FormLabel>{'Foto'}</FormLabel>
         <Flex
+          alignItems={'center'}
           bgColor={'white'}
           borderRadius={'md'}
+          color={'background'}
+          flexDir={'column'}
           h={'calc(100% - 2rem)'}
-        ></Flex>
+          justifyContent={'center'}
+          overflow={'hidden'}
+          position={'relative'}
+        >
+          {data.photoTaken && data.photoSrc ? (
+            <Image src={data.photoSrc} objectFit={'contain'} />
+          ) : (
+            <>
+              <Webcam
+                audio={false}
+                height={'100%'}
+                ref={webCamRef}
+                screenshotFormat={'image/jpeg'}
+                screenshotQuality={1}
+                width={'100%'}
+                forceScreenshotSourceSize={true}
+              />
+            </>
+          )}
+          <Flex position={'absolute'} bottom={'0'} right={'0'} p={'2px'}>
+            {data.photoTaken && data.photoSrc ? (
+              <IconButton
+                aria-label={'Retake photo'}
+                icon={<FiRotateCcw size={'1.25rem'} />}
+                onClick={() =>
+                  setData!({ ...data, photoSrc: undefined, photoTaken: false })
+                }
+                variant={'solid'}
+              />
+            ) : (
+              <IconButton
+                aria-label={'Take photo'}
+                icon={<FiCamera size={'1.25rem'} />}
+                onClick={() => handleTakePhoto()}
+                variant={'solid'}
+              />
+            )}
+          </Flex>
+        </Flex>
       </FormControl>
     </Flex>
   );

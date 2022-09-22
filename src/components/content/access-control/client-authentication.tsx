@@ -7,7 +7,7 @@ const ClientAuthentication = () => {
   const canvasRef = useRef<any>(null);
 
   useEffect(() => {
-    startVideo();
+    // startVideo();
     videoRef && loadModels();
   }, []);
 
@@ -24,10 +24,9 @@ const ClientAuthentication = () => {
 
   const loadModels = () => {
     Promise.all([
-      faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
       faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
       faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-      faceapi.nets.faceExpressionNet.loadFromUri('/models'),
     ]).then(() => {
       faceDetection();
     });
@@ -36,12 +35,10 @@ const ClientAuthentication = () => {
   const faceDetection = async () => {
     setInterval(async () => {
       const detections = await faceapi
-        .detectAllFaces(
-          videoRef.current!,
-          new faceapi.TinyFaceDetectorOptions()
-        )
+        .detectAllFaces(videoRef.current!, new faceapi.SsdMobilenetv1Options())
         .withFaceLandmarks()
-        .withFaceExpressions();
+        .withFaceDescriptors();
+      console.log(detections);
       canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
         videoRef.current!
       );
@@ -55,6 +52,7 @@ const ClientAuthentication = () => {
       });
 
       faceapi.draw.drawDetections(canvasRef.current, resized);
+      faceapi.draw.drawFaceLandmarks(canvasRef.current, resized);
     }, 1000);
   };
 
