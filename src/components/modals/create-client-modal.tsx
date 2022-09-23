@@ -22,7 +22,7 @@ const CreateClientModal = ({
     const screenshotSrc = webCamRef.current!.getScreenshot();
     setData!({
       ...data,
-      photoSrc: screenshotSrc ? screenshotSrc : undefined,
+      photoSrc: screenshotSrc ? screenshotSrc : '',
       photoTaken: screenshotSrc ? true : false,
     });
   };
@@ -105,7 +105,7 @@ const CreateClientModal = ({
                 aria-label={'Retake photo'}
                 icon={<FiRotateCcw size={'1.25rem'} />}
                 onClick={() =>
-                  setData!({ ...data, photoSrc: undefined, photoTaken: false })
+                  setData!({ ...data, photoSrc: '', photoTaken: false })
                 }
                 variant={'solid'}
               />

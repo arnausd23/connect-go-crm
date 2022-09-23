@@ -11,6 +11,7 @@ export const protectedClientRouter = createProtectedRouter()
     input: createClientSchema,
     async resolve({ input, ctx }) {
       const { ci, name, phoneNumber } = input;
+
       const exists = await ctx.prisma.user.findFirst({ where: { ci } });
 
       if (exists) {

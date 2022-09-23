@@ -24,26 +24,49 @@ const NavbarPrimaryActionButton = () => {
     ci: '',
     name: '',
     phoneNumber: '',
-    photoSrc: undefined,
+    photoSrc: '',
     photoTaken: false,
   });
-  const { mutate, isLoading } = trpc.useMutation('client.create', {
-    onSuccess: () => {
-      toast({
-        description: SUCCESS_MESSAGES.ClientCreated,
-        duration: 3000,
-        isClosable: true,
-        status: 'success',
-        variant: 'top-accent',
-      });
-      setCreateClientData({
-        ci: '',
-        name: '',
-        phoneNumber: '',
-        photoSrc: undefined,
-        photoTaken: false,
-      });
-      onClose();
+  const { isLoading, mutate } = trpc.useMutation('client.create', {
+    onSuccess: async () => {
+      try {
+        const formData = new FormData();
+        const img = await fetch(createClientData.photoSrc!);
+        const blob = await img.blob();
+        formData.append('file', blob);
+        formData.append('upload_preset', 'connect-crm');
+        const result = await fetch(
+          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL!,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+        if (!result.ok) throw new Error();
+        toast({
+          description: SUCCESS_MESSAGES.ClientCreated,
+          duration: 3000,
+          isClosable: true,
+          status: 'success',
+          variant: 'top-accent',
+        });
+        setCreateClientData({
+          ci: '',
+          name: '',
+          phoneNumber: '',
+          photoSrc: '',
+          photoTaken: false,
+        });
+        onClose();
+      } catch (error) {
+        toast({
+          description: ERROR_MESSAGES.SomethingWentWrong,
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          variant: 'top-accent',
+        });
+      }
     },
     onError: (error) => {
       if (error.data?.zodError?.fieldErrors) {
@@ -70,38 +93,8 @@ const NavbarPrimaryActionButton = () => {
     },
   });
 
-  const handleCreateClient = async () => {
-    try {
-      const formData = new FormData();
-      const img = await fetch(createClientData.photoSrc!);
-      const blob = await img.blob();
-      formData.append('file', blob);
-      formData.append('upload_preset', 'connect-crm');
-      const result = await fetch(
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL!,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
-      if (result.ok) mutate(createClientData);
-      else
-        toast({
-          description: ERROR_MESSAGES.SomethingWentWrong,
-          duration: 3000,
-          isClosable: true,
-          status: 'error',
-          variant: 'top-accent',
-        });
-    } catch (error) {
-      toast({
-        description: ERROR_MESSAGES.SomethingWentWrong,
-        duration: 3000,
-        isClosable: true,
-        status: 'error',
-        variant: 'top-accent',
-      });
-    }
+  const handleCreateClient = () => {
+    mutate(createClientData);
   };
 
   return (

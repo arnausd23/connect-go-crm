@@ -10,7 +10,7 @@ export const createClientSchema = z.object({
   ci: z.string().trim().min(7, { message: ERROR_MESSAGES.InvalidCI }),
   name: z.string().trim().min(1, { message: ERROR_MESSAGES.EmptyName }),
   phoneNumber: z.string(),
-  photoSrc: z.string().optional(),
+  photoSrc: z.string().trim().min(1, { message: ERROR_MESSAGES.EmptyPhoto }),
   photoTaken: z.boolean().optional(),
 });
 
