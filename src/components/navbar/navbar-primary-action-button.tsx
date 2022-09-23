@@ -35,6 +35,10 @@ const NavbarPrimaryActionButton = () => {
         const blob = await img.blob();
         formData.append('file', blob);
         formData.append('upload_preset', 'connect-crm');
+        formData.append(
+          'public_id',
+          `${createClientData.ci}_${createClientData.name}`
+        );
         const result = await fetch(
           process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL!,
           {
