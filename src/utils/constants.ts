@@ -28,6 +28,8 @@ export const enum ERROR_MESSAGES {
   DuplicateClient = 'Ya existe un cliente con ese CI.',
   EmptyName = 'Porfavor ingresa un nombre.',
   EmptyPhoto = 'Porfavor toma una foto.',
+  FailedToLoadModels = 'Error al cargar los modelos.',
+  FailedToSavePhoto = 'Error al guardar la foto, porfavor intenta de nuevo.',
   InvalidCI = 'Porfavor ingresa un carnet válido.',
   InvalidCredentials = 'Credenciales inválidos.',
   PlanNotFound = 'Plan no encontrado.',

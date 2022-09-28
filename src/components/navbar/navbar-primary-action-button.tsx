@@ -9,7 +9,6 @@ import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { ICreateClient } from '../../server/common/validation/schemas';
 import {
-  ERROR_MESSAGES,
   NAVBAR_ACTION_BAR_BUTTON_LABELS,
   SUCCESS_MESSAGES,
 } from '../../utils/constants';
@@ -29,48 +28,21 @@ const NavbarPrimaryActionButton = () => {
   });
   const { isLoading, mutate } = trpc.useMutation('client.create', {
     onSuccess: async () => {
-      try {
-        const formData = new FormData();
-        const img = await fetch(createClientData.photoSrc!);
-        const blob = await img.blob();
-        formData.append('file', blob);
-        formData.append('upload_preset', 'connect-crm');
-        formData.append(
-          'public_id',
-          `${createClientData.ci}_${createClientData.name}`
-        );
-        const result = await fetch(
-          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL!,
-          {
-            method: 'POST',
-            body: formData,
-          }
-        );
-        if (!result.ok) throw new Error();
-        toast({
-          description: SUCCESS_MESSAGES.ClientCreated,
-          duration: 3000,
-          isClosable: true,
-          status: 'success',
-          variant: 'top-accent',
-        });
-        setCreateClientData({
-          ci: '',
-          name: '',
-          phoneNumber: '',
-          photoSrc: '',
-          photoTaken: false,
-        });
-        onClose();
-      } catch (error) {
-        toast({
-          description: ERROR_MESSAGES.SomethingWentWrong,
-          duration: 3000,
-          isClosable: true,
-          status: 'error',
-          variant: 'top-accent',
-        });
-      }
+      toast({
+        description: SUCCESS_MESSAGES.ClientCreated,
+        duration: 3000,
+        isClosable: true,
+        status: 'success',
+        variant: 'top-accent',
+      });
+      setCreateClientData({
+        ci: '',
+        name: '',
+        phoneNumber: '',
+        photoSrc: '',
+        photoTaken: false,
+      });
+      onClose();
     },
     onError: (error) => {
       if (error.data?.zodError?.fieldErrors) {

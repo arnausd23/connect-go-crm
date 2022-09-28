@@ -90,16 +90,16 @@ const CreateClientModal = ({
             <>
               <Webcam
                 audio={false}
+                forceScreenshotSourceSize={true}
                 height={'100%'}
                 ref={webCamRef}
                 screenshotFormat={'image/jpeg'}
                 screenshotQuality={1}
                 width={'100%'}
-                forceScreenshotSourceSize={true}
               />
             </>
           )}
-          <Flex position={'absolute'} bottom={'0'} right={'0'} p={'2px'}>
+          <Flex position={'absolute'} bottom={'0'} right={'0'} p={'0.5rem'}>
             {data.photoTaken && data.photoSrc ? (
               <IconButton
                 aria-label={'Retake photo'}

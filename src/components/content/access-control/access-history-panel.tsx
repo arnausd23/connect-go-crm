@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 
-const AccessHistory = () => {
+const AccessHistoryPanel = () => {
   return (
     <Flex
       border={'1px solid'}
@@ -12,4 +12,4 @@ const AccessHistory = () => {
   );
 };
 
-export default AccessHistory;
+export default AccessHistoryPanel;

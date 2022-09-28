@@ -11,8 +11,8 @@ import { FiClock, FiUserCheck } from 'react-icons/fi';
 import { ACCESS_CONTROL_TAB_LABELS } from '../../../utils/constants';
 import AccessControlTab from './access-control-tab';
 import AccessControlTabPanel from './access-control-tab-panel';
-import AccessHistory from './access-history';
-import ClientAuthentication from './client-authentication';
+import AccessHistoryPanel from './access-history-panel';
+import ClientAuthenticationPanel from './client-authentication-panel';
 
 const AccessControl = () => {
   return (
@@ -29,8 +29,8 @@ const AccessControl = () => {
           />
         </TabList>
         <TabPanels h={'calc(100% - 3rem)'}>
-          <AccessControlTabPanel body={<ClientAuthentication />} />
-          <AccessControlTabPanel body={<AccessHistory />} />
+          <AccessControlTabPanel body={<ClientAuthenticationPanel />} />
+          <AccessControlTabPanel body={<AccessHistoryPanel />} />
         </TabPanels>
       </Tabs>
     </Flex>

@@ -31,6 +31,7 @@ const MyApp: AppType = ({
           <link
             href='https://fonts.googleapis.com/css2?family=Poppins&display=swap'
             rel='stylesheet'
+            crossOrigin='anonymous'
           />
         </Head>
         <Component {...pageProps} />

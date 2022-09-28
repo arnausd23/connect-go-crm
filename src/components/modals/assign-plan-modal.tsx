@@ -1,4 +1,12 @@
-import { Flex, FormControl, FormLabel, Input, Select } from '@chakra-ui/react';
+import {
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  useToast,
+} from '@chakra-ui/react';
+import { ERROR_MESSAGES } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import CustomDatePicker from '../custom-date-picker';
 import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
@@ -8,11 +16,21 @@ const AssignPlanModal = ({
   isLoading,
   setData,
 }: NavbarActionBarModalProps) => {
+  const toast = useToast();
   const { data: getAllPlansData, isLoading: getAllPlansIsLoading } =
     trpc.useQuery(['plan.getAll'], {
       onSuccess: (result) => {
         if (data.name === '' || !data.name)
           setData!({ ...data, name: result?.at(0)?.name });
+      },
+      onError: () => {
+        toast({
+          description: ERROR_MESSAGES.SomethingWentWrong,
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          variant: 'top-accent',
+        });
       },
     });
 

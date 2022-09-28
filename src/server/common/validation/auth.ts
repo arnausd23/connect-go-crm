@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { verify } from 'argon2';
 import * as trpc from '@trpc/server';
 import { prisma } from '../../../server/db/client';

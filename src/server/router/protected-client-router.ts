@@ -5,12 +5,28 @@ import {
 import { createProtectedRouter } from './protected-router';
 import * as trpc from '@trpc/server';
 import { ERROR_MESSAGES } from '../../utils/constants';
+import { v2 as cloudinary } from 'cloudinary';
 
 export const protectedClientRouter = createProtectedRouter()
+  .query('getPhotoUrls', {
+    async resolve() {
+      try {
+        const { resources } = await cloudinary.search
+          .expression('folder:connect-crm/*')
+          .execute();
+        return resources.map((resource: any) => resource.secure_url);
+      } catch (error) {
+        throw new trpc.TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: ERROR_MESSAGES.FailedToLoadModels,
+        });
+      }
+    },
+  })
   .mutation('create', {
     input: createClientSchema,
     async resolve({ input, ctx }) {
-      const { ci, name, phoneNumber } = input;
+      const { ci, name, phoneNumber, photoSrc } = input;
 
       const exists = await ctx.prisma.user.findFirst({ where: { ci } });
 
@@ -18,6 +34,17 @@ export const protectedClientRouter = createProtectedRouter()
         throw new trpc.TRPCError({
           code: 'CONFLICT',
           message: ERROR_MESSAGES.DuplicateClient,
+        });
+      }
+
+      try {
+        await cloudinary.uploader.unsigned_upload(photoSrc, 'connect-crm', {
+          public_id: ci,
+        });
+      } catch {
+        throw new trpc.TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: ERROR_MESSAGES.FailedToSavePhoto,
         });
       }
 

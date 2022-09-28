@@ -14,3 +14,14 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.client-auth-canvas {
+  position: absolute;
+}
+
+.client-auth-webcam,
+.client-auth-canvas {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
