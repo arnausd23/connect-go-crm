@@ -1,10 +1,10 @@
 import { IconButton } from '@chakra-ui/react';
 import { ReactElement, ReactNode } from 'react';
-import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
+import { NAVBAR_ACTION_BAR_BUTTON_LABEL } from '../../utils/constants';
 import NavbarActionBarButtonModal from '../modals/navbar-action-bar-button-modal';
 
 type NavbarActionBarButtonProps = {
-  ariaLabel: NAVBAR_ACTION_BAR_BUTTON_LABELS;
+  ariaLabel: NAVBAR_ACTION_BAR_BUTTON_LABEL;
   icon: ReactElement;
   isOpen: boolean;
   modalBody: ReactNode;

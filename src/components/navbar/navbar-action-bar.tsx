@@ -1,9 +1,9 @@
 import { Flex, useDisclosure, useToast } from '@chakra-ui/react';
 import { FiFilePlus, FiLogOut, FiSettings, FiUserPlus } from 'react-icons/fi';
 import {
-  NAVBAR_ACTION_BAR_BUTTON_LABELS,
-  PLANS,
-  SUCCESS_MESSAGES,
+  NAVBAR_ACTION_BAR_BUTTON_LABEL,
+  PLAN_ACCESS_TYPE,
+  SUCCESS_MESSAGE,
 } from '../../utils/constants';
 import AssignPlanModal from '../modals/assign-plan-modal';
 import CreatePlanModal from '../modals/create-plan-modal';
@@ -44,7 +44,7 @@ const NavbarActionBar = () => {
     startingDate: new Date(),
   });
   const [createPlanData, setCreatePlanData] = useState<ICreatePlan>({
-    accessType: PLANS.Everyday,
+    accessType: PLAN_ACCESS_TYPE.Unlimited,
     name: '',
     price: '',
   });
@@ -52,7 +52,7 @@ const NavbarActionBar = () => {
     trpc.useMutation('client.assignPlan', {
       onSuccess: () => {
         toast({
-          description: SUCCESS_MESSAGES.PlanAssigned,
+          description: SUCCESS_MESSAGE.PlanAssigned,
           duration: 3000,
           isClosable: true,
           status: 'success',
@@ -94,14 +94,14 @@ const NavbarActionBar = () => {
     trpc.useMutation('plan.create', {
       onSuccess: () => {
         toast({
-          description: SUCCESS_MESSAGES.PlanCreated,
+          description: SUCCESS_MESSAGE.PlanCreated,
           duration: 3000,
           isClosable: true,
           status: 'success',
           variant: 'top-accent',
         });
         setCreatePlanData({
-          accessType: PLANS.Everyday,
+          accessType: PLAN_ACCESS_TYPE.Unlimited,
           name: '',
           price: '',
         });
@@ -157,7 +157,7 @@ const NavbarActionBar = () => {
     >
       <NavbarActionBarButton
         actionButtonLabel={'Asignar'}
-        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.AssignPlan}
+        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.AssignPlan}
         icon={<FiUserPlus size={'1.25rem'} />}
         isLoading={assignPlanIsLoading}
         isOpen={assignPlanIsOpen}
@@ -174,7 +174,7 @@ const NavbarActionBar = () => {
       />
       <NavbarActionBarButton
         actionButtonLabel={'Crear'}
-        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreatePlan}
+        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.CreatePlan}
         icon={<FiFilePlus size={'1.25rem'} />}
         isLoading={createPlanIsLoading}
         isOpen={createPlanIsOpen}
@@ -191,7 +191,7 @@ const NavbarActionBar = () => {
       />
       <NavbarActionBarButton
         actionButtonLabel={'Guardar'}
-        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.Settings}
+        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.Settings}
         icon={<FiSettings size={'1.25rem'} />}
         isLoading={false}
         isOpen={settingsIsOpen}
@@ -202,7 +202,7 @@ const NavbarActionBar = () => {
       />
       <NavbarActionBarButton
         actionButtonLabel={'Cerrar'}
-        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABELS.SignOut}
+        ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.SignOut}
         icon={<FiLogOut size={'1.25rem'} />}
         isLoading={false}
         isOpen={signOutPlanIsOpen}

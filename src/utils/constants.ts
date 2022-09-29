@@ -1,15 +1,17 @@
 export const NAV_BAR_WIDTH: number = 320;
+export const FACE_MATCH_DISTANCE_THRESHOLD: number = 0.45;
+export const MINUTES_BETWEEN_ACCESS: number = 45;
 
-export const enum SECTIONS {
+export const enum SECTION {
   AccessControl = 'Control de acceso',
   Plans = 'Planes',
 }
-export const enum ACCESS_CONTROL_TAB_LABELS {
+export const enum ACCESS_CONTROL_TAB_LABEL {
   ClientAuthentication = 'Autenticación de clientes',
   AccessHistory = 'Historial de accesos',
 }
 
-export const enum NAVBAR_ACTION_BAR_BUTTON_LABELS {
+export const enum NAVBAR_ACTION_BAR_BUTTON_LABEL {
   AssignPlan = 'Asignar plan',
   CreateClient = 'Nuevo cliente',
   CreatePlan = 'Nuevo plan',
@@ -17,13 +19,13 @@ export const enum NAVBAR_ACTION_BAR_BUTTON_LABELS {
   SignOut = 'Cerrar sesión',
 }
 
-export const enum PLANS {
-  Everyday = 'Todos los días',
+export const enum PLAN_ACCESS_TYPE {
+  Unlimited = 'Ilimitado',
   OneSession = 'Una sesión',
   ThreePerWeek = '3 por semana',
 }
 
-export const enum ERROR_MESSAGES {
+export const enum ERROR_MESSAGE {
   ClientNotFound = 'Cliente no encontrado.',
   DuplicateClient = 'Ya existe un cliente con ese CI.',
   EmptyName = 'Porfavor ingresa un nombre.',
@@ -37,7 +39,7 @@ export const enum ERROR_MESSAGES {
   UserNotFound = 'Usuario no encontrado.',
 }
 
-export const enum SUCCESS_MESSAGES {
+export const enum SUCCESS_MESSAGE {
   ClientCreated = 'Cliente creado exitosamente.',
   PlanAssigned = 'Plan asignado exitosamente.',
   PlanCreated = 'Plan creado exitosamente.',

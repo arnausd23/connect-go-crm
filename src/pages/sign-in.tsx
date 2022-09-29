@@ -11,7 +11,7 @@ import { signIn } from 'next-auth/react';
 import router from 'next/router';
 import { useState } from 'react';
 import { ISignIn } from '../server/common/validation/schemas';
-import { ERROR_MESSAGES } from '../utils/constants';
+import { ERROR_MESSAGE } from '../utils/constants';
 
 const SignIn: NextPage = () => {
   const [credentials, setCredentials] = useState<ISignIn>({
@@ -33,7 +33,7 @@ const SignIn: NextPage = () => {
     toast({
       description: result?.error
         ? result.error
-        : ERROR_MESSAGES.SomethingWentWrong,
+        : ERROR_MESSAGE.SomethingWentWrong,
       duration: 3000,
       isClosable: true,
       status: 'error',

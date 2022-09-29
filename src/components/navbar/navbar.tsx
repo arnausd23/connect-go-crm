@@ -1,15 +1,15 @@
 import { Button, Divider, Flex } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 import { FiArchive, FiKey } from 'react-icons/fi';
-import { NAV_BAR_WIDTH, SECTIONS } from '../../utils/constants';
+import { NAV_BAR_WIDTH, SECTION } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import NavbarActionBar from './navbar-action-bar';
 import NavbarButton from './navbar-button';
 import NavbarPrimaryActionButton from './navbar-primary-action-button';
 
 type NavbarProps = {
-  currentSection: SECTIONS;
-  setCurrentSection: Dispatch<SetStateAction<SECTIONS>>;
+  currentSection: SECTION;
+  setCurrentSection: Dispatch<SetStateAction<SECTION>>;
 };
 
 const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
@@ -17,7 +17,7 @@ const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
   // const handleSignUp = () => {
   //   mutate({ username: 'Mateo.Altamirano', password: 'C0NN3CTmateo' });
   // };
-  const handleSectionChange = (section: SECTIONS) => {
+  const handleSectionChange = (section: SECTION) => {
     if (currentSection !== section) setCurrentSection(section);
   };
 
@@ -34,16 +34,16 @@ const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
       <Flex flexDir={'column'}>
         <Divider bgColor={'gray.300'} m={'1rem 0'} h={'1px'} />
         <NavbarButton
-          active={currentSection === SECTIONS.AccessControl}
+          active={currentSection === SECTION.AccessControl}
           handleSectionChange={handleSectionChange}
           icon={<FiKey size={'1.25rem'} />}
-          label={SECTIONS.AccessControl}
+          label={SECTION.AccessControl}
         />
         <NavbarButton
-          active={currentSection === SECTIONS.Plans}
+          active={currentSection === SECTION.Plans}
           handleSectionChange={handleSectionChange}
           icon={<FiArchive size={'1.25rem'} />}
-          label={SECTIONS.Plans}
+          label={SECTION.Plans}
         />
       </Flex>
       <Flex flexDir={'column'}>

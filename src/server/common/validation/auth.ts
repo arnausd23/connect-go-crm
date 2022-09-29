@@ -1,7 +1,7 @@
 import { verify } from 'argon2';
 import * as trpc from '@trpc/server';
 import { prisma } from '../../../server/db/client';
-import { ERROR_MESSAGES } from '../../../utils/constants';
+import { ERROR_MESSAGE } from '../../../utils/constants';
 import { signInSchema } from './schemas';
 
 export const authorizeSignIn = async (
@@ -15,7 +15,7 @@ export const authorizeSignIn = async (
   if (!user) {
     throw new trpc.TRPCError({
       code: 'NOT_FOUND',
-      message: ERROR_MESSAGES.UserNotFound,
+      message: ERROR_MESSAGE.UserNotFound,
     });
   }
 
@@ -27,7 +27,7 @@ export const authorizeSignIn = async (
   if (!isValidPassword) {
     throw new trpc.TRPCError({
       code: 'BAD_REQUEST',
-      message: ERROR_MESSAGES.InvalidCredentials,
+      message: ERROR_MESSAGE.InvalidCredentials,
     });
   }
 

@@ -4,11 +4,11 @@ import { useState } from 'react';
 import Content from '../components/content/content';
 import Navbar from '../components/navbar/navbar';
 import { getServerAuthSession } from '../server/common/get-server-auth-session';
-import { SECTIONS } from '../utils/constants';
+import { SECTION } from '../utils/constants';
 
 const Home: NextPage = () => {
-  const [currentSection, setCurrentSection] = useState<SECTIONS>(
-    SECTIONS.AccessControl
+  const [currentSection, setCurrentSection] = useState<SECTION>(
+    SECTION.AccessControl
   );
 
   return (

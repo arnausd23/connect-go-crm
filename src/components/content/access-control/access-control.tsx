@@ -8,7 +8,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { FiClock, FiUserCheck } from 'react-icons/fi';
-import { ACCESS_CONTROL_TAB_LABELS } from '../../../utils/constants';
+import { ACCESS_CONTROL_TAB_LABEL } from '../../../utils/constants';
 import AccessControlTab from './access-control-tab';
 import AccessControlTabPanel from './access-control-tab-panel';
 import AccessHistoryPanel from './access-history-panel';
@@ -21,11 +21,11 @@ const AccessControl = () => {
         <TabList border={'none'}>
           <AccessControlTab
             icon={<FiUserCheck />}
-            label={ACCESS_CONTROL_TAB_LABELS.ClientAuthentication}
+            label={ACCESS_CONTROL_TAB_LABEL.ClientAuthentication}
           />
           <AccessControlTab
             icon={<FiClock />}
-            label={ACCESS_CONTROL_TAB_LABELS.AccessHistory}
+            label={ACCESS_CONTROL_TAB_LABEL.AccessHistory}
           />
         </TabList>
         <TabPanels h={'calc(100% - 3rem)'}>

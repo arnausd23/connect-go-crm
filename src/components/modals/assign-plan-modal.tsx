@@ -7,7 +7,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { ERROR_MESSAGES } from '../../utils/constants';
+import { ERROR_MESSAGE } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import CustomDatePicker from '../custom-date-picker';
 import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
@@ -35,7 +35,7 @@ const AssignPlanModal = ({
       },
       onError: () => {
         toast({
-          description: ERROR_MESSAGES.SomethingWentWrong,
+          description: ERROR_MESSAGE.SomethingWentWrong,
           duration: 3000,
           isClosable: true,
           status: 'error',

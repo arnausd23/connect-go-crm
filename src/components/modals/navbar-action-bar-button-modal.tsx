@@ -8,13 +8,13 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { Dispatch, ReactNode, SetStateAction } from 'react';
-import { NAVBAR_ACTION_BAR_BUTTON_LABELS } from '../../utils/constants';
+import { NAVBAR_ACTION_BAR_BUTTON_LABEL } from '../../utils/constants';
 
 type NavbarActionBarButtonModalProps = {
   body: ReactNode;
   isOpen: boolean;
   onClose: () => void;
-  title: NAVBAR_ACTION_BAR_BUTTON_LABELS;
+  title: NAVBAR_ACTION_BAR_BUTTON_LABEL;
 };
 
 export type NavbarActionBarModalProps = {
@@ -44,9 +44,7 @@ const NavbarActionBarButtonModal = ({
       isOpen={isOpen}
       onClose={onClose}
       trapFocus={false}
-      size={
-        title === NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient ? 'xl' : 'md'
-      }
+      size={title === NAVBAR_ACTION_BAR_BUTTON_LABEL.CreateClient ? 'xl' : 'md'}
     >
       <ModalOverlay />
       <ModalContent bgColor={'background'} color={'white'}>

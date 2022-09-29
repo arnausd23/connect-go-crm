@@ -1,10 +1,10 @@
 import { Flex, Tab, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { ACCESS_CONTROL_TAB_LABELS } from '../../../utils/constants';
+import { ACCESS_CONTROL_TAB_LABEL } from '../../../utils/constants';
 
 type AccessControlTabProps = {
   icon: ReactNode;
-  label: ACCESS_CONTROL_TAB_LABELS;
+  label: ACCESS_CONTROL_TAB_LABEL;
 };
 
 const AccessControlTab = ({ icon, label }: AccessControlTabProps) => {

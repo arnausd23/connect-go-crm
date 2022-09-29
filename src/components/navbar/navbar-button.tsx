@@ -1,12 +1,12 @@
 import { Flex, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { SECTIONS } from '../../utils/constants';
+import { SECTION } from '../../utils/constants';
 
 type NavbarProps = {
   active: boolean;
-  handleSectionChange: (section: SECTIONS) => void;
+  handleSectionChange: (section: SECTION) => void;
   icon: ReactNode;
-  label: SECTIONS;
+  label: SECTION;
 };
 const NavbarButton = ({
   active,

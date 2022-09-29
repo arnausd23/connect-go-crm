@@ -4,7 +4,7 @@ import {
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 import * as trpc from '@trpc/server';
-import { ERROR_MESSAGES } from '../../utils/constants';
+import { ERROR_MESSAGE } from '../../utils/constants';
 import { v2 as cloudinary } from 'cloudinary';
 
 export const protectedClientRouter = createProtectedRouter()
@@ -18,7 +18,7 @@ export const protectedClientRouter = createProtectedRouter()
       } catch (error) {
         throw new trpc.TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: ERROR_MESSAGES.FailedToLoadModels,
+          message: ERROR_MESSAGE.FailedToLoadModels,
         });
       }
     },
@@ -33,7 +33,7 @@ export const protectedClientRouter = createProtectedRouter()
       if (exists) {
         throw new trpc.TRPCError({
           code: 'CONFLICT',
-          message: ERROR_MESSAGES.DuplicateClient,
+          message: ERROR_MESSAGE.DuplicateClient,
         });
       }
 
@@ -44,7 +44,7 @@ export const protectedClientRouter = createProtectedRouter()
       } catch {
         throw new trpc.TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: ERROR_MESSAGES.FailedToSavePhoto,
+          message: ERROR_MESSAGE.FailedToSavePhoto,
         });
       }
 
@@ -67,7 +67,7 @@ export const protectedClientRouter = createProtectedRouter()
       if (!user) {
         throw new trpc.TRPCError({
           code: 'NOT_FOUND',
-          message: ERROR_MESSAGES.ClientNotFound,
+          message: ERROR_MESSAGE.ClientNotFound,
         });
       }
 
@@ -75,7 +75,7 @@ export const protectedClientRouter = createProtectedRouter()
       if (!plan) {
         throw new trpc.TRPCError({
           code: 'NOT_FOUND',
-          message: ERROR_MESSAGES.PlanNotFound,
+          message: ERROR_MESSAGE.PlanNotFound,
         });
       }
 

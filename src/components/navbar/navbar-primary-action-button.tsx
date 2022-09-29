@@ -9,8 +9,8 @@ import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { ICreateClient } from '../../server/common/validation/schemas';
 import {
-  NAVBAR_ACTION_BAR_BUTTON_LABELS,
-  SUCCESS_MESSAGES,
+  NAVBAR_ACTION_BAR_BUTTON_LABEL,
+  SUCCESS_MESSAGE,
 } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import CreateClientModal from '../modals/create-client-modal';
@@ -29,7 +29,7 @@ const NavbarPrimaryActionButton = () => {
   const { isLoading, mutate } = trpc.useMutation('client.create', {
     onSuccess: async () => {
       toast({
-        description: SUCCESS_MESSAGES.ClientCreated,
+        description: SUCCESS_MESSAGE.ClientCreated,
         duration: 3000,
         isClosable: true,
         status: 'success',
@@ -84,7 +84,7 @@ const NavbarPrimaryActionButton = () => {
       shadow={'md'}
     >
       <IconButton
-        aria-label={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient}
+        aria-label={NAVBAR_ACTION_BAR_BUTTON_LABEL.CreateClient}
         h={'100%'}
         icon={
           <Flex
@@ -113,7 +113,7 @@ const NavbarPrimaryActionButton = () => {
         w={'100%'}
       />
       <NavbarActionBarButtonModal
-        title={NAVBAR_ACTION_BAR_BUTTON_LABELS.CreateClient}
+        title={NAVBAR_ACTION_BAR_BUTTON_LABEL.CreateClient}
         isLoading={isLoading}
         isOpen={isOpen}
         onClose={onClose}

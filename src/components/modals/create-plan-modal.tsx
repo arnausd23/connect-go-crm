@@ -7,7 +7,7 @@ import {
   InputLeftElement,
   Select,
 } from '@chakra-ui/react';
-import { PLANS } from '../../utils/constants';
+import { PLAN_ACCESS_TYPE } from '../../utils/constants';
 import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
 
 const CreatePlanModal = ({
@@ -42,9 +42,15 @@ const CreatePlanModal = ({
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
         >
-          <option value={PLANS.Everyday}>{PLANS.Everyday}</option>
-          <option value={PLANS.ThreePerWeek}>{PLANS.ThreePerWeek}</option>
-          <option value={PLANS.OneSession}>{PLANS.OneSession}</option>
+          <option value={PLAN_ACCESS_TYPE.Unlimited}>
+            {PLAN_ACCESS_TYPE.Unlimited}
+          </option>
+          <option value={PLAN_ACCESS_TYPE.ThreePerWeek}>
+            {PLAN_ACCESS_TYPE.ThreePerWeek}
+          </option>
+          <option value={PLAN_ACCESS_TYPE.OneSession}>
+            {PLAN_ACCESS_TYPE.OneSession}
+          </option>
         </Select>
       </FormControl>
       <FormControl mb={'0.5rem'}>
