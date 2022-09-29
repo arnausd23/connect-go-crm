@@ -26,14 +26,13 @@ model Plan {
 }
 
 model UserPlans {
+    id           String   @id @default(cuid())
     user         User     @relation(fields: [userId], references: [id])
     userId       String
     plan         Plan     @relation(fields: [planId],references: [id])
     planId       String
     startingDate DateTime
     endingDate   DateTime
-
-     @@id([userId, planId])
 }
 
 model AccessHistory {
