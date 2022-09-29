@@ -6,6 +6,7 @@ import {
   Select,
   useToast,
 } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { ERROR_MESSAGES } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import CustomDatePicker from '../custom-date-picker';
@@ -17,6 +18,15 @@ const AssignPlanModal = ({
   setData,
 }: NavbarActionBarModalProps) => {
   const toast = useToast();
+
+  useEffect(() => {
+    const startingDate = new Date(data.startingDate.valueOf());
+    const endingDate = new Date(data.endingDate.valueOf());
+    startingDate.setHours(0, 0, 0, 0);
+    endingDate.setHours(0, 0, 0, 0);
+    setData!({ ...data, startingDate, endingDate });
+  }, []);
+
   const { data: getAllPlansData, isLoading: getAllPlansIsLoading } =
     trpc.useQuery(['plan.getAll'], {
       onSuccess: (result) => {
