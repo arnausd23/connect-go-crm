@@ -11,7 +11,7 @@ datasource db {
 model User {
     id          String          @id @default(cuid())
     ci          String          @unique
-    name        String?
+    name        String          @default("")
     password    String?
     phoneNumber String?
     plans       UserPlans[]

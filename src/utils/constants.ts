@@ -1,6 +1,6 @@
 export const NAV_BAR_WIDTH: number = 320;
 export const FACE_MATCH_DISTANCE_THRESHOLD: number = 0.45;
-export const MINUTES_BETWEEN_ACCESS: number = 45;
+export const MINUTES_BETWEEN_ACCESS: number = 1;
 
 export const enum SECTION {
   AccessControl = 'Control de acceso',
@@ -44,3 +44,14 @@ export const enum SUCCESS_MESSAGE {
   PlanAssigned = 'Plan asignado exitosamente.',
   PlanCreated = 'Plan creado exitosamente.',
 }
+
+export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+export type AccessAuthenticationInfo = {
+  bgColor: string;
+  endingDate: Date | undefined;
+  footer: string | undefined;
+  header: string | undefined;
+  name: string | undefined;
+  startingDate: Date | undefined;
+};

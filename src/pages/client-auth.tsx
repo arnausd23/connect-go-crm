@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { NextPage } from 'next';
-import ClientAuthentication from '../components/content/access-control/client-authentication';
+import ClientAuthentication from '../components/content/access-control/client-authentication/client-authentication';
 
 const ClientAuth: NextPage = () => {
   return (

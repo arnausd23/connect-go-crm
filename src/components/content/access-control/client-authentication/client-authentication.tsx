@@ -1,13 +1,44 @@
 import { Flex, useToast } from '@chakra-ui/react';
-import { memo, useRef } from 'react';
+import { Dispatch, memo, SetStateAction, useRef } from 'react';
 import Webcam from 'react-webcam';
-import { trpc } from '../../../utils/trpc';
+import { trpc } from '../../../../utils/trpc';
 import * as faceapi from 'face-api.js';
+import { setIntervalAsync } from 'set-interval-async';
+import {
+  AccessAuthenticationInfo,
+  delay,
+  FACE_MATCH_DISTANCE_THRESHOLD,
+} from '../../../../utils/constants';
 
-const ClientAuthentication = () => {
+type ClientAuthenticationProps = {
+  setShowAccessAuthenticationMessage: Dispatch<SetStateAction<boolean>>;
+  setAccessAuthenticationInfo: Dispatch<
+    SetStateAction<AccessAuthenticationInfo>
+  >;
+};
+
+const ClientAuthentication = ({
+  setShowAccessAuthenticationMessage,
+  setAccessAuthenticationInfo,
+}: ClientAuthenticationProps) => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<any>(null);
   const toast = useToast();
+
+  const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
+    'accessHistory.create',
+    {
+      onError: (error) => {
+        toast({
+          description: error.message,
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          variant: 'top-accent',
+        });
+      },
+    }
+  );
 
   trpc.useQuery(['client.getPhotoUrls'], {
     staleTime: Infinity,
@@ -18,7 +49,7 @@ const ClientAuthentication = () => {
       const faceDescriptors = await loadFaceDescriptors(urls);
       const faceMatcher: faceapi.FaceMatcher = new faceapi.FaceMatcher(
         faceDescriptors,
-        0.4
+        FACE_MATCH_DISTANCE_THRESHOLD
       );
       await faceDetection(faceMatcher);
     },
@@ -61,34 +92,48 @@ const ClientAuthentication = () => {
   };
 
   const faceDetection = async (faceMatcher: faceapi.FaceMatcher) => {
-    setInterval(async () => {
+    setIntervalAsync(async () => {
       const detection = await faceapi
         .detectSingleFace(webcamRef.current?.video!)
         .withFaceLandmarks()
         .withFaceDescriptor();
+      console.log('DETECTION SCORE:', detection?.detection.score);
       if (detection && detection.detection.score > 0.95) {
+        console.log('FACE DETECTED');
         canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
           webcamRef.current?.video!
         );
-
         faceapi.matchDimensions(
           canvasRef.current,
           webcamRef.current?.video!,
           true
         );
-
-        const match = faceMatcher.findBestMatch(detection.descriptor);
-        console.log(match);
-
-        const foundMatch: boolean = match.distance < 0.4;
-        const detectionBoxColor = foundMatch ? '#68D391' : '#C53030';
+        const { distance, label: ci } = faceMatcher.findBestMatch(
+          detection.descriptor
+        );
+        const now = new Date();
+        const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
+        const detectionBoxColor = foundMatch ? '#66BB6A' : '#EF5350';
 
         const detectionBox = new faceapi.draw.DrawBox(detection.detection.box, {
           boxColor: detectionBoxColor,
           lineWidth: 1,
         });
         detectionBox.draw(canvasRef.current);
-        //WRITE NEW ACCESS
+
+        if (foundMatch) {
+          console.log('MATCH:', ci, now, distance);
+          const accessAuthenticationInfo = await createAccessHistoryMutate({
+            ci,
+            date: now,
+          });
+          setAccessAuthenticationInfo(accessAuthenticationInfo);
+          setShowAccessAuthenticationMessage(true);
+          await delay(3000);
+        } else {
+          console.log('NO MATCH:', ci, now, distance);
+          setShowAccessAuthenticationMessage(false);
+        }
       } else {
         const context = canvasRef.current.getContext('2d');
         context.clearRect(
@@ -97,6 +142,7 @@ const ClientAuthentication = () => {
           canvasRef.current.width,
           canvasRef.current.height
         );
+        setShowAccessAuthenticationMessage(false);
       }
     }, 1000);
   };

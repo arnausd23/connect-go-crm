@@ -12,7 +12,7 @@ import { ACCESS_CONTROL_TAB_LABEL } from '../../../utils/constants';
 import AccessControlTab from './access-control-tab';
 import AccessControlTabPanel from './access-control-tab-panel';
 import AccessHistoryPanel from './access-history-panel';
-import ClientAuthenticationPanel from './client-authentication-panel';
+import ClientAuthenticationPanel from './client-authentication/client-authentication-panel';
 
 const AccessControl = () => {
   return (
