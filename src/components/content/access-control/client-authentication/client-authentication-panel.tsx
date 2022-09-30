@@ -46,9 +46,6 @@ const ClientAuthenticationPanel = () => {
       />
       {showAccessAuthenticationMessage ? (
         <AccessAuthenticationMessage
-          // bgColor={'#66BB6A'}
-          // bgColor={'#FFCA28'}
-          //#FF7043
           bgColor={bgColor}
           endingDate={endingDate}
           footer={footer}

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { endOfWeek, startOfWeek } from 'date-fns';
+import { endOfWeek, startOfWeek, differenceInCalendarDays } from 'date-fns';
 import {
   MINUTES_BETWEEN_ACCESS,
   PLAN_ACCESS_TYPE,
@@ -41,11 +41,18 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
           plan.accessType === PLAN_ACCESS_TYPE.ThreePerWeek ? undefined : 1
         );
 
+        const { bgColor, footer } = getInfoDaysUntilPlanExpires(
+          endingDate,
+          date,
+          plan.name,
+          plan.accessType
+        );
+
         if (lastAccessOfDateRange.length > 0) {
-          const { date: lastAccessOfTodayDate } = lastAccessOfDateRange[0]!;
+          const { date: lastAccessOfDateRangeDate } = lastAccessOfDateRange[0]!;
           const minsDiff = getMinutesDifferenceBetweenDates(
             date,
-            lastAccessOfTodayDate
+            lastAccessOfDateRangeDate
           );
 
           if (minsDiff > MINUTES_BETWEEN_ACCESS) {
@@ -53,9 +60,9 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
               case PLAN_ACCESS_TYPE.Unlimited:
                 await createAccessHistory(ctx.prisma, user.id, date);
                 return {
-                  bgColor: '#66BB6A',
+                  bgColor,
                   endingDate,
-                  footer: `Plan ${plan.name}`,
+                  footer,
                   header: 'Bienvenido',
                   name: user.name,
                   startingDate,
@@ -64,9 +71,9 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
                 if (lastAccessOfDateRange.length < 3) {
                   await createAccessHistory(ctx.prisma, user.id, date);
                   return {
-                    bgColor: '#66BB6A',
+                    bgColor,
                     endingDate,
-                    footer: `Plan ${plan.name}`,
+                    footer,
                     header: 'Bienvenido',
                     name: user.name,
                     startingDate,
@@ -102,9 +109,9 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
             }
           } else {
             return {
-              bgColor: '#66BB6A',
+              bgColor,
               endingDate,
-              footer: `Plan ${plan.name}`,
+              footer,
               header: 'Bienvenido',
               name: user.name,
               startingDate,
@@ -113,9 +120,9 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
         } else {
           await createAccessHistory(ctx.prisma, user.id, date);
           return {
-            bgColor: '#66BB6A',
+            bgColor,
             endingDate,
-            footer: `Plan ${plan.name}`,
+            footer,
             header: 'Bienvenido',
             name: user.name,
             startingDate,
@@ -204,4 +211,28 @@ const createAccessHistory = async (
   });
 
   return accessHistory;
+};
+
+const getInfoDaysUntilPlanExpires = (
+  date1: Date,
+  date2: Date,
+  planName: string,
+  planAccessType: string
+) => {
+  const daysUntilPlanExpires = differenceInCalendarDays(date1, date2);
+  if (
+    daysUntilPlanExpires <= 3 &&
+    planAccessType !== PLAN_ACCESS_TYPE.OneSession
+  ) {
+    const footer: string = `Tu plan vence ${
+      daysUntilPlanExpires === 0
+        ? 'hoy'
+        : `en ${daysUntilPlanExpires} día${daysUntilPlanExpires > 1 ? 's' : ''}`
+    }`;
+    return { bgColor: '#FFCA28', footer };
+  }
+  return {
+    bgColor: '#66BB6A',
+    footer: `Plan ${planName}`,
+  };
 };
