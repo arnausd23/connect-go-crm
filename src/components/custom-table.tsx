@@ -6,6 +6,7 @@ import {
   Th,
   Tbody,
   Td,
+  Flex,
 } from '@chakra-ui/react';
 import { flexRender, Table } from '@tanstack/react-table';
 

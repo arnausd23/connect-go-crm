@@ -84,6 +84,7 @@ const AssignPlanModal = ({
             date={data.startingDate}
             disabled={isLoading}
             onChange={(date) => setData!({ ...data, startingDate: date })}
+            placeholder={'Fecha inicial'}
           />
         </FormControl>
         <FormControl color={'background'} mb={'0.5rem'} ml={'1.5rem'}>
@@ -92,6 +93,7 @@ const AssignPlanModal = ({
             date={data.endingDate}
             disabled={isLoading}
             onChange={(date) => setData!({ ...data, endingDate: date })}
+            placeholder={'Fecha final'}
           />
         </FormControl>
       </Flex>

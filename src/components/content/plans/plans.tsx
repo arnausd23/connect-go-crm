@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Button, Flex, Input, Select } from '@chakra-ui/react';
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -6,8 +6,10 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { FiSliders } from 'react-icons/fi';
 import { PlansTableInfo, TABLE_PAGE_SIZE } from '../../../utils/constants';
 import { trpc } from '../../../utils/trpc';
+import CustomDatePicker from '../../custom-date-picker';
 import CustomTable from '../../custom-table';
 import CustomTableFooter from '../../custom-table-footer';
 
@@ -80,7 +82,69 @@ const Plans = () => {
       p={'1.5rem'}
       w={'100%'}
     >
-      <Flex bgColor={'light'} h={'3rem'} w={'100%'} mb={'0.125rem'}></Flex>
+      <Flex alignItems={'center'} h={'3rem'} mb={'0.125rem'} w={'100%'}>
+        <Flex w={'25%'} mr={'1px'}>
+          <Button
+            bgColor={'blue.400'}
+            colorScheme={'blue'}
+            fontSize={'14px'}
+            leftIcon={<FiSliders size={'1.25rem'} />}
+            // isLoading={isLoading}
+            // onClick={() => onActionClick()}
+            variant={'solid'}
+            w={'100%'}
+          >
+            {'Filtrar'}
+          </Button>
+        </Flex>
+        <Flex w={'25%'} ml={'1px'} mr={'1px'}>
+          <Input
+            bgColor={'white'}
+            color={'background'}
+            // disabled={isLoading}
+            // onChange={({ target }) => setData!({ ...data, ci: target.value })}
+            placeholder={'Nombre'}
+            type={'number'}
+            // value={data.ci}
+            variant={'filled'}
+            _focus={{ bgColor: 'white' }}
+          />
+        </Flex>
+        <Flex w={'25%'} ml={'1px'} mr={'1px'}>
+          <Select
+            bgColor={'white'}
+            color={'background'}
+            // disabled={isLoading || getAllPlansIsLoading}
+            // onChange={({ target }) => setData!({ ...data, name: target.value })}
+            // value={data.name}
+            placeholder={'Plan'}
+            variant={'filled'}
+            _focus={{ bgColor: 'white' }}
+          >
+            {/* {getAllPlansData?.map((plan) => (
+            <option key={plan.id} value={plan.name}>
+            {plan.name}
+            </option>
+          ))} */}
+          </Select>
+        </Flex>
+        <Flex w={'25%'} ml={'1px'} mr={'1px'}>
+          <CustomDatePicker
+            date={undefined}
+            disabled={false}
+            onChange={(date) => console.log(date)}
+            placeholder={'Fecha inicial'}
+          />
+        </Flex>
+        <Flex w={'25%'} ml={'1px'}>
+          <CustomDatePicker
+            date={undefined}
+            disabled={false}
+            onChange={(date) => console.log(date)}
+            placeholder={'Fecha final'}
+          />
+        </Flex>
+      </Flex>
       <Flex
         border={'1px solid'}
         borderColor={'light'}

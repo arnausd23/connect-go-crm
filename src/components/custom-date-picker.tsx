@@ -4,12 +4,18 @@ import React from 'react';
 import { FiCalendar } from 'react-icons/fi';
 
 type DatePickerProps = {
-  date: Date;
+  date: Date | undefined;
   disabled: boolean;
   onChange: (date: Date) => void;
+  placeholder: string;
 };
 
-const CustomDatePicker = ({ date, disabled, onChange }: DatePickerProps) => {
+const CustomDatePicker = ({
+  date,
+  disabled,
+  onChange,
+  placeholder,
+}: DatePickerProps) => {
   return (
     <InputGroup>
       <SingleDatepicker
@@ -43,6 +49,7 @@ const CustomDatePicker = ({ date, disabled, onChange }: DatePickerProps) => {
             color: 'white',
           },
           inputProps: {
+            placeholder,
             bgColor: 'white',
             color: 'background',
             variant: 'filled',
