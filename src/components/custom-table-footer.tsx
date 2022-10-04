@@ -15,7 +15,7 @@ const CustomTableFooter = ({ table }: CustomTableFooterProps) => {
     <Flex alignItems={'center'} justifyContent={'space-between'}>
       <Flex>
         <IconButton
-          aria-label={'Back'}
+          aria-label={'First page'}
           bottom={0}
           color={'white'}
           icon={<FiChevronsLeft size={'1.25rem'} />}
@@ -26,7 +26,7 @@ const CustomTableFooter = ({ table }: CustomTableFooterProps) => {
           _hover={{ color: 'background', bg: 'gray.100' }}
         />
         <IconButton
-          aria-label={'Back'}
+          aria-label={'Previous page'}
           bottom={0}
           color={'white'}
           icon={<FiChevronLeft size={'1.25rem'} />}
@@ -39,7 +39,7 @@ const CustomTableFooter = ({ table }: CustomTableFooterProps) => {
       </Flex>
       <Flex>
         <IconButton
-          aria-label={'Forward'}
+          aria-label={'Next page'}
           bottom={0}
           color={'white'}
           icon={<FiChevronRight size={'1.25rem'} />}
@@ -50,7 +50,7 @@ const CustomTableFooter = ({ table }: CustomTableFooterProps) => {
           _hover={{ color: 'background', bg: 'gray.100' }}
         />
         <IconButton
-          aria-label={'Forward'}
+          aria-label={'Last page'}
           bottom={0}
           color={'white'}
           icon={<FiChevronsRight size={'1.25rem'} />}

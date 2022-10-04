@@ -44,6 +44,8 @@ export const enum SUCCESS_MESSAGE {
   ClientCreated = 'Cliente creado exitosamente.',
   PlanAssigned = 'Plan asignado exitosamente.',
   PlanCreated = 'Plan creado exitosamente.',
+  UserPlanDeleted = 'Plan de cliente eliminado exitosamente.',
+  UserPlanUpdated = 'Plan de cliente actualizado exitosamente.',
 }
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -71,6 +73,7 @@ export type AccessHistoryTableInfo = {
 };
 
 export type PlansTableInfo = {
+  id: string;
   endingDate: Date;
   startingDate: Date;
   user: {

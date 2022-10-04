@@ -41,8 +41,19 @@ export const paginationSchema = z.object({
   take: z.number(),
 });
 
+export const editUserPlanSchema = z.object({
+  id: z.string(),
+  startingDate: z.date(),
+  endingDate: z.date(),
+});
+
+export const deleteUserPlanSchema = z.object({
+  id: z.string(),
+});
+
 export type ISignIn = z.infer<typeof signInSchema>;
 export type ICreateClient = z.infer<typeof createClientSchema>;
 export type ICreatePlan = z.infer<typeof createPlanSchema>;
 export type IAssignPlan = z.infer<typeof assignPlanSchema>;
 export type ICreateAccessHistory = z.infer<typeof createAccessHistorySchema>;
+export type IEditUserPlan = z.infer<typeof editUserPlanSchema>;

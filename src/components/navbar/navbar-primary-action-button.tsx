@@ -14,7 +14,7 @@ import {
 } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import CreateClientModal from '../modals/create-client-modal';
-import NavbarActionBarButtonModal from '../modals/navbar-action-bar-button-modal';
+import CustomModal from '../custom-modal';
 
 const NavbarPrimaryActionButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -112,7 +112,7 @@ const NavbarPrimaryActionButton = () => {
         variant={'ghost'}
         w={'100%'}
       />
-      <NavbarActionBarButtonModal
+      <CustomModal
         title={NAVBAR_ACTION_BAR_BUTTON_LABEL.CreateClient}
         isLoading={isLoading}
         isOpen={isOpen}

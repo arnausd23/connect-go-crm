@@ -9,13 +9,9 @@ import {
 import { useRef } from 'react';
 import { FiCamera, FiRotateCcw } from 'react-icons/fi';
 import Webcam from 'react-webcam';
-import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
+import { CustomModalProps } from '../custom-modal';
 
-const CreateClientModal = ({
-  data,
-  isLoading,
-  setData,
-}: NavbarActionBarModalProps) => {
+const CreateClientModal = ({ data, isLoading, setData }: CustomModalProps) => {
   const webCamRef = useRef<Webcam>(null);
 
   const handleTakePhoto = () => {

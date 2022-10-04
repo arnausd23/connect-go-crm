@@ -8,23 +8,23 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { Dispatch, ReactNode, SetStateAction } from 'react';
-import { NAVBAR_ACTION_BAR_BUTTON_LABEL } from '../../utils/constants';
+import { NAVBAR_ACTION_BAR_BUTTON_LABEL } from '../utils/constants';
 
-type NavbarActionBarButtonModalProps = {
+type CustomButtonModalProps = {
   body: ReactNode;
   isOpen: boolean;
   onClose: () => void;
-  title: NAVBAR_ACTION_BAR_BUTTON_LABEL;
+  title: string;
 };
 
-export type NavbarActionBarModalProps = {
+export type CustomModalProps = {
   data?: any;
   isLoading: boolean;
   onActionClick?: () => void;
   setData?: Dispatch<SetStateAction<any>>;
 };
 
-const NavbarActionBarButtonModal = ({
+const CustomModal = ({
   actionButtonLabel,
   body,
   isLoading,
@@ -32,7 +32,7 @@ const NavbarActionBarButtonModal = ({
   onClose,
   onActionClick,
   title,
-}: NavbarActionBarButtonModalProps & {
+}: CustomButtonModalProps & {
   actionButtonLabel: string;
   isLoading: boolean;
   onActionClick: () => void;
@@ -78,4 +78,4 @@ const NavbarActionBarButtonModal = ({
   );
 };
 
-export default NavbarActionBarButtonModal;
+export default CustomModal;

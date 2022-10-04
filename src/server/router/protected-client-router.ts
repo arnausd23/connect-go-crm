@@ -1,12 +1,15 @@
 import {
   assignPlanSchema,
   createClientSchema,
+  deleteUserPlanSchema,
+  editUserPlanSchema,
   paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 import * as trpc from '@trpc/server';
 import { ERROR_MESSAGE } from '../../utils/constants';
 import { v2 as cloudinary } from 'cloudinary';
+import { TRPCClientError } from '@trpc/client';
 
 export const protectedClientRouter = createProtectedRouter()
   .query('getPhotoUrls', {
@@ -32,6 +35,7 @@ export const protectedClientRouter = createProtectedRouter()
         skip,
         take,
         select: {
+          id: true,
           startingDate: true,
           endingDate: true,
           user: { select: { name: true } },
@@ -43,6 +47,24 @@ export const protectedClientRouter = createProtectedRouter()
       const pageCount = Math.ceil(numberOfAccessHistory / take);
 
       return { plans, pageCount };
+    },
+  })
+  .mutation('editPlan', {
+    input: editUserPlanSchema,
+    async resolve({ input, ctx }) {
+      const { id, startingDate, endingDate } = input;
+      await ctx.prisma.userPlan.update({
+        where: { id },
+        data: { startingDate, endingDate },
+      });
+    },
+  })
+  .mutation('deletePlan', {
+    input: deleteUserPlanSchema,
+    async resolve({ input, ctx }) {
+      const { id } = input;
+      await ctx.prisma.accessHistory.deleteMany({ where: { userPlanId: id } });
+      await ctx.prisma.userPlan.delete({ where: { id } });
     },
   })
   .mutation('create', {

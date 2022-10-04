@@ -8,13 +8,9 @@ import {
   Select,
 } from '@chakra-ui/react';
 import { PLAN_ACCESS_TYPE } from '../../utils/constants';
-import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
+import { CustomModalProps } from '../custom-modal';
 
-const CreatePlanModal = ({
-  data,
-  isLoading,
-  setData,
-}: NavbarActionBarModalProps) => {
+const CreatePlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
   return (
     <Flex flexDir={'column'}>
       <FormControl mb={'0.5rem'}>

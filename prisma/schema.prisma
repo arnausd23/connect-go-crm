@@ -16,6 +16,7 @@ model User {
     phoneNumber String?
     plans       UserPlan[]
 }
+
 model Plan {
     id         String      @id @default(cuid())
     accessType String      @default("Ilimitado")

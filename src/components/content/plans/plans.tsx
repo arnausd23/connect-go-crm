@@ -12,6 +12,7 @@ import { trpc } from '../../../utils/trpc';
 import CustomDatePicker from '../../custom-date-picker';
 import CustomTable from '../../custom-table';
 import CustomTableFooter from '../../custom-table-footer';
+import PlansActionsCell from './plans-actions-cell';
 
 const Plans = () => {
   const columnHelper = createColumnHelper<PlansTableInfo>();
@@ -36,6 +37,11 @@ const Plans = () => {
       id: 'endingDate',
       cell: (info) => info.getValue().toLocaleString('es-BO').split(',')[0],
       header: () => 'Fecha final',
+    }),
+    columnHelper.accessor((row) => row, {
+      id: 'actions',
+      cell: (info) => <PlansActionsCell data={info.getValue()} />,
+      header: () => <Flex justifyContent={'flex-end'}>{'Acciones'}</Flex>,
     }),
   ];
 

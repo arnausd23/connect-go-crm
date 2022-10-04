@@ -10,13 +10,9 @@ import { useEffect } from 'react';
 import { ERROR_MESSAGE } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import CustomDatePicker from '../custom-date-picker';
-import { NavbarActionBarModalProps } from './navbar-action-bar-button-modal';
+import { CustomModalProps } from '../custom-modal';
 
-const AssignPlanModal = ({
-  data,
-  isLoading,
-  setData,
-}: NavbarActionBarModalProps) => {
+const AssignPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
   const toast = useToast();
 
   useEffect(() => {
