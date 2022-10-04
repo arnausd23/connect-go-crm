@@ -7,11 +7,13 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { FiClock, FiUserCheck } from 'react-icons/fi';
+import NewWindow from 'react-new-window';
 import { ACCESS_CONTROL_TAB_LABEL } from '../../../utils/constants';
 import AccessControlTab from './access-control-tab';
 import AccessControlTabPanel from './access-control-tab-panel';
-import AccessHistoryPanel from './access-history-panel';
+import AccessHistoryPanel from './access-history/access-history-panel';
 import ClientAuthenticationPanel from './client-authentication/client-authentication-panel';
 
 const AccessControl = () => {

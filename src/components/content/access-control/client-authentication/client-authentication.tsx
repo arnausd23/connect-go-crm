@@ -24,10 +24,12 @@ const ClientAuthentication = ({
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<any>(null);
   const toast = useToast();
+  const ctx = trpc.useContext();
 
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',
     {
+      onSuccess: () => ctx.invalidateQueries('accessHistory.getAll'),
       onError: (error) => {
         toast({
           description: error.message,
@@ -113,7 +115,7 @@ const ClientAuthentication = ({
         );
         const now = new Date();
         const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
-        const detectionBoxColor = foundMatch ? '#66BB6A' : '#EF5350';
+        const detectionBoxColor = foundMatch ? '#66bb6a' : '#ef5350';
 
         const detectionBox = new faceapi.draw.DrawBox(detection.detection.box, {
           boxColor: detectionBoxColor,
@@ -150,10 +152,8 @@ const ClientAuthentication = ({
   return (
     <Flex
       bgColor={'light'}
-      borderRadius={'lg'}
       h={'100%'}
       justifyContent={'center'}
-      overflow={'hidden'}
       position={'relative'}
       w={'100%'}
     >

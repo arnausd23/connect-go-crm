@@ -4,12 +4,40 @@ import {
   MINUTES_BETWEEN_ACCESS,
   PLAN_ACCESS_TYPE,
 } from '../../utils/constants';
-import { createAccessHistorySchema } from '../common/validation/schemas';
+import {
+  createAccessHistorySchema,
+  getAllAccessHistorySchema,
+} from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 
-export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
-  'create',
-  {
+export const protectedAccessHistoryRouter = createProtectedRouter()
+  .query('getAll', {
+    input: getAllAccessHistorySchema,
+    async resolve({ input, ctx }) {
+      const { skip, take } = input;
+      const accessHistory = await ctx.prisma.accessHistory.findMany({
+        skip,
+        take,
+        orderBy: { date: 'desc' },
+        select: {
+          date: true,
+          userPlan: {
+            select: {
+              user: { select: { name: true } },
+              plan: { select: { name: true } },
+              endingDate: true,
+            },
+          },
+        },
+      });
+
+      const numberOfAccessHistory = await ctx.prisma.accessHistory.count();
+      const pageCount = Math.ceil(numberOfAccessHistory / take);
+
+      return { accessHistory, pageCount };
+    },
+  })
+  .mutation('create', {
     input: createAccessHistorySchema,
     async resolve({ input, ctx }) {
       const { ci, date } = input;
@@ -26,7 +54,12 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
       );
 
       if (user && user.plans.length > 0) {
-        const { plan, startingDate, endingDate } = user.plans[0]!;
+        const {
+          plan,
+          id: userPlanId,
+          startingDate,
+          endingDate,
+        } = user.plans[0]!;
 
         if (plan.accessType === PLAN_ACCESS_TYPE.ThreePerWeek) {
           startOfDate = startOfWeek(date, { weekStartsOn: 1 });
@@ -35,7 +68,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
 
         const lastAccessOfDateRange = await getLastAccessOfDateRange(
           ctx.prisma,
-          user.id,
+          userPlanId,
           startOfDate,
           endOfDate,
           plan.accessType === PLAN_ACCESS_TYPE.ThreePerWeek ? undefined : 1
@@ -58,7 +91,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
           if (minsDiff > MINUTES_BETWEEN_ACCESS) {
             switch (plan.accessType) {
               case PLAN_ACCESS_TYPE.Unlimited:
-                await createAccessHistory(ctx.prisma, user.id, date);
+                await createAccessHistory(ctx.prisma, date, userPlanId);
                 return {
                   bgColor,
                   endingDate,
@@ -69,7 +102,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
                 };
               case PLAN_ACCESS_TYPE.ThreePerWeek:
                 if (lastAccessOfDateRange.length < 3) {
-                  await createAccessHistory(ctx.prisma, user.id, date);
+                  await createAccessHistory(ctx.prisma, date, userPlanId);
                   return {
                     bgColor,
                     endingDate,
@@ -80,7 +113,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
                   };
                 } else {
                   return {
-                    bgColor: '#FF7043',
+                    bgColor: 'authOrange',
                     endingDate,
                     footer: 'Has alcanzado tu límite de accesos',
                     header: 'Lo sentimos',
@@ -90,7 +123,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
                 }
               case PLAN_ACCESS_TYPE.OneSession:
                 return {
-                  bgColor: '#FF7043',
+                  bgColor: 'authOrange',
                   endingDate,
                   footer: 'Has alcanzado tu límite de accesos',
                   header: 'Lo sentimos',
@@ -99,7 +132,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
                 };
               default:
                 return {
-                  bgColor: '#EF5350',
+                  bgColor: 'authRed',
                   endingDate,
                   footer: 'Plan inválido',
                   header: 'Lo sentimos',
@@ -118,7 +151,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
             };
           }
         } else {
-          await createAccessHistory(ctx.prisma, user.id, date);
+          await createAccessHistory(ctx.prisma, date, userPlanId);
           return {
             bgColor,
             endingDate,
@@ -130,7 +163,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
         }
       } else {
         return {
-          bgColor: '#EF5350',
+          bgColor: 'authRed',
           endingDate: undefined,
           footer: `No cuentas con planes activos`,
           header: 'Lo sentimos',
@@ -139,8 +172,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter().mutation(
         };
       }
     },
-  }
-);
+  });
 
 const getUserWithActivePlans = async (
   prisma: PrismaClient,
@@ -162,7 +194,12 @@ const getUserWithActivePlans = async (
           endingDate: 'desc',
         },
         take: 1,
-        include: { plan: { select: { name: true, accessType: true } } },
+        select: {
+          id: true,
+          startingDate: true,
+          endingDate: true,
+          plan: { select: { name: true, accessType: true } },
+        },
       },
     },
   });
@@ -171,14 +208,14 @@ const getUserWithActivePlans = async (
 
 const getLastAccessOfDateRange = async (
   prisma: PrismaClient,
-  userId: string,
+  userPlanId: string,
   startingDate: Date,
   endingDate: Date,
   maxNumberOfRecords?: number
 ) => {
   const lastAccess = await prisma.accessHistory.findMany({
     where: {
-      userId,
+      userPlanId,
       date: {
         lte: endingDate,
         gte: startingDate,
@@ -200,13 +237,13 @@ const getMinutesDifferenceBetweenDates = (date1: Date, date2: Date) => {
 
 const createAccessHistory = async (
   prisma: PrismaClient,
-  userId: string,
-  date: Date
+  date: Date,
+  userPlanId: string
 ) => {
   const accessHistory = await prisma.accessHistory.create({
     data: {
-      userId,
       date,
+      userPlanId,
     },
   });
 
@@ -229,10 +266,10 @@ const getInfoDaysUntilPlanExpires = (
         ? 'hoy'
         : `en ${daysUntilPlanExpires} día${daysUntilPlanExpires > 1 ? 's' : ''}`
     }`;
-    return { bgColor: '#FFCA28', footer };
+    return { bgColor: 'authYellow', footer };
   }
   return {
-    bgColor: '#66BB6A',
+    bgColor: 'authGreen',
     footer: `Plan ${planName}`,
   };
 };

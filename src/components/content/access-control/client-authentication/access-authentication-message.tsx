@@ -25,9 +25,7 @@ const AccessAuthenticationMessage = ({
       <Text fontSize={'22px'} fontWeight={'semibold'}>
         {header}
       </Text>
-      <Text fontSize={'20px'} fontWeight={'semibold'}>
-        {name}
-      </Text>
+      <Text fontSize={'20px'}>{name}</Text>
       <Flex>
         {startingDate && (
           <Flex justifyContent={'center'} mr={'3rem'}>

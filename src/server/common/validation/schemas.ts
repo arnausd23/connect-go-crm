@@ -36,6 +36,11 @@ export const createAccessHistorySchema = z.object({
   date: z.date(),
 });
 
+export const getAllAccessHistorySchema = z.object({
+  skip: z.number(),
+  take: z.number(),
+});
+
 export type ISignIn = z.infer<typeof signInSchema>;
 export type ICreateClient = z.infer<typeof createClientSchema>;
 export type ICreatePlan = z.infer<typeof createPlanSchema>;

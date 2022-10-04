@@ -79,7 +79,7 @@ export const protectedClientRouter = createProtectedRouter()
         });
       }
 
-      const userPlan = await ctx.prisma.userPlans.create({
+      const userPlan = await ctx.prisma.userPlan.create({
         data: {
           userId: user.id,
           planId: plan.id,

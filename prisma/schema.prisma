@@ -14,30 +14,33 @@ model User {
     name        String          @default("")
     password    String?
     phoneNumber String?
-    plans       UserPlans[]
-    access      AccessHistory[]
+    plans       UserPlan[]
+    // access      AccessHistory[]
 }
 model Plan {
     id         String      @id @default(cuid())
     accessType String      @default("Ilimitado")
     name       String      @unique
     price      Int
-    users      UserPlans[]
+    users      UserPlan[]
 }
 
-model UserPlans {
-    id           String   @id @default(cuid())
-    user         User     @relation(fields: [userId], references: [id])
-    userId       String
-    plan         Plan     @relation(fields: [planId],references: [id])
-    planId       String
-    startingDate DateTime
-    endingDate   DateTime
+model UserPlan {
+    id            String   @id @default(cuid())
+    user          User     @relation(fields: [userId], references: [id])
+    userId        String
+    plan          Plan     @relation(fields: [planId],references: [id])
+    planId        String
+    startingDate  DateTime
+    endingDate    DateTime
+    accessHistory AccessHistory[]
 }
 
 model AccessHistory {
-    id     String   @id @default(cuid())
-    user   User     @relation(fields: [userId], references: [id])
-    userId String
-    date   DateTime
+    id         String   @id @default(cuid())
+    // user       User     @relation(fields: [userId], references: [id])
+    // userId     String
+    userPlan   UserPlan @relation(fields: [userPlanId], references: [id])
+    userPlanId String
+    date       DateTime
 }

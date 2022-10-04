@@ -1,6 +1,7 @@
 export const NAV_BAR_WIDTH: number = 320;
 export const FACE_MATCH_DISTANCE_THRESHOLD: number = 0.45;
 export const MINUTES_BETWEEN_ACCESS: number = 1;
+export const TABLE_PAGE_SIZE = 10;
 
 export const enum SECTION {
   AccessControl = 'Control de acceso',
@@ -54,4 +55,17 @@ export type AccessAuthenticationInfo = {
   header: string | undefined;
   name: string | undefined;
   startingDate: Date | undefined;
+};
+
+export type AccessHistoryTableInfo = {
+  userPlan: {
+    user: {
+      name: string;
+    };
+    endingDate: Date;
+    plan: {
+      name: string;
+    };
+  };
+  date: Date;
 };

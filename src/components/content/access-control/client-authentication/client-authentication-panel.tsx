@@ -10,7 +10,7 @@ const ClientAuthenticationPanel = () => {
     useState<boolean>(false);
   const [accessAuthenticationInfo, setAccessAuthenticationInfo] =
     useState<AccessAuthenticationInfo>({
-      bgColor: '#66BB6A',
+      bgColor: 'authGreen',
       endingDate: undefined,
       footer: undefined,
       header: undefined,
@@ -30,10 +30,10 @@ const ClientAuthenticationPanel = () => {
       position={'relative'}
       w={'100%'}
     >
-      <ClientAuthentication
+      {/* <ClientAuthentication
         setAccessAuthenticationInfo={setAccessAuthenticationInfo}
         setShowAccessAuthenticationMessage={setShowAccessAuthenticationMessage}
-      />
+      /> */}
       <IconButton
         aria-label={'Fullscreen'}
         bottom={0}
