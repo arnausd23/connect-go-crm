@@ -37,7 +37,11 @@ const CustomTable = ({ table }: CustomTableProps) => {
           {table.getRowModel().rows.map((row) => (
             <Tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
+                <Td
+                  key={cell.id}
+                  borderTop={'solid 1px white'}
+                  borderBottom={'none'}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </Td>
               ))}
