@@ -6,12 +6,11 @@ import {
   FiChevronRight,
   FiChevronsRight,
 } from 'react-icons/fi';
-import { AccessHistoryTableInfo } from '../../../../utils/constants';
 
-type AccessHistoryTableFooterProps = {
-  table: Table<AccessHistoryTableInfo>;
+type CustomTableFooterProps = {
+  table: Table<any>;
 };
-const AccessHistoryTableFooter = ({ table }: AccessHistoryTableFooterProps) => {
+const CustomTableFooter = ({ table }: CustomTableFooterProps) => {
   return (
     <Flex alignItems={'center'} justifyContent={'space-between'}>
       <Flex>
@@ -54,4 +53,4 @@ const AccessHistoryTableFooter = ({ table }: AccessHistoryTableFooterProps) => {
   );
 };
 
-export default AccessHistoryTableFooter;
+export default CustomTableFooter;

@@ -1,6 +1,7 @@
 import {
   assignPlanSchema,
   createClientSchema,
+  paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 import * as trpc from '@trpc/server';
@@ -21,6 +22,27 @@ export const protectedClientRouter = createProtectedRouter()
           message: ERROR_MESSAGE.FailedToLoadModels,
         });
       }
+    },
+  })
+  .query('getPlans', {
+    input: paginationSchema,
+    async resolve({ input, ctx }) {
+      const { skip, take } = input;
+      const plans = await ctx.prisma.userPlan.findMany({
+        skip,
+        take,
+        select: {
+          startingDate: true,
+          endingDate: true,
+          user: { select: { name: true } },
+          plan: { select: { name: true } },
+        },
+      });
+
+      const numberOfAccessHistory = await ctx.prisma.accessHistory.count();
+      const pageCount = Math.ceil(numberOfAccessHistory / take);
+
+      return { plans, pageCount };
     },
   })
   .mutation('create', {

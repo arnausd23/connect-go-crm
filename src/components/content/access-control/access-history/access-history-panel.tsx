@@ -11,9 +11,9 @@ import {
   TABLE_PAGE_SIZE,
 } from '../../../../utils/constants';
 import { trpc } from '../../../../utils/trpc';
-import AccessHistoryTableFooter from './access-history-footer';
+import CustomTable from '../../../custom-table';
+import CustomTableFooter from '../../../custom-table-footer';
 import AccessHistoryStatusCell from './access-history-status-cell';
-import AccessHistoryTable from './access-history-table';
 
 const AccessHistoryPanel = () => {
   const columnHelper = createColumnHelper<AccessHistoryTableInfo>();
@@ -88,8 +88,8 @@ const AccessHistoryPanel = () => {
       h={'100%'}
       w={'100%'}
     >
-      <AccessHistoryTable table={table} />
-      <AccessHistoryTableFooter table={table} />
+      <CustomTable table={table} />
+      <CustomTableFooter table={table} />
     </Flex>
   );
 };

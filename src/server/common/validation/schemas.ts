@@ -36,7 +36,7 @@ export const createAccessHistorySchema = z.object({
   date: z.date(),
 });
 
-export const getAllAccessHistorySchema = z.object({
+export const paginationSchema = z.object({
   skip: z.number(),
   take: z.number(),
 });

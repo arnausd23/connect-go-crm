@@ -8,13 +8,12 @@ import {
   Td,
 } from '@chakra-ui/react';
 import { flexRender, Table } from '@tanstack/react-table';
-import { AccessHistoryTableInfo } from '../../../../utils/constants';
 
-type AccessHistoryTableProps = {
-  table: Table<AccessHistoryTableInfo>;
+type CustomTableProps = {
+  table: Table<any>;
 };
 
-const AccessHistoryTable = ({ table }: AccessHistoryTableProps) => {
+const CustomTable = ({ table }: CustomTableProps) => {
   return (
     <TableContainer h={'100%'} overflowY={'auto'}>
       <ChakraTable variant={'simple'} h={'100%'}>
@@ -50,4 +49,4 @@ const AccessHistoryTable = ({ table }: AccessHistoryTableProps) => {
   );
 };
 
-export default AccessHistoryTable;
+export default CustomTable;

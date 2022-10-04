@@ -69,3 +69,14 @@ export type AccessHistoryTableInfo = {
   };
   date: Date;
 };
+
+export type PlansTableInfo = {
+  endingDate: Date;
+  startingDate: Date;
+  user: {
+    name: string;
+  };
+  plan: {
+    name: string;
+  };
+};

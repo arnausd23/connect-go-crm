@@ -29,7 +29,8 @@ const ClientAuthentication = ({
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',
     {
-      onSuccess: () => ctx.invalidateQueries('accessHistory.getAll'),
+      onSuccess: async () =>
+        await ctx.invalidateQueries('accessHistory.getAll'),
       onError: (error) => {
         toast({
           description: error.message,

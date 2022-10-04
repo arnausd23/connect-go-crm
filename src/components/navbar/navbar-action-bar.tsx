@@ -17,6 +17,7 @@ import { ICreatePlan } from '../../server/common/validation/schemas';
 
 const NavbarActionBar = () => {
   const toast = useToast();
+  const ctx = trpc.useContext();
   const {
     isOpen: assignPlanIsOpen,
     onOpen: assignPlanOnOpen,
@@ -50,7 +51,7 @@ const NavbarActionBar = () => {
   });
   const { mutate: assignPlanMutate, isLoading: assignPlanIsLoading } =
     trpc.useMutation('client.assignPlan', {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast({
           description: SUCCESS_MESSAGE.PlanAssigned,
           duration: 3000,
@@ -64,6 +65,7 @@ const NavbarActionBar = () => {
           name: '',
           startingDate: new Date(),
         });
+        await ctx.invalidateQueries('client.getPlans');
         assignPlanOnClose();
       },
       onError: (error) => {

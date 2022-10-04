@@ -6,13 +6,13 @@ import {
 } from '../../utils/constants';
 import {
   createAccessHistorySchema,
-  getAllAccessHistorySchema,
+  paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 
 export const protectedAccessHistoryRouter = createProtectedRouter()
   .query('getAll', {
-    input: getAllAccessHistorySchema,
+    input: paginationSchema,
     async resolve({ input, ctx }) {
       const { skip, take } = input;
       const accessHistory = await ctx.prisma.accessHistory.findMany({
