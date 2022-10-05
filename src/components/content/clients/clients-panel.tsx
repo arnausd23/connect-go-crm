@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, useDisclosure, useToast } from '@chakra-ui/react';
 import {
   createColumnHelper,
   PaginationState,
@@ -6,10 +6,13 @@ import {
   getCoreRowModel,
 } from '@tanstack/react-table';
 import { useState, useMemo } from 'react';
+import { utils, writeFile } from 'xlsx';
+import { IExportClients } from '../../../server/common/validation/schemas';
 import { ClientsTableInfo, TABLE_PAGE_SIZE } from '../../../utils/constants';
 import { trpc } from '../../../utils/trpc';
 import CustomTable from '../../custom/custom-table';
 import CustomTableFooter from '../../custom/custom-table-footer';
+import ExportClientsDataModal from '../../modals/export-clients-data-modal';
 import ClientsActionsCell from './clients-actions-cell';
 
 const ClientsPanel = () => {
@@ -77,6 +80,55 @@ const ClientsPanel = () => {
     manualPagination: true,
   });
 
+  const toast = useToast();
+  const [exportData, setExportData] = useState<IExportClients>({
+    fileName: '',
+  });
+
+  const { refetch, isLoading } = trpc.useQuery(
+    ['client.exportAll', exportData],
+    {
+      enabled: false,
+      retry: false,
+      onSuccess(data) {
+        const workBook = utils.book_new();
+        const workSheet = utils.json_to_sheet(data);
+        utils.book_append_sheet(workBook, workSheet);
+        writeFile(workBook, `${exportData.fileName}.xlsx`);
+        onClose();
+      },
+      onError: (error) => {
+        if (error.data?.zodError?.fieldErrors) {
+          for (const [_, value] of Object.entries(
+            error.data?.zodError?.fieldErrors
+          )) {
+            toast({
+              description: value,
+              duration: 3000,
+              isClosable: true,
+              status: 'error',
+              variant: 'top-accent',
+            });
+          }
+        } else {
+          toast({
+            description: error.message,
+            duration: 3000,
+            isClosable: true,
+            status: 'error',
+            variant: 'top-accent',
+          });
+        }
+      },
+    }
+  );
+
+  const handleExport = () => {
+    refetch();
+  };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Flex
       border={'1px solid'}
@@ -87,7 +139,21 @@ const ClientsPanel = () => {
       w={'100%'}
     >
       <CustomTable table={table} />
-      <CustomTableFooter table={table} />
+      <CustomTableFooter
+        table={table}
+        exportBody={
+          <ExportClientsDataModal
+            data={exportData}
+            isLoading={isLoading}
+            setData={setExportData}
+          />
+        }
+        onClickExport={handleExport}
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        isLoading={isLoading}
+      />
     </Flex>
   );
 };

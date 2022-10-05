@@ -4,6 +4,7 @@ import {
   deleteSchema,
   editClientSchema,
   editUserPlanSchema,
+  exportClientsSchema,
   paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
@@ -75,6 +76,24 @@ export const protectedClientRouter = createProtectedRouter()
       const pageCount = Math.ceil(numberOfClients / take!);
 
       return { clients, pageCount };
+    },
+  })
+  .query('exportAll', {
+    input: exportClientsSchema,
+    async resolve({ ctx }) {
+      const clients = await ctx.prisma.user.findMany({
+        where: {
+          password: null,
+        },
+        select: {
+          name: true,
+          ci: true,
+          phoneNumber: true,
+          updatedBy: true,
+        },
+      });
+
+      return clients;
     },
   })
   .mutation('editPlan', {
