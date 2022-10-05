@@ -134,8 +134,17 @@ export const protectedClientRouter = createProtectedRouter()
   .mutation('delete', {
     input: deleteSchema,
     async resolve({ input, ctx }) {
-      const { id } = input;
-      await ctx.prisma.user.delete({ where: { id } });
+      const { id, ci } = input;
+      try {
+        await cloudinary.uploader.destroy(`connect-crm/${ci}`);
+        await ctx.prisma.user.delete({ where: { id } });
+      } catch (error) {
+        console.log(error);
+        throw new trpc.TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: ERROR_MESSAGE.SomethingWentWrong,
+        });
+      }
     },
   })
   .mutation('create', {

@@ -13,7 +13,7 @@ type ClientsActionsCellProps = {
 };
 
 const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
-  const { id, name, phoneNumber } = data;
+  const { id, name, phoneNumber, ci } = data;
   const {
     isOpen: editClientIsOpen,
     onOpen: editClientOnOpen,
@@ -155,7 +155,7 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
         onClose={deleteClientOnClose}
         body={<DeleteClientModal />}
         actionButtonLabel={'Aceptar'}
-        onActionClick={() => deleteClientMutate({ id })}
+        onActionClick={() => deleteClientMutate({ id, ci })}
       />
     </Flex>
   );

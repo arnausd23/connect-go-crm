@@ -66,6 +66,7 @@ export const editPlanSchema = z.object({
 
 export const deleteSchema = z.object({
   id: z.string(),
+  ci: z.string().optional(),
 });
 
 export const updatePasswordSchema = z.object({
