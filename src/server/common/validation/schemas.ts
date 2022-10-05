@@ -68,6 +68,17 @@ export const deleteSchema = z.object({
   id: z.string(),
 });
 
+export const updatePasswordSchema = z.object({
+  newPassword: z
+    .string()
+    .trim()
+    .min(8, { message: ERROR_MESSAGE.InvalidPassword }),
+  repeatedNewPassword: z
+    .string()
+    .trim()
+    .min(8, { message: ERROR_MESSAGE.InvalidPassword }),
+});
+
 export type IAuth = z.infer<typeof authSchema>;
 export type ICreateClient = z.infer<typeof createClientSchema>;
 export type ICreatePlan = z.infer<typeof createPlanSchema>;
@@ -76,3 +87,4 @@ export type ICreateAccessHistory = z.infer<typeof createAccessHistorySchema>;
 export type IEditUserPlan = z.infer<typeof editUserPlanSchema>;
 export type IEditPlan = z.infer<typeof editPlanSchema>;
 export type IEditClient = z.infer<typeof editClientSchema>;
+export type IUpdatePassword = z.infer<typeof updatePasswordSchema>;

@@ -13,7 +13,10 @@ import NavbarActionBarButton from './navbar-action-bar-button';
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
 import { trpc } from '../../utils/trpc';
-import { ICreatePlan } from '../../server/common/validation/schemas';
+import {
+  ICreatePlan,
+  IUpdatePassword,
+} from '../../server/common/validation/schemas';
 
 const NavbarActionBar = () => {
   const toast = useToast();
@@ -48,6 +51,10 @@ const NavbarActionBar = () => {
     accessType: PLAN_ACCESS_TYPE.Unlimited,
     name: '',
     price: '',
+  });
+  const [settingsData, setSettingsData] = useState<IUpdatePassword>({
+    newPassword: '',
+    repeatedNewPassword: '',
   });
   const { mutate: assignPlanMutate, isLoading: assignPlanIsLoading } =
     trpc.useMutation('client.assignPlan', {
@@ -134,6 +141,46 @@ const NavbarActionBar = () => {
         }
       },
     });
+  const { mutate: updatePasswordMutate, isLoading: updatePasswordIsLoading } =
+    trpc.useMutation('auth.updatePassword', {
+      onSuccess: async () => {
+        toast({
+          description: SUCCESS_MESSAGE.PasswordUpdated,
+          duration: 3000,
+          isClosable: true,
+          status: 'success',
+          variant: 'top-accent',
+        });
+        setSettingsData({
+          newPassword: '',
+          repeatedNewPassword: '',
+        });
+        settingsOnClose();
+      },
+      onError: (error) => {
+        if (error.data?.zodError?.fieldErrors) {
+          for (const [_, value] of Object.entries(
+            error.data?.zodError?.fieldErrors
+          )) {
+            toast({
+              description: value,
+              duration: 3000,
+              isClosable: true,
+              status: 'error',
+              variant: 'top-accent',
+            });
+          }
+        } else {
+          toast({
+            description: error.message,
+            duration: 3000,
+            isClosable: true,
+            status: 'error',
+            variant: 'top-accent',
+          });
+        }
+      },
+    });
 
   const handleAssignPlan = () => {
     assignPlanMutate(assignPlanData);
@@ -141,6 +188,10 @@ const NavbarActionBar = () => {
 
   const handleCreatePlan = () => {
     createPlanMutate(createPlanData);
+  };
+
+  const handleSettings = () => {
+    updatePasswordMutate(settingsData);
   };
 
   const handleSignOut = () => {
@@ -196,10 +247,16 @@ const NavbarActionBar = () => {
         actionButtonLabel={'Guardar'}
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.Settings}
         icon={<FiSettings size={'1.25rem'} />}
-        isLoading={false}
+        isLoading={updatePasswordIsLoading}
         isOpen={settingsIsOpen}
-        modalBody={<SettingsModal />}
-        onActionClick={() => {}}
+        modalBody={
+          <SettingsModal
+            data={settingsData}
+            isLoading={updatePasswordIsLoading}
+            setData={setSettingsData}
+          />
+        }
+        onActionClick={handleSettings}
         onClose={settingsOnClose}
         onOpen={settingsOnOpen}
       />

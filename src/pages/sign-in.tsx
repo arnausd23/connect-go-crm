@@ -3,13 +3,17 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   useToast,
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import { signIn } from 'next-auth/react';
 import router from 'next/router';
 import { useState } from 'react';
+import { FiEyeOff, FiEye } from 'react-icons/fi';
 import { IAuth } from '../server/common/validation/schemas';
 import { ERROR_MESSAGE } from '../utils/constants';
 
@@ -19,6 +23,8 @@ const SignIn: NextPage = () => {
     password: '',
   });
   const [isSignInLoading, setIsSignInLoading] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
   const toast = useToast();
 
   const handleSignIn = async () => {
@@ -73,17 +79,39 @@ const SignIn: NextPage = () => {
         </FormControl>
         <FormControl mb={'2rem'}>
           <FormLabel>{'Contraseña'}</FormLabel>
-          <Input
-            bgColor={'white'}
-            color={'background'}
-            onChange={({ target }) =>
-              setCredentials({ ...credentials, password: target.value })
-            }
-            type={'password'}
-            value={credentials.password}
-            variant={'filled'}
-            _focus={{ bgColor: 'white' }}
-          />
+          <InputGroup>
+            <Input
+              bgColor={'white'}
+              color={'background'}
+              onChange={({ target }) =>
+                setCredentials({ ...credentials, password: target.value })
+              }
+              type={isVisible ? 'text' : 'password'}
+              value={credentials.password}
+              variant={'filled'}
+              _focus={{ bgColor: 'white' }}
+            />
+            <InputRightElement
+              children={
+                <IconButton
+                  aria-label={'Previous page'}
+                  bottom={0}
+                  color={'background'}
+                  icon={
+                    isVisible ? (
+                      <FiEyeOff size={'1.25rem'} />
+                    ) : (
+                      <FiEye size={'1.25rem'} />
+                    )
+                  }
+                  m={'0.5rem'}
+                  onClick={() => setIsVisible(!isVisible)}
+                  disabled={isSignInLoading}
+                  size={'sm'}
+                />
+              }
+            />
+          </InputGroup>
         </FormControl>
         <Button
           bgColor={'blue.400'}

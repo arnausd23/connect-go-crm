@@ -41,9 +41,11 @@ export const enum ERROR_MESSAGE {
   FailedToSavePhoto = 'Error al guardar la foto, porfavor intenta de nuevo.',
   InvalidCI = 'Porfavor ingresa un carnet válido.',
   InvalidCredentials = 'Credenciales inválidos.',
+  InvalidPassword = 'La contraseña debe contener al menos 8 caracteres.',
   PlanNotFound = 'Plan no encontrado.',
   SomethingWentWrong = 'Algo salió mal.',
   UserNotFound = 'Usuario no encontrado.',
+  PasswordMismatch = 'Las contraseñas no coinciden.',
 }
 
 export const enum SUCCESS_MESSAGE {
@@ -56,6 +58,7 @@ export const enum SUCCESS_MESSAGE {
   PlanUpdated = 'Plan actualizado exitosamente.',
   UserPlanDeleted = 'Plan de cliente eliminado exitosamente.',
   UserPlanUpdated = 'Plan de cliente actualizado exitosamente.',
+  PasswordUpdated = 'Contraseña actualizada exitosamente,',
 }
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
