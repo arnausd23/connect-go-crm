@@ -1,6 +1,6 @@
 import { Flex, Tab, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { CUSTOM_TAB_LABEL } from '../utils/constants';
+import { CUSTOM_TAB_LABEL } from '../../utils/constants';
 
 type CustomTabProps = {
   icon: ReactNode;

@@ -4,7 +4,7 @@ import { FiEdit3, FiTrash2 } from 'react-icons/fi';
 import { IEditClient } from '../../../server/common/validation/schemas';
 import { ClientsTableInfo, SUCCESS_MESSAGE } from '../../../utils/constants';
 import { trpc } from '../../../utils/trpc';
-import CustomModal from '../../custom-modal';
+import CustomModal from '../../custom/custom-modal';
 import DeleteClientModal from '../../modals/delete-client-modal';
 import EditClientModal from '../../modals/edit-client-modal';
 

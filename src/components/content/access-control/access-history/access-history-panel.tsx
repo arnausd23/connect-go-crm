@@ -11,8 +11,8 @@ import {
   TABLE_PAGE_SIZE,
 } from '../../../../utils/constants';
 import { trpc } from '../../../../utils/trpc';
-import CustomTable from '../../../custom-table';
-import CustomTableFooter from '../../../custom-table-footer';
+import CustomTable from '../../../custom/custom-table';
+import CustomTableFooter from '../../../custom/custom-table-footer';
 import AccessHistoryStatusCell from './access-history-status-cell';
 
 const AccessHistoryPanel = () => {

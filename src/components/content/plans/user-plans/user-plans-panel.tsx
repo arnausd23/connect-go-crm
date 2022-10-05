@@ -12,9 +12,9 @@ import {
   TABLE_PAGE_SIZE,
 } from '../../../../utils/constants';
 import { trpc } from '../../../../utils/trpc';
-import CustomDatePicker from '../../../custom-date-picker';
-import CustomTable from '../../../custom-table';
-import CustomTableFooter from '../../../custom-table-footer';
+import CustomDatePicker from '../../../custom/custom-date-picker';
+import CustomTable from '../../../custom/custom-table';
+import CustomTableFooter from '../../../custom/custom-table-footer';
 import UserPlansActionsCell from './user-plans-actions-cell';
 
 const UserPlansPanel = () => {

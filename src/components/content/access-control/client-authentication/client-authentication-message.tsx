@@ -1,14 +1,14 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { AccessAuthenticationInfo } from '../../../../utils/constants';
+import { ClientAuthenticationInfo } from '../../../../utils/constants';
 
-const AccessAuthenticationMessage = ({
+const ClientAuthenticationMessage = ({
   bgColor,
   endingDate,
   footer,
   header,
   name,
   startingDate,
-}: AccessAuthenticationInfo) => {
+}: ClientAuthenticationInfo) => {
   return (
     <Flex
       bgColor={bgColor}
@@ -55,4 +55,4 @@ const AccessAuthenticationMessage = ({
   );
 };
 
-export default AccessAuthenticationMessage;
+export default ClientAuthenticationMessage;

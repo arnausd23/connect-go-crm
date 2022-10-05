@@ -1,5 +1,5 @@
 import { Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { CustomModalProps } from '../custom-modal';
+import { CustomModalProps } from '../custom/custom-modal';
 
 const EditClientModal = ({ data, isLoading, setData }: CustomModalProps) => {
   return (

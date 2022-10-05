@@ -9,7 +9,7 @@ import {
 import { useRef } from 'react';
 import { FiCamera, FiRotateCcw } from 'react-icons/fi';
 import Webcam from 'react-webcam';
-import { CustomModalProps } from '../custom-modal';
+import { CustomModalProps } from '../custom/custom-modal';
 
 const CreateClientModal = ({ data, isLoading, setData }: CustomModalProps) => {
   const webCamRef = useRef<Webcam>(null);

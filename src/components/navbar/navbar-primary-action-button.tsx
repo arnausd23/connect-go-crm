@@ -14,7 +14,7 @@ import {
 } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import CreateClientModal from '../modals/create-client-modal';
-import CustomModal from '../custom-modal';
+import CustomModal from '../custom/custom-modal';
 
 const NavbarPrimaryActionButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

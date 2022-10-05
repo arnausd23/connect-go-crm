@@ -5,7 +5,7 @@ import { FiEdit3, FiTrash2 } from 'react-icons/fi';
 import { IEditPlan } from '../../../../server/common/validation/schemas';
 import { PLAN_ACCESS_TYPE, SUCCESS_MESSAGE } from '../../../../utils/constants';
 import { trpc } from '../../../../utils/trpc';
-import CustomModal from '../../../custom-modal';
+import CustomModal from '../../../custom/custom-modal';
 import DeletePlanModal from '../../../modals/delete-plan-modal';
 import EditPlanModal from '../../../modals/edit-plan-modal';
 

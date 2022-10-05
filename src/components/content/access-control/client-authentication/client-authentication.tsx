@@ -5,7 +5,7 @@ import { trpc } from '../../../../utils/trpc';
 import * as faceapi from 'face-api.js';
 import { setIntervalAsync } from 'set-interval-async';
 import {
-  AccessAuthenticationInfo,
+  ClientAuthenticationInfo,
   delay,
   FACE_MATCH_DISTANCE_THRESHOLD,
 } from '../../../../utils/constants';
@@ -13,7 +13,7 @@ import {
 type ClientAuthenticationProps = {
   setShowAccessAuthenticationMessage: Dispatch<SetStateAction<boolean>>;
   setAccessAuthenticationInfo: Dispatch<
-    SetStateAction<AccessAuthenticationInfo>
+    SetStateAction<ClientAuthenticationInfo>
   >;
 };
 

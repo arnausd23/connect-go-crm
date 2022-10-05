@@ -9,8 +9,8 @@ import {
 import { useEffect } from 'react';
 import { ERROR_MESSAGE } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
-import CustomDatePicker from '../custom-date-picker';
-import { CustomModalProps } from '../custom-modal';
+import CustomDatePicker from '../custom/custom-date-picker';
+import { CustomModalProps } from '../custom/custom-modal';
 
 const AssignPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
   const toast = useToast();

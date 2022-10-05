@@ -8,7 +8,7 @@ import {
   Select,
 } from '@chakra-ui/react';
 import { PLAN_ACCESS_TYPE } from '../../utils/constants';
-import { CustomModalProps } from '../custom-modal';
+import { CustomModalProps } from '../custom/custom-modal';
 
 const CreatePlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
   return (

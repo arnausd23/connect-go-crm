@@ -1,15 +1,15 @@
 import { Flex, IconButton } from '@chakra-ui/react';
 import { useState } from 'react';
 import { FiMaximize } from 'react-icons/fi';
-import { AccessAuthenticationInfo } from '../../../../utils/constants';
-import AccessAuthenticationMessage from './access-authentication-message';
+import { ClientAuthenticationInfo } from '../../../../utils/constants';
+import ClientAuthenticationMessage from './client-authentication-message';
 import ClientAuthentication from './client-authentication';
 
 const ClientAuthenticationPanel = () => {
   const [showAccessAuthenticationMessage, setShowAccessAuthenticationMessage] =
     useState<boolean>(false);
   const [accessAuthenticationInfo, setAccessAuthenticationInfo] =
-    useState<AccessAuthenticationInfo>({
+    useState<ClientAuthenticationInfo>({
       bgColor: 'authGreen',
       endingDate: undefined,
       footer: undefined,
@@ -45,7 +45,7 @@ const ClientAuthenticationPanel = () => {
         variant={'ghost'}
       />
       {showAccessAuthenticationMessage ? (
-        <AccessAuthenticationMessage
+        <ClientAuthenticationMessage
           bgColor={bgColor}
           endingDate={endingDate}
           footer={footer}

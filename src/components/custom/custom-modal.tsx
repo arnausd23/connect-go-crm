@@ -8,7 +8,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { Dispatch, ReactNode, SetStateAction } from 'react';
-import { NAVBAR_ACTION_BAR_BUTTON_LABEL } from '../utils/constants';
+import { NAVBAR_ACTION_BAR_BUTTON_LABEL } from '../../utils/constants';
 
 type CustomButtonModalProps = {
   body: ReactNode;

@@ -1,6 +1,6 @@
 import { Flex, FormControl, FormLabel } from '@chakra-ui/react';
-import CustomDatePicker from '../custom-date-picker';
-import { CustomModalProps } from '../custom-modal';
+import CustomDatePicker from '../custom/custom-date-picker';
+import { CustomModalProps } from '../custom/custom-modal';
 
 const EditUserPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
   return (

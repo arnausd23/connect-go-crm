@@ -7,7 +7,7 @@ import {
   SUCCESS_MESSAGE,
 } from '../../../../utils/constants';
 import { trpc } from '../../../../utils/trpc';
-import CustomModal from '../../../custom-modal';
+import CustomModal from '../../../custom/custom-modal';
 import DeletePlanModal from '../../../modals/delete-plan-modal';
 import EditUserPlanModal from '../../../modals/edit-user-plan-modal';
 

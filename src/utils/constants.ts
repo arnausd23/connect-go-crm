@@ -60,7 +60,7 @@ export const enum SUCCESS_MESSAGE {
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-export type AccessAuthenticationInfo = {
+export type ClientAuthenticationInfo = {
   bgColor: string;
   endingDate: Date | undefined;
   footer: string | undefined;

@@ -1,8 +1,8 @@
 import { Flex, TabList, TabPanels, Tabs } from '@chakra-ui/react';
 import { FiUsers } from 'react-icons/fi';
 import { CUSTOM_TAB_LABEL } from '../../../utils/constants';
-import CustomTab from '../../custom-tab';
-import CustomTabPanel from '../../custom-tab-panel';
+import CustomTab from '../../custom/custom-tab';
+import CustomTabPanel from '../../custom/custom-tab-panel';
 import ClientsPanel from './clients-panel';
 
 const Clients = () => {
