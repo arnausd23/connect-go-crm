@@ -10,11 +10,11 @@ import type { NextPage } from 'next';
 import { signIn } from 'next-auth/react';
 import router from 'next/router';
 import { useState } from 'react';
-import { ISignIn } from '../server/common/validation/schemas';
+import { IAuth } from '../server/common/validation/schemas';
 import { ERROR_MESSAGE } from '../utils/constants';
 
 const SignIn: NextPage = () => {
-  const [credentials, setCredentials] = useState<ISignIn>({
+  const [credentials, setCredentials] = useState<IAuth>({
     username: '',
     password: '',
   });

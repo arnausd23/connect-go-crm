@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ERROR_MESSAGE, PLAN_ACCESS_TYPE } from '../../../utils/constants';
 
-export const signInSchema = z.object({
+export const authSchema = z.object({
   username: z.string(),
   password: z.string(),
 });
@@ -47,6 +47,12 @@ export const editUserPlanSchema = z.object({
   endingDate: z.date(),
 });
 
+export const editClientSchema = z.object({
+  id: z.string(),
+  name: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
+  phoneNumber: z.string(),
+});
+
 export const editPlanSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
@@ -62,10 +68,11 @@ export const deleteSchema = z.object({
   id: z.string(),
 });
 
-export type ISignIn = z.infer<typeof signInSchema>;
+export type IAuth = z.infer<typeof authSchema>;
 export type ICreateClient = z.infer<typeof createClientSchema>;
 export type ICreatePlan = z.infer<typeof createPlanSchema>;
 export type IAssignPlan = z.infer<typeof assignPlanSchema>;
 export type ICreateAccessHistory = z.infer<typeof createAccessHistorySchema>;
 export type IEditUserPlan = z.infer<typeof editUserPlanSchema>;
 export type IEditPlan = z.infer<typeof editPlanSchema>;
+export type IEditClient = z.infer<typeof editClientSchema>;

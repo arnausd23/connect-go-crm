@@ -6,12 +6,14 @@ export const TABLE_PAGE_SIZE = 10;
 export const enum SECTION {
   AccessControl = 'Control de acceso',
   Plans = 'Planes',
+  Clients = 'Clientes',
 }
 export const enum CUSTOM_TAB_LABEL {
   ClientAuthentication = 'Autenticación de clientes',
   AccessHistory = 'Historial de accesos',
   CreatedPlans = 'Planes creados',
   UserPlans = 'Planes de clientes',
+  Clients = 'Clientes',
 }
 
 export const enum NAVBAR_ACTION_BAR_BUTTON_LABEL {
@@ -30,6 +32,7 @@ export const enum PLAN_ACCESS_TYPE {
 
 export const enum ERROR_MESSAGE {
   ClientNotFound = 'Cliente no encontrado.',
+  DuplicateUser = 'Ya existe ese usuario.',
   DuplicateClient = 'Ya existe un cliente con ese CI.',
   DuplicatePlan = 'Ya existe un plan con ese nombre.',
   EmptyName = 'Porfavor ingresa un nombre.',
@@ -45,6 +48,8 @@ export const enum ERROR_MESSAGE {
 
 export const enum SUCCESS_MESSAGE {
   ClientCreated = 'Cliente creado exitosamente.',
+  ClientUpdated = 'Cliente actualizado exitosamente.',
+  ClientDeleted = 'Cliente eliminado exitosamente.',
   PlanAssigned = 'Plan asignado exitosamente.',
   PlanCreated = 'Plan creado exitosamente.',
   PlanDeleted = 'Plan eliminado exitosamente.',
@@ -88,4 +93,12 @@ export type UserPlansTableInfo = {
   plan: {
     name: string;
   };
+};
+
+export type ClientsTableInfo = {
+  ci: string;
+  id: string;
+  name: string;
+  updatedBy: string;
+  phoneNumber: string | null;
 };

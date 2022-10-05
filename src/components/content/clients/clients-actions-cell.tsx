@@ -1,54 +1,53 @@
 import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { FiEdit3, FiTrash2 } from 'react-icons/fi';
-import { IEditUserPlan } from '../../../../server/common/validation/schemas';
-import {
-  UserPlansTableInfo,
-  SUCCESS_MESSAGE,
-} from '../../../../utils/constants';
-import { trpc } from '../../../../utils/trpc';
-import CustomModal from '../../../custom-modal';
-import DeletePlanModal from '../../../modals/delete-plan-modal';
-import EditUserPlanModal from '../../../modals/edit-user-plan-modal';
+import { IEditClient } from '../../../server/common/validation/schemas';
+import { ClientsTableInfo, SUCCESS_MESSAGE } from '../../../utils/constants';
+import { trpc } from '../../../utils/trpc';
+import CustomModal from '../../custom-modal';
+import DeleteClientModal from '../../modals/delete-client-modal';
+import EditClientModal from '../../modals/edit-client-modal';
 
-type UserPlansActionsCellProps = {
-  data: UserPlansTableInfo;
+type ClientsActionsCellProps = {
+  data: ClientsTableInfo;
 };
 
-const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
-  const { id, startingDate, endingDate } = data;
+const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
+  const { id, name, phoneNumber } = data;
   const {
-    isOpen: editPlanIsOpen,
-    onOpen: editPlanOnOpen,
-    onClose: editPlanOnClose,
+    isOpen: editClientIsOpen,
+    onOpen: editClientOnOpen,
+    onClose: editClientOnClose,
   } = useDisclosure();
   const {
-    isOpen: deletePlanIsOpen,
-    onOpen: deletePlanOnOpen,
-    onClose: deletePlanOnClose,
+    isOpen: deleteClientIsOpen,
+    onOpen: deleteClientOnOpen,
+    onClose: deleteClientOnClose,
   } = useDisclosure();
   const toast = useToast();
   const ctx = trpc.useContext();
 
-  const [editPlanData, setEditPlanData] = useState<IEditUserPlan>({
+  const [editClientData, setEditClientData] = useState<IEditClient>({
     id,
-    startingDate,
-    endingDate,
+    name,
+    phoneNumber: phoneNumber ?? '',
   });
 
-  const { isLoading: editPlanIsLoading, mutate: editPlanMutate } =
-    trpc.useMutation('client.editPlan', {
+  const { isLoading: editClientIsLoading, mutate: editClientMutate } =
+    trpc.useMutation('client.edit', {
       onSuccess: async () => {
         toast({
-          description: SUCCESS_MESSAGE.UserPlanUpdated,
+          description: SUCCESS_MESSAGE.ClientUpdated,
           duration: 3000,
           isClosable: true,
           status: 'success',
           variant: 'top-accent',
         });
+        await ctx.invalidateQueries('client.getAll');
+        await ctx.invalidateQueries('plan.getAll');
         await ctx.invalidateQueries('client.getPlans');
         await ctx.invalidateQueries('accessHistory.getAll');
-        editPlanOnClose();
+        editClientOnClose();
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {
@@ -75,19 +74,21 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
       },
     });
 
-  const { isLoading: deletePlanIsLoading, mutate: deletePlanMutate } =
-    trpc.useMutation('client.deletePlan', {
+  const { isLoading: deleteClientIsLoading, mutate: deleteClientMutate } =
+    trpc.useMutation('client.delete', {
       onSuccess: async () => {
         toast({
-          description: SUCCESS_MESSAGE.UserPlanDeleted,
+          description: SUCCESS_MESSAGE.ClientDeleted,
           duration: 3000,
           isClosable: true,
           status: 'success',
           variant: 'top-accent',
         });
+        await ctx.invalidateQueries('client.getAll');
+        await ctx.invalidateQueries('plan.getAll');
         await ctx.invalidateQueries('client.getPlans');
         await ctx.invalidateQueries('accessHistory.getAll');
-        deletePlanOnClose();
+        deleteClientOnClose();
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {
@@ -117,47 +118,47 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
   return (
     <Flex justifyContent={'flex-end'}>
       <IconButton
-        aria-label={'Edit user plan'}
+        aria-label={'Edit user'}
         icon={<FiEdit3 />}
         color={'background'}
         mr={'0.125rem'}
-        onClick={() => editPlanOnOpen()}
+        onClick={() => editClientOnOpen()}
         size={'sm'}
       />
       <IconButton
-        aria-label={'Delete user plan'}
+        aria-label={'Delete user'}
         icon={<FiTrash2 />}
         colorScheme={'red'}
         ml={'0.125rem'}
-        onClick={() => deletePlanOnOpen()}
+        onClick={() => deleteClientOnOpen()}
         size={'sm'}
       />
       <CustomModal
-        title={'Editar plan de cliente'}
-        isLoading={editPlanIsLoading}
-        isOpen={editPlanIsOpen}
-        onClose={editPlanOnClose}
+        title={'Editar cliente'}
+        isLoading={editClientIsLoading}
+        isOpen={editClientIsOpen}
+        onClose={editClientOnClose}
         body={
-          <EditUserPlanModal
-            data={editPlanData}
-            isLoading={editPlanIsLoading}
-            setData={setEditPlanData}
+          <EditClientModal
+            data={editClientData}
+            isLoading={editClientIsLoading}
+            setData={setEditClientData}
           />
         }
         actionButtonLabel={'Guardar'}
-        onActionClick={() => editPlanMutate(editPlanData)}
+        onActionClick={() => editClientMutate(editClientData)}
       />
       <CustomModal
-        title={'Eliminar plan de cliente'}
-        isLoading={deletePlanIsLoading}
-        isOpen={deletePlanIsOpen}
-        onClose={deletePlanOnClose}
-        body={<DeletePlanModal />}
+        title={'Eliminar cliente'}
+        isLoading={deleteClientIsLoading}
+        isOpen={deleteClientIsOpen}
+        onClose={deleteClientOnClose}
+        body={<DeleteClientModal />}
         actionButtonLabel={'Aceptar'}
-        onActionClick={() => deletePlanMutate({ id })}
+        onActionClick={() => deleteClientMutate({ id })}
       />
     </Flex>
   );
 };
 
-export default UserPlansActionsCell;
+export default ClientsActionsCell;

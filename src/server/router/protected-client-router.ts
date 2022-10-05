@@ -2,6 +2,7 @@ import {
   assignPlanSchema,
   createClientSchema,
   deleteSchema,
+  editClientSchema,
   editUserPlanSchema,
   paginationSchema,
 } from '../common/validation/schemas';
@@ -43,10 +44,37 @@ export const protectedClientRouter = createProtectedRouter()
         },
       });
 
-      const numberOfAccessHistory = await ctx.prisma.accessHistory.count();
-      const pageCount = Math.ceil(numberOfAccessHistory / take!);
+      const numberOfUserPlans = await ctx.prisma.userPlan.count();
+      const pageCount = Math.ceil(numberOfUserPlans / take!);
 
       return { plans, pageCount };
+    },
+  })
+  .query('getAll', {
+    input: paginationSchema,
+    async resolve({ input, ctx }) {
+      const { skip, take } = input;
+      const clients = await ctx.prisma.user.findMany({
+        skip,
+        take,
+        where: {
+          password: null,
+        },
+        select: {
+          id: true,
+          name: true,
+          ci: true,
+          phoneNumber: true,
+          updatedBy: true,
+        },
+      });
+
+      const numberOfClients = await ctx.prisma.user.count({
+        where: { password: null },
+      });
+      const pageCount = Math.ceil(numberOfClients / take!);
+
+      return { clients, pageCount };
     },
   })
   .mutation('editPlan', {
@@ -63,11 +91,32 @@ export const protectedClientRouter = createProtectedRouter()
       });
     },
   })
+  .mutation('edit', {
+    input: editClientSchema,
+    async resolve({ input, ctx }) {
+      const { id, name, phoneNumber } = input;
+      const updatedBy = Object.entries(ctx.session).filter(
+        (entry) => entry[0] === 'id'
+      )[0]![1] as string;
+
+      await ctx.prisma.user.update({
+        where: { id },
+        data: { name, phoneNumber, updatedBy },
+      });
+    },
+  })
   .mutation('deletePlan', {
     input: deleteSchema,
     async resolve({ input, ctx }) {
       const { id } = input;
       await ctx.prisma.userPlan.delete({ where: { id } });
+    },
+  })
+  .mutation('delete', {
+    input: deleteSchema,
+    async resolve({ input, ctx }) {
+      const { id } = input;
+      await ctx.prisma.user.delete({ where: { id } });
     },
   })
   .mutation('create', {
@@ -95,11 +144,16 @@ export const protectedClientRouter = createProtectedRouter()
         });
       }
 
+      const updatedBy = Object.entries(ctx.session).filter(
+        (entry) => entry[0] === 'id'
+      )[0]![1] as string;
+
       const client = await ctx.prisma.user.create({
         data: {
           ci,
           name,
           phoneNumber,
+          updatedBy,
         },
       });
 

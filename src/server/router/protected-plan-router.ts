@@ -17,8 +17,8 @@ export const protectedPlanRouter = createProtectedRouter()
         skip,
         take,
       });
-      const numberOfAccessHistory = await ctx.prisma.accessHistory.count();
-      const pageCount = Math.ceil(numberOfAccessHistory / take!);
+      const numberOfPlans = await ctx.prisma.plan.count();
+      const pageCount = Math.ceil(numberOfPlans / take!);
       return { plans, pageCount };
     },
   })

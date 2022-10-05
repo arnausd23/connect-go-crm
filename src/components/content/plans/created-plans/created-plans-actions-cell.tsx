@@ -50,6 +50,7 @@ const CreatedPlansActionsCell = ({ data }: CreatedPlansActionsCellProps) => {
         });
         await ctx.invalidateQueries('plan.getAll');
         await ctx.invalidateQueries('client.getPlans');
+        await ctx.invalidateQueries('accessHistory.getAll');
         editPlanOnClose();
       },
       onError: (error) => {
@@ -89,6 +90,7 @@ const CreatedPlansActionsCell = ({ data }: CreatedPlansActionsCellProps) => {
         });
         await ctx.invalidateQueries('plan.getAll');
         await ctx.invalidateQueries('client.getPlans');
+        await ctx.invalidateQueries('accessHistory.getAll');
         deletePlanOnClose();
       },
       onError: (error) => {

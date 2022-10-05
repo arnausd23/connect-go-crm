@@ -2,12 +2,12 @@ import { verify } from 'argon2';
 import * as trpc from '@trpc/server';
 import { prisma } from '../../../server/db/client';
 import { ERROR_MESSAGE } from '../../../utils/constants';
-import { signInSchema } from './schemas';
+import { authSchema } from './schemas';
 
 export const authorizeSignIn = async (
   credentials: Record<never, string> | undefined
 ) => {
-  const parsedCredentials = await signInSchema.parseAsync(credentials);
+  const parsedCredentials = await authSchema.parseAsync(credentials);
   const user = await prisma.user.findFirst({
     where: { id: parsedCredentials.username },
   });

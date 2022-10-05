@@ -14,6 +14,7 @@ model User {
     name        String          @default("")
     password    String?
     phoneNumber String?
+    updatedBy   String
     plans       UserPlan[]
 }
 

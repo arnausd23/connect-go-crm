@@ -1,6 +1,6 @@
 import { Button, Divider, Flex } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
-import { FiArchive, FiKey } from 'react-icons/fi';
+import { FiArchive, FiKey, FiUsers } from 'react-icons/fi';
 import { NAV_BAR_WIDTH, SECTION } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import NavbarActionBar from './navbar-action-bar';
@@ -44,6 +44,12 @@ const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
           handleSectionChange={handleSectionChange}
           icon={<FiArchive size={'1.25rem'} />}
           label={SECTION.Plans}
+        />
+        <NavbarButton
+          active={currentSection === SECTION.Clients}
+          handleSectionChange={handleSectionChange}
+          icon={<FiUsers size={'1.25rem'} />}
+          label={SECTION.Clients}
         />
       </Flex>
       <Flex flexDir={'column'}>

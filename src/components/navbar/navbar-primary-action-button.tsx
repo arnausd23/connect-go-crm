@@ -19,6 +19,7 @@ import CustomModal from '../custom-modal';
 const NavbarPrimaryActionButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const ctx = trpc.useContext();
   const [createClientData, setCreateClientData] = useState<ICreateClient>({
     ci: '',
     name: '',
@@ -42,6 +43,7 @@ const NavbarPrimaryActionButton = () => {
         photoSrc: '',
         photoTaken: false,
       });
+      await ctx.invalidateQueries('client.getAll');
       onClose();
     },
     onError: (error) => {
