@@ -91,10 +91,14 @@ const ClientsPanel = () => {
       enabled: false,
       retry: false,
       onSuccess(data) {
-        const workBook = utils.book_new();
-        const workSheet = utils.json_to_sheet(data);
-        utils.book_append_sheet(workBook, workSheet);
-        writeFile(workBook, `${exportData.fileName}.xlsx`);
+        const workbook = utils.book_new();
+        const worksheet = utils.json_to_sheet(data);
+        const headers = ['Nombre', 'CI', 'Celular', 'Actualizado por'];
+        utils.sheet_add_aoa(worksheet, [headers], {
+          origin: 'A1',
+        });
+        utils.book_append_sheet(workbook, worksheet);
+        writeFile(workbook, `${exportData.fileName}.xlsx`);
         onClose();
       },
       onError: (error) => {
