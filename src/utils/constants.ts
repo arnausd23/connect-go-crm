@@ -7,9 +7,11 @@ export const enum SECTION {
   AccessControl = 'Control de acceso',
   Plans = 'Planes',
 }
-export const enum ACCESS_CONTROL_TAB_LABEL {
+export const enum CUSTOM_TAB_LABEL {
   ClientAuthentication = 'Autenticación de clientes',
   AccessHistory = 'Historial de accesos',
+  CreatedPlans = 'Planes creados',
+  UserPlans = 'Planes de clientes',
 }
 
 export const enum NAVBAR_ACTION_BAR_BUTTON_LABEL {
@@ -29,6 +31,7 @@ export const enum PLAN_ACCESS_TYPE {
 export const enum ERROR_MESSAGE {
   ClientNotFound = 'Cliente no encontrado.',
   DuplicateClient = 'Ya existe un cliente con ese CI.',
+  DuplicatePlan = 'Ya existe un plan con ese nombre.',
   EmptyName = 'Porfavor ingresa un nombre.',
   EmptyPhoto = 'Porfavor toma una foto.',
   FailedToLoadModels = 'Error al cargar los modelos.',
@@ -44,6 +47,8 @@ export const enum SUCCESS_MESSAGE {
   ClientCreated = 'Cliente creado exitosamente.',
   PlanAssigned = 'Plan asignado exitosamente.',
   PlanCreated = 'Plan creado exitosamente.',
+  PlanDeleted = 'Plan eliminado exitosamente.',
+  PlanUpdated = 'Plan actualizado exitosamente.',
   UserPlanDeleted = 'Plan de cliente eliminado exitosamente.',
   UserPlanUpdated = 'Plan de cliente actualizado exitosamente.',
 }
@@ -72,10 +77,11 @@ export type AccessHistoryTableInfo = {
   date: Date;
 };
 
-export type PlansTableInfo = {
+export type UserPlansTableInfo = {
   id: string;
   endingDate: Date;
   startingDate: Date;
+  updatedBy: string;
   user: {
     name: string;
   };

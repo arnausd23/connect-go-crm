@@ -94,7 +94,7 @@ const NavbarActionBar = () => {
     });
   const { mutate: createPlanMutate, isLoading: createPlanIsLoading } =
     trpc.useMutation('plan.create', {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast({
           description: SUCCESS_MESSAGE.PlanCreated,
           duration: 3000,
@@ -107,6 +107,7 @@ const NavbarActionBar = () => {
           name: '',
           price: '',
         });
+        await ctx.invalidateQueries('plan.getAll');
         createPlanOnClose();
       },
       onError: (error) => {

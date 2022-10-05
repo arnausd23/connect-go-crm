@@ -34,7 +34,7 @@ const CreatePlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
           onChange={({ target }) =>
             setData!({ ...data, accessType: target.value })
           }
-          value={data.type}
+          value={data.accessType}
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
         >

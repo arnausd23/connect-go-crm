@@ -32,7 +32,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter()
       });
 
       const numberOfAccessHistory = await ctx.prisma.accessHistory.count();
-      const pageCount = Math.ceil(numberOfAccessHistory / take);
+      const pageCount = Math.ceil(numberOfAccessHistory / take!);
 
       return { accessHistory, pageCount };
     },

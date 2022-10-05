@@ -1,7 +1,7 @@
 import {
   assignPlanSchema,
   createClientSchema,
-  deleteUserPlanSchema,
+  deleteSchema,
   editUserPlanSchema,
   paginationSchema,
 } from '../common/validation/schemas';
@@ -9,7 +9,6 @@ import { createProtectedRouter } from './protected-router';
 import * as trpc from '@trpc/server';
 import { ERROR_MESSAGE } from '../../utils/constants';
 import { v2 as cloudinary } from 'cloudinary';
-import { TRPCClientError } from '@trpc/client';
 
 export const protectedClientRouter = createProtectedRouter()
   .query('getPhotoUrls', {
@@ -38,13 +37,14 @@ export const protectedClientRouter = createProtectedRouter()
           id: true,
           startingDate: true,
           endingDate: true,
+          updatedBy: true,
           user: { select: { name: true } },
           plan: { select: { name: true } },
         },
       });
 
       const numberOfAccessHistory = await ctx.prisma.accessHistory.count();
-      const pageCount = Math.ceil(numberOfAccessHistory / take);
+      const pageCount = Math.ceil(numberOfAccessHistory / take!);
 
       return { plans, pageCount };
     },
@@ -53,17 +53,20 @@ export const protectedClientRouter = createProtectedRouter()
     input: editUserPlanSchema,
     async resolve({ input, ctx }) {
       const { id, startingDate, endingDate } = input;
+      const updatedBy = Object.entries(ctx.session).filter(
+        (entry) => entry[0] === 'id'
+      )[0]![1] as string;
+
       await ctx.prisma.userPlan.update({
         where: { id },
-        data: { startingDate, endingDate },
+        data: { startingDate, endingDate, updatedBy },
       });
     },
   })
   .mutation('deletePlan', {
-    input: deleteUserPlanSchema,
+    input: deleteSchema,
     async resolve({ input, ctx }) {
       const { id } = input;
-      await ctx.prisma.accessHistory.deleteMany({ where: { userPlanId: id } });
       await ctx.prisma.userPlan.delete({ where: { id } });
     },
   })
@@ -123,12 +126,17 @@ export const protectedClientRouter = createProtectedRouter()
         });
       }
 
+      const updatedBy = Object.entries(ctx.session).filter(
+        (entry) => entry[0] === 'id'
+      )[0]![1] as string;
+
       const userPlan = await ctx.prisma.userPlan.create({
         data: {
           userId: user.id,
           planId: plan.id,
           startingDate,
           endingDate,
+          updatedBy,
         },
       });
 

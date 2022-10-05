@@ -1,11 +1,11 @@
 import { TabPanel } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-type AccessControlTabPanelProps = {
+type CustomTabPanelProps = {
   body: ReactNode;
 };
 
-const AccessControlTabPanel = ({ body }: AccessControlTabPanelProps) => {
+const CustomTabPanel = ({ body }: CustomTabPanelProps) => {
   return (
     <TabPanel
       bgColor={'dark'}
@@ -20,4 +20,4 @@ const AccessControlTabPanel = ({ body }: AccessControlTabPanelProps) => {
   );
 };
 
-export default AccessControlTabPanel;
+export default CustomTabPanel;

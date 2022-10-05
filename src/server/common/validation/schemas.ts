@@ -37,8 +37,8 @@ export const createAccessHistorySchema = z.object({
 });
 
 export const paginationSchema = z.object({
-  skip: z.number(),
-  take: z.number(),
+  skip: z.number().optional(),
+  take: z.number().optional(),
 });
 
 export const editUserPlanSchema = z.object({
@@ -47,7 +47,18 @@ export const editUserPlanSchema = z.object({
   endingDate: z.date(),
 });
 
-export const deleteUserPlanSchema = z.object({
+export const editPlanSchema = z.object({
+  id: z.string(),
+  name: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
+  accessType: z.enum([
+    PLAN_ACCESS_TYPE.Unlimited,
+    PLAN_ACCESS_TYPE.OneSession,
+    PLAN_ACCESS_TYPE.ThreePerWeek,
+  ]),
+  price: z.string(),
+});
+
+export const deleteSchema = z.object({
   id: z.string(),
 });
 
@@ -57,3 +68,4 @@ export type ICreatePlan = z.infer<typeof createPlanSchema>;
 export type IAssignPlan = z.infer<typeof assignPlanSchema>;
 export type ICreateAccessHistory = z.infer<typeof createAccessHistorySchema>;
 export type IEditUserPlan = z.infer<typeof editUserPlanSchema>;
+export type IEditPlan = z.infer<typeof editPlanSchema>;

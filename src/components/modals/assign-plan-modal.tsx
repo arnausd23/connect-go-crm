@@ -24,10 +24,10 @@ const AssignPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
   }, []);
 
   const { data: getAllPlansData, isLoading: getAllPlansIsLoading } =
-    trpc.useQuery(['plan.getAll'], {
+    trpc.useQuery(['plan.getAll', { skip: undefined, take: undefined }], {
       onSuccess: (result) => {
         if (data.name === '' || !data.name)
-          setData!({ ...data, name: result?.at(0)?.name });
+          setData!({ ...data, name: result?.plans.at(0)?.name });
       },
       onError: () => {
         toast({
@@ -53,7 +53,7 @@ const AssignPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
         >
-          {getAllPlansData?.map((plan) => (
+          {getAllPlansData?.plans?.map((plan) => (
             <option key={plan.id} value={plan.name}>
               {plan.name}
             </option>

@@ -1,13 +1,13 @@
 import { Flex, Tab, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { ACCESS_CONTROL_TAB_LABEL } from '../../../utils/constants';
+import { CUSTOM_TAB_LABEL } from '../utils/constants';
 
-type AccessControlTabProps = {
+type CustomTabProps = {
   icon: ReactNode;
-  label: ACCESS_CONTROL_TAB_LABEL;
+  label: CUSTOM_TAB_LABEL;
 };
 
-const AccessControlTab = ({ icon, label }: AccessControlTabProps) => {
+const CustomTab = ({ icon, label }: CustomTabProps) => {
   return (
     <Tab
       color={'white'}
@@ -25,4 +25,4 @@ const AccessControlTab = ({ icon, label }: AccessControlTabProps) => {
   );
 };
 
-export default AccessControlTab;
+export default CustomTab;

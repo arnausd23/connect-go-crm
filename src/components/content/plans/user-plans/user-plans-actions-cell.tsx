@@ -1,18 +1,21 @@
 import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { FiEdit3, FiTrash2 } from 'react-icons/fi';
-import { IEditUserPlan } from '../../../server/common/validation/schemas';
-import { PlansTableInfo, SUCCESS_MESSAGE } from '../../../utils/constants';
-import { trpc } from '../../../utils/trpc';
-import CustomModal from '../../custom-modal';
-import DeletePlanModal from '../../modals/delete-plan-modal';
-import EditPlanModal from '../../modals/edit-plan-modal';
+import { IEditUserPlan } from '../../../../server/common/validation/schemas';
+import {
+  UserPlansTableInfo,
+  SUCCESS_MESSAGE,
+} from '../../../../utils/constants';
+import { trpc } from '../../../../utils/trpc';
+import CustomModal from '../../../custom-modal';
+import DeletePlanModal from '../../../modals/delete-plan-modal';
+import EditUserPlanModal from '../../../modals/edit-user-plan-modal';
 
-type PlansActionsCellProps = {
-  data: PlansTableInfo;
+type UserPlansActionsCellProps = {
+  data: UserPlansTableInfo;
 };
 
-const PlansActionsCell = ({ data }: PlansActionsCellProps) => {
+const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
   const { id, startingDate, endingDate } = data;
   const {
     isOpen: editPlanIsOpen,
@@ -43,7 +46,7 @@ const PlansActionsCell = ({ data }: PlansActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
-        ctx.invalidateQueries('client.getPlans');
+        await ctx.invalidateQueries('client.getPlans');
         editPlanOnClose();
       },
       onError: (error) => {
@@ -81,7 +84,7 @@ const PlansActionsCell = ({ data }: PlansActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
-        ctx.invalidateQueries('client.getPlans');
+        await ctx.invalidateQueries('client.getPlans');
         deletePlanOnClose();
       },
       onError: (error) => {
@@ -133,7 +136,7 @@ const PlansActionsCell = ({ data }: PlansActionsCellProps) => {
         isOpen={editPlanIsOpen}
         onClose={editPlanOnClose}
         body={
-          <EditPlanModal
+          <EditUserPlanModal
             data={editPlanData}
             isLoading={editPlanIsLoading}
             setData={setEditPlanData}
@@ -155,4 +158,4 @@ const PlansActionsCell = ({ data }: PlansActionsCellProps) => {
   );
 };
 
-export default PlansActionsCell;
+export default UserPlansActionsCell;
