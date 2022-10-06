@@ -78,7 +78,9 @@ const CustomDatePicker = ({
           },
         }}
       />
-      <InputRightElement children={<FiCalendar />} />
+      <InputRightElement>
+        <FiCalendar />
+      </InputRightElement>
     </InputGroup>
   );
 };

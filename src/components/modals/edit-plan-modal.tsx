@@ -52,11 +52,9 @@ const EditPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
       <FormControl mb={'0.5rem'}>
         <FormLabel>{'Precio'}</FormLabel>
         <InputGroup>
-          <InputLeftElement
-            pointerEvents={'none'}
-            color={'background'}
-            children={'Bs.'}
-          />
+          <InputLeftElement pointerEvents={'none'} color={'background'}>
+            {'Bs.'}
+          </InputLeftElement>
           <Input
             bgColor={'white'}
             color={'background'}

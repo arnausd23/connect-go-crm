@@ -91,26 +91,24 @@ const SignIn: NextPage = () => {
               variant={'filled'}
               _focus={{ bgColor: 'white' }}
             />
-            <InputRightElement
-              children={
-                <IconButton
-                  aria-label={'Previous page'}
-                  bottom={0}
-                  color={'background'}
-                  icon={
-                    isVisible ? (
-                      <FiEyeOff size={'1.25rem'} />
-                    ) : (
-                      <FiEye size={'1.25rem'} />
-                    )
-                  }
-                  m={'0.5rem'}
-                  onClick={() => setIsVisible(!isVisible)}
-                  disabled={isSignInLoading}
-                  size={'sm'}
-                />
-              }
-            />
+            <InputRightElement>
+              <IconButton
+                aria-label={'See password'}
+                bottom={0}
+                color={'background'}
+                icon={
+                  isVisible ? (
+                    <FiEyeOff size={'1.25rem'} />
+                  ) : (
+                    <FiEye size={'1.25rem'} />
+                  )
+                }
+                m={'0.5rem'}
+                onClick={() => setIsVisible(!isVisible)}
+                disabled={isSignInLoading}
+                size={'sm'}
+              />
+            </InputRightElement>
           </InputGroup>
         </FormControl>
         <Button

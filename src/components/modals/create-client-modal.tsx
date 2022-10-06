@@ -81,7 +81,11 @@ const CreateClientModal = ({ data, isLoading, setData }: CustomModalProps) => {
           position={'relative'}
         >
           {data.photoTaken && data.photoSrc ? (
-            <Image src={data.photoSrc} objectFit={'contain'} />
+            <Image
+              src={data.photoSrc}
+              objectFit={'contain'}
+              alt='Client photo'
+            />
           ) : (
             <>
               <Webcam

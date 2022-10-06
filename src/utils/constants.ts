@@ -1,6 +1,6 @@
-export const NAV_BAR_WIDTH: number = 320;
-export const FACE_MATCH_DISTANCE_THRESHOLD: number = 0.45;
-export const MINUTES_BETWEEN_ACCESS: number = 1;
+export const NAV_BAR_WIDTH = 320;
+export const FACE_MATCH_DISTANCE_THRESHOLD = 0.45;
+export const MINUTES_BETWEEN_ACCESS = 1;
 export const TABLE_PAGE_SIZE = 10;
 
 export const enum SECTION {

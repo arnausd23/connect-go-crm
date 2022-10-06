@@ -86,9 +86,9 @@ const ClientAuthentication = ({
 
       const ci = url.split('/').pop()?.split('.')[0];
 
-      if (ci)
+      if (ci && detection)
         faceDescriptors.push(
-          new faceapi.LabeledFaceDescriptors(ci, [detection?.descriptor!])
+          new faceapi.LabeledFaceDescriptors(ci, [detection.descriptor])
         );
     }
     return faceDescriptors;
@@ -96,56 +96,60 @@ const ClientAuthentication = ({
 
   const faceDetection = async (faceMatcher: faceapi.FaceMatcher) => {
     setIntervalAsync(async () => {
-      const detection = await faceapi
-        .detectSingleFace(webcamRef.current?.video!)
-        .withFaceLandmarks()
-        .withFaceDescriptor();
-      console.log('DETECTION SCORE:', detection?.detection.score);
-      if (detection && detection.detection.score > 0.95) {
-        console.log('FACE DETECTED');
-        canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
-          webcamRef.current?.video!
-        );
-        faceapi.matchDimensions(
-          canvasRef.current,
-          webcamRef.current?.video!,
-          true
-        );
-        const { distance, label: ci } = faceMatcher.findBestMatch(
-          detection.descriptor
-        );
-        const now = new Date();
-        const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
-        const detectionBoxColor = foundMatch ? '#66bb6a' : '#ef5350';
+      if (webcamRef.current) {
+        const detection = await faceapi
+          .detectSingleFace(webcamRef.current.video!)
+          .withFaceLandmarks()
+          .withFaceDescriptor();
+        if (detection && detection.detection.score > 0.95) {
+          console.log('DETECTION SCORE:', detection.detection.score);
+          canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
+            webcamRef.current.video!
+          );
+          faceapi.matchDimensions(
+            canvasRef.current,
+            webcamRef.current.video!,
+            true
+          );
+          const { distance, label: ci } = faceMatcher.findBestMatch(
+            detection.descriptor
+          );
+          const now = new Date();
+          const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
+          const detectionBoxColor = foundMatch ? '#66bb6a' : '#ef5350';
 
-        const detectionBox = new faceapi.draw.DrawBox(detection.detection.box, {
-          boxColor: detectionBoxColor,
-          lineWidth: 1,
-        });
-        detectionBox.draw(canvasRef.current);
+          const detectionBox = new faceapi.draw.DrawBox(
+            detection.detection.box,
+            {
+              boxColor: detectionBoxColor,
+              lineWidth: 1,
+            }
+          );
+          detectionBox.draw(canvasRef.current);
 
-        if (foundMatch) {
-          console.log('MATCH:', ci, now, distance);
-          const accessAuthenticationInfo = await createAccessHistoryMutate({
-            ci,
-            date: now,
-          });
-          setAccessAuthenticationInfo(accessAuthenticationInfo);
-          setShowAccessAuthenticationMessage(true);
-          await delay(3000);
+          if (foundMatch) {
+            console.log('MATCH:', ci, now, distance);
+            const accessAuthenticationInfo = await createAccessHistoryMutate({
+              ci,
+              date: now,
+            });
+            setAccessAuthenticationInfo(accessAuthenticationInfo);
+            setShowAccessAuthenticationMessage(true);
+            await delay(3000);
+          } else {
+            console.log('NO MATCH:', ci, now, distance);
+            setShowAccessAuthenticationMessage(false);
+          }
         } else {
-          console.log('NO MATCH:', ci, now, distance);
+          const context = canvasRef.current.getContext('2d');
+          context.clearRect(
+            0,
+            0,
+            canvasRef.current.width,
+            canvasRef.current.height
+          );
           setShowAccessAuthenticationMessage(false);
         }
-      } else {
-        const context = canvasRef.current.getContext('2d');
-        context.clearRect(
-          0,
-          0,
-          canvasRef.current.width,
-          canvasRef.current.height
-        );
-        setShowAccessAuthenticationMessage(false);
       }
     }, 1000);
   };

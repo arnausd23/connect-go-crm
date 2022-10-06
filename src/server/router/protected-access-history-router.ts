@@ -261,7 +261,7 @@ const getInfoDaysUntilPlanExpires = (
     daysUntilPlanExpires <= 3 &&
     planAccessType !== PLAN_ACCESS_TYPE.OneSession
   ) {
-    const footer: string = `Tu plan vence ${
+    const footer = `Tu plan vence ${
       daysUntilPlanExpires === 0
         ? 'hoy'
         : `en ${daysUntilPlanExpires} día${daysUntilPlanExpires > 1 ? 's' : ''}`

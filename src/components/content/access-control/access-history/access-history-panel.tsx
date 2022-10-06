@@ -92,10 +92,10 @@ const AccessHistoryPanel = () => {
       <CustomTableFooter
         table={table}
         exportBody={undefined}
-        onClickExport={() => {}}
+        onClickExport={() => undefined}
         isOpen={false}
-        onOpen={() => {}}
-        onClose={() => {}}
+        onOpen={() => undefined}
+        onClose={() => undefined}
         isLoading={false}
       />
     </Flex>

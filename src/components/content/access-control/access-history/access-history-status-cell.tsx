@@ -8,8 +8,8 @@ const AccessHistoryStatusCell = ({
   endingDate,
 }: AccessHistoryStatusCellProps) => {
   const daysUntilPlanExpires = differenceInCalendarDays(endingDate, new Date());
-  let status: string = 'Vigente';
-  let bgColor: string = 'authGreen';
+  let status = 'Vigente';
+  let bgColor = 'authGreen';
 
   if (daysUntilPlanExpires <= 3 && daysUntilPlanExpires > 0) {
     status = `Vence ${

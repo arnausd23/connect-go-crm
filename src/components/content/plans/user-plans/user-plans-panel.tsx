@@ -3,7 +3,6 @@ import {
   Flex,
   IconButton,
   Input,
-  Select,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
