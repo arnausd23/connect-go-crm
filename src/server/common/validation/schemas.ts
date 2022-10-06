@@ -84,6 +84,14 @@ export const exportClientsSchema = z.object({
   fileName: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
 });
 
+export const exportUserPlansSchema = z.object({
+  fileName: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
+  userName: z.string().optional(),
+  planName: z.string().optional(),
+  startingDate: z.date().optional(),
+  endingDate: z.date().optional(),
+});
+
 export type IAuth = z.infer<typeof authSchema>;
 export type ICreateClient = z.infer<typeof createClientSchema>;
 export type ICreatePlan = z.infer<typeof createPlanSchema>;
@@ -94,3 +102,4 @@ export type IEditPlan = z.infer<typeof editPlanSchema>;
 export type IEditClient = z.infer<typeof editClientSchema>;
 export type IUpdatePassword = z.infer<typeof updatePasswordSchema>;
 export type IExportClients = z.infer<typeof exportClientsSchema>;
+export type IExportUserPlans = z.infer<typeof exportUserPlansSchema>;

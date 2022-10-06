@@ -99,6 +99,9 @@ const ClientsPanel = () => {
         });
         utils.book_append_sheet(workbook, worksheet);
         writeFile(workbook, `${exportData.fileName}.xlsx`);
+        setExportData({
+          fileName: '',
+        });
         onClose();
       },
       onError: (error) => {

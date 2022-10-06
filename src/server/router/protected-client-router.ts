@@ -5,6 +5,8 @@ import {
   editClientSchema,
   editUserPlanSchema,
   exportClientsSchema,
+  exportUserPlansSchema,
+  IExportUserPlans,
   paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
@@ -94,6 +96,53 @@ export const protectedClientRouter = createProtectedRouter()
       });
 
       return clients;
+    },
+  })
+  .query('exportPlans', {
+    input: exportUserPlansSchema,
+    async resolve({ input, ctx }) {
+      const { userName, planName, startingDate, endingDate } = input;
+      const userPlans = await ctx.prisma.userPlan.findMany({
+        select: {
+          startingDate: true,
+          endingDate: true,
+          updatedBy: true,
+          user: { select: { name: true } },
+          plan: { select: { name: true } },
+        },
+        where: {
+          user: userName
+            ? {
+                name: {
+                  contains: userName,
+                },
+              }
+            : undefined,
+          plan: planName
+            ? {
+                name: {
+                  contains: planName,
+                },
+              }
+            : undefined,
+          startingDate: startingDate ? { gte: startingDate } : undefined,
+          endingDate: endingDate ? { lte: endingDate } : undefined,
+        },
+      });
+      const plans: Omit<IExportUserPlans, 'fileName'>[] = [];
+      userPlans.forEach((userPlan) => {
+        const { startingDate, endingDate, user, plan, updatedBy } = userPlan;
+        const newPlan = {
+          userName: user.name,
+          userPlan: plan.name,
+          startingDate,
+          endingDate,
+          updatedBy,
+        };
+        plans.push(newPlan);
+      });
+
+      return plans;
     },
   })
   .mutation('editPlan', {
