@@ -89,7 +89,15 @@ const AccessHistoryPanel = () => {
       w={'100%'}
     >
       <CustomTable table={table} />
-      <CustomTableFooter table={table} />
+      <CustomTableFooter
+        table={table}
+        exportBody={undefined}
+        onClickExport={() => {}}
+        isOpen={false}
+        onOpen={() => {}}
+        onClose={() => {}}
+        isLoading={false}
+      />
     </Flex>
   );
 };
