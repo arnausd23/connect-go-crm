@@ -28,6 +28,7 @@ const NavbarButton = ({
       shadow={active ? 'md' : undefined}
       userSelect={'none'}
       _hover={{ bgColor: 'blue.400', color: 'white' }}
+      transition={'ease-in 0.2s'}
     >
       {icon}
       <Text ml={'0.5rem'} fontSize={'sm'}>
