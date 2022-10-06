@@ -7,12 +7,12 @@ import {
 } from '@tanstack/react-table';
 import { useState, useMemo } from 'react';
 import { utils, writeFile } from 'xlsx';
-import { IExportClients } from '../../../server/common/validation/schemas';
+import { IExport } from '../../../server/common/validation/schemas';
 import { ClientsTableInfo, TABLE_PAGE_SIZE } from '../../../utils/constants';
 import { trpc } from '../../../utils/trpc';
 import CustomTable from '../../custom/custom-table';
 import CustomTableFooter from '../../custom/custom-table-footer';
-import ExportClientsDataModal from '../../modals/export-clients-data-modal';
+import ExportDataModal from '../../modals/export-data-modal';
 import ClientsActionsCell from './clients-actions-cell';
 
 const ClientsPanel = () => {
@@ -81,7 +81,7 @@ const ClientsPanel = () => {
   });
 
   const toast = useToast();
-  const [exportData, setExportData] = useState<IExportClients>({
+  const [exportData, setExportData] = useState<IExport>({
     fileName: '',
   });
 
@@ -149,7 +149,7 @@ const ClientsPanel = () => {
       <CustomTableFooter
         table={table}
         exportBody={
-          <ExportClientsDataModal
+          <ExportDataModal
             data={exportData}
             isLoading={isLoading}
             setData={setExportData}

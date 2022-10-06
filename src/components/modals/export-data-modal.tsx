@@ -1,11 +1,7 @@
 import { FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { CustomModalProps } from '../custom/custom-modal';
 
-const ExportClientsDataModal = ({
-  data,
-  isLoading,
-  setData,
-}: CustomModalProps) => {
+const ExportDataModal = ({ data, isLoading, setData }: CustomModalProps) => {
   return (
     <FormControl mb={'0.5rem'}>
       <FormLabel>{'Nombre del archivo'}</FormLabel>
@@ -22,4 +18,4 @@ const ExportClientsDataModal = ({
   );
 };
 
-export default ExportClientsDataModal;
+export default ExportDataModal;

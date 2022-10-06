@@ -80,7 +80,7 @@ export const updatePasswordSchema = z.object({
     .min(8, { message: ERROR_MESSAGE.InvalidPassword }),
 });
 
-export const exportClientsSchema = z.object({
+export const exportSchema = z.object({
   fileName: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
 });
 
@@ -101,5 +101,5 @@ export type IEditUserPlan = z.infer<typeof editUserPlanSchema>;
 export type IEditPlan = z.infer<typeof editPlanSchema>;
 export type IEditClient = z.infer<typeof editClientSchema>;
 export type IUpdatePassword = z.infer<typeof updatePasswordSchema>;
-export type IExportClients = z.infer<typeof exportClientsSchema>;
+export type IExport = z.infer<typeof exportSchema>;
 export type IExportUserPlans = z.infer<typeof exportUserPlansSchema>;

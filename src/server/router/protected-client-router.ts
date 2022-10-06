@@ -4,7 +4,7 @@ import {
   deleteSchema,
   editClientSchema,
   editUserPlanSchema,
-  exportClientsSchema,
+  exportSchema,
   exportUserPlansSchema,
   IExportUserPlans,
   paginationSchema,
@@ -81,7 +81,7 @@ export const protectedClientRouter = createProtectedRouter()
     },
   })
   .query('exportAll', {
-    input: exportClientsSchema,
+    input: exportSchema,
     async resolve({ ctx }) {
       const clients = await ctx.prisma.user.findMany({
         where: {

@@ -2,6 +2,7 @@ import {
   createPlanSchema,
   deleteSchema,
   editPlanSchema,
+  exportSchema,
   paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
@@ -51,6 +52,21 @@ export const protectedPlanRouter = createProtectedRouter()
       });
 
       return plan;
+    },
+  })
+  .query('exportAll', {
+    input: exportSchema,
+    async resolve({ ctx }) {
+      const plans = await ctx.prisma.plan.findMany({
+        select: {
+          name: true,
+          accessType: true,
+          price: true,
+          updatedBy: true,
+        },
+      });
+
+      return plans;
     },
   })
   .mutation('edit', {
