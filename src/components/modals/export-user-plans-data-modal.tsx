@@ -18,6 +18,7 @@ const ExportClientsDataModal = ({
           onChange={({ target }) =>
             setData!({ ...data, userName: target.value })
           }
+          placeholder={'Nombre'}
           value={data.userName}
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
@@ -32,6 +33,7 @@ const ExportClientsDataModal = ({
           onChange={({ target }) =>
             setData!({ ...data, planName: target.value })
           }
+          placeholder={'Plan'}
           value={data.planName}
           variant={'filled'}
           _focus={{ bgColor: 'white' }}
@@ -64,6 +66,7 @@ const ExportClientsDataModal = ({
           onChange={({ target }) =>
             setData!({ ...data, fileName: target.value })
           }
+          placeholder={'Nombre del archivo'}
           value={data.fileName}
           variant={'filled'}
           _focus={{ bgColor: 'white' }}

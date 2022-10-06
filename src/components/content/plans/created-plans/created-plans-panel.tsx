@@ -35,11 +35,6 @@ const CreatedPlansPanel = () => {
       cell: (info) => `Bs. ${info.getValue()}`,
       header: () => 'Precio',
     }),
-    columnHelper.accessor((row) => row.updatedBy, {
-      id: 'updatedBy',
-      cell: (info) => info.getValue(),
-      header: () => 'Actualizado por',
-    }),
     columnHelper.accessor((row) => row, {
       id: 'actions',
       cell: (info) => <CreatedPlansActionsCell data={info.getValue()} />,

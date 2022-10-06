@@ -10,6 +10,7 @@ const ExportDataModal = ({ data, isLoading, setData }: CustomModalProps) => {
         color={'background'}
         disabled={isLoading}
         onChange={({ target }) => setData!({ ...data, fileName: target.value })}
+        placeholder={'Nombre del archivo'}
         value={data.fileName}
         variant={'filled'}
         _focus={{ bgColor: 'white' }}

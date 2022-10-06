@@ -34,11 +34,6 @@ const ClientsPanel = () => {
       cell: (info) => info.getValue(),
       header: () => 'Celular',
     }),
-    columnHelper.accessor((row) => row.updatedBy, {
-      id: 'updatedBy',
-      cell: (info) => info.getValue(),
-      header: () => 'Actualizado por',
-    }),
     columnHelper.accessor((row) => row, {
       id: 'actions',
       cell: (info) => <ClientsActionsCell data={info.getValue()} />,

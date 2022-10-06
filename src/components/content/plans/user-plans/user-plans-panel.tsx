@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  IconButton,
   Input,
   Select,
   useDisclosure,
@@ -13,7 +14,7 @@ import {
   getCoreRowModel,
 } from '@tanstack/react-table';
 import { useState, useMemo } from 'react';
-import { FiSliders } from 'react-icons/fi';
+import { FiSliders, FiXSquare } from 'react-icons/fi';
 import { utils, writeFile } from 'xlsx';
 import { IExportUserPlans } from '../../../../server/common/validation/schemas';
 import {
@@ -50,11 +51,6 @@ const UserPlansPanel = () => {
       id: 'endingDate',
       cell: (info) => info.getValue().toLocaleString('es-BO').split(',')[0],
       header: () => 'Fecha final',
-    }),
-    columnHelper.accessor((row) => row.updatedBy, {
-      id: 'updatedBy',
-      cell: (info) => info.getValue(),
-      header: () => 'Actualizado por',
     }),
     columnHelper.accessor((row) => row, {
       id: 'actions',
@@ -170,7 +166,7 @@ const UserPlansPanel = () => {
   return (
     <Flex borderRadius={'lg'} flexDir={'column'} h={'100%'} w={'100%'}>
       <Flex alignItems={'center'} h={'3rem'} mb={'0.125rem'} w={'100%'}>
-        <Flex w={'25%'} mr={'1px'}>
+        <Flex w={'25%'}>
           <Button
             bgColor={'blue.400'}
             colorScheme={'blue'}
@@ -178,11 +174,19 @@ const UserPlansPanel = () => {
             leftIcon={<FiSliders size={'1.25rem'} />}
             // isLoading={isLoading}
             // onClick={() => onActionClick()}
+            mr={'1px'}
             variant={'solid'}
             w={'100%'}
           >
             {'Filtrar'}
           </Button>
+          <IconButton
+            aria-label={'Clear filters'}
+            icon={<FiXSquare size={'1.25rem'} />}
+            ml={'1px'}
+            mr={'1px'}
+            // onClick={() => onOpen()}
+          />
         </Flex>
         <Flex w={'25%'} ml={'1px'} mr={'1px'}>
           <Input
@@ -191,29 +195,22 @@ const UserPlansPanel = () => {
             // disabled={isLoading}
             // onChange={({ target }) => setData!({ ...data, ci: target.value })}
             placeholder={'Nombre'}
-            type={'number'}
             // value={data.ci}
             variant={'filled'}
             _focus={{ bgColor: 'white' }}
           />
         </Flex>
         <Flex w={'25%'} ml={'1px'} mr={'1px'}>
-          <Select
+          <Input
             bgColor={'white'}
             color={'background'}
-            // disabled={isLoading || getAllPlansIsLoading}
-            // onChange={({ target }) => setData!({ ...data, name: target.value })}
-            // value={data.name}
+            // disabled={isLoading}
+            // onChange={({ target }) => setData!({ ...data, ci: target.value })}
             placeholder={'Plan'}
+            // value={data.ci}
             variant={'filled'}
             _focus={{ bgColor: 'white' }}
-          >
-            {/* {getAllPlansData?.map((plan) => (
-          <option key={plan.id} value={plan.name}>
-          {plan.name}
-          </option>
-        ))} */}
-          </Select>
+          />
         </Flex>
         <Flex w={'25%'} ml={'1px'} mr={'1px'}>
           <CustomDatePicker
