@@ -16,7 +16,7 @@ type CustomTableProps = {
 
 const CustomTable = ({ table }: CustomTableProps) => {
   return (
-    <TableContainer h={'100%'} overflowY={'auto'}>
+    <TableContainer h={'100%'} overflowY={'auto'} whiteSpace={'normal'}>
       <ChakraTable variant={'simple'} h={'100%'}>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
