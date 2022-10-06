@@ -4,6 +4,7 @@ import { FiMaximize } from 'react-icons/fi';
 import { ClientAuthenticationInfo } from '../../../../utils/constants';
 import ClientAuthenticationMessage from './client-authentication-message';
 import ClientAuthentication from './client-authentication';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 const ClientAuthenticationPanel = () => {
   const [showAccessAuthenticationMessage, setShowAccessAuthenticationMessage] =
@@ -19,6 +20,7 @@ const ClientAuthenticationPanel = () => {
     });
   const { bgColor, endingDate, footer, header, name, startingDate } =
     accessAuthenticationInfo;
+  const [ref] = useAutoAnimate<HTMLDivElement>();
 
   return (
     <Flex
@@ -29,11 +31,12 @@ const ClientAuthenticationPanel = () => {
       overflow={'hidden'}
       position={'relative'}
       w={'100%'}
+      ref={ref}
     >
-      {/* <ClientAuthentication
+      <ClientAuthentication
         setAccessAuthenticationInfo={setAccessAuthenticationInfo}
         setShowAccessAuthenticationMessage={setShowAccessAuthenticationMessage}
-      /> */}
+      />
       <IconButton
         aria-label={'Fullscreen'}
         bottom={0}

@@ -2,7 +2,7 @@ import { Button, Divider, Flex } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 import { FiArchive, FiKey, FiUsers } from 'react-icons/fi';
 import { NAV_BAR_WIDTH, SECTION } from '../../utils/constants';
-import { trpc } from '../../utils/trpc';
+// import { trpc } from '../../utils/trpc';
 import NavbarActionBar from './navbar-action-bar';
 import NavbarButton from './navbar-button';
 import NavbarPrimaryActionButton from './navbar-primary-action-button';
