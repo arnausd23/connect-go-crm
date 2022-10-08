@@ -1,4 +1,5 @@
 import { Divider, Flex, TabList } from '@chakra-ui/react';
+import Image from 'next/image';
 import { FiArchive, FiKey, FiUsers } from 'react-icons/fi';
 import { NAV_BAR_WIDTH, SECTION } from '../../utils/constants';
 import NavbarActionBar from './navbar-action-bar';
@@ -24,7 +25,21 @@ const Navbar = () => {
       w={`${NAV_BAR_WIDTH}px`}
     >
       <Flex flexDir={'column'}>
-        <Divider bgColor={'gray.300'} m={'1rem 0'} h={'1px'} />
+        <Flex
+          h={'4rem'}
+          alignSelf={'center'}
+          mb={'0.25rem'}
+          position={'relative'}
+          w={'70%'}
+        >
+          <Image
+            src={'/connect-logo-dark.svg'}
+            width={'100%'}
+            height={'100%'}
+            layout={'fill'}
+          />
+        </Flex>
+        <Divider bgColor={'gray.300'} mb={'1rem'} h={'1px'} />
         <TabList border={'none'} display={'flex'} flexDir={'column'}>
           <NavbarButton icon={<FiKey size={'1.25rem'} />}>
             {SECTION.AccessControl}

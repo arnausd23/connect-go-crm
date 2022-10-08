@@ -11,9 +11,10 @@ import {
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import { signIn } from 'next-auth/react';
+import Image from 'next/image';
 import router from 'next/router';
 import { useState } from 'react';
-import { FiEyeOff, FiEye } from 'react-icons/fi';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { IAuth } from '../server/common/validation/schemas';
 import { ERROR_MESSAGE } from '../utils/constants';
 
@@ -64,6 +65,20 @@ const SignIn: NextPage = () => {
         shadow={'lg'}
         w={'20rem'}
       >
+        <Flex
+          h={'4rem'}
+          alignSelf={'center'}
+          m={'1rem 0'}
+          position={'relative'}
+          w={'80%'}
+        >
+          <Image
+            src={'/connect-logo-light.svg'}
+            width={'100%'}
+            height={'100%'}
+            layout={'fill'}
+          />
+        </Flex>
         <FormControl mb={'0.5rem'}>
           <FormLabel>{'Usuario'}</FormLabel>
           <Input
