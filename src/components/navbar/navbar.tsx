@@ -1,26 +1,18 @@
-import { Divider, Flex } from '@chakra-ui/react';
-import { Dispatch, SetStateAction } from 'react';
+import { Divider, Flex, TabList } from '@chakra-ui/react';
 import { FiArchive, FiKey, FiUsers } from 'react-icons/fi';
 import { NAV_BAR_WIDTH, SECTION } from '../../utils/constants';
-// import { trpc } from '../../utils/trpc';
 import NavbarActionBar from './navbar-action-bar';
 import NavbarButton from './navbar-button';
 import NavbarPrimaryActionButton from './navbar-primary-action-button';
 
-type NavbarProps = {
-  currentSection: SECTION;
-  setCurrentSection: Dispatch<SetStateAction<SECTION>>;
-};
-
-const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
+const Navbar = () => {
   // const { mutate } = trpc.useMutation('auth.signUp');
   // const handleSignUp = () => {
   //   mutate({ username: 'Mateo.Altamirano', password: 'C0NN3CTmateo' });
   // };
-  const handleSectionChange = (section: SECTION) => {
-    if (currentSection !== section) setCurrentSection(section);
-  };
-
+  // const handleSectionChange = (section: SECTION) => {
+  //   if (currentSection !== section) setCurrentSection(section);
+  // };
   return (
     <Flex
       bgColor={'light'}
@@ -33,25 +25,19 @@ const Navbar = ({ currentSection, setCurrentSection }: NavbarProps) => {
     >
       <Flex flexDir={'column'}>
         <Divider bgColor={'gray.300'} m={'1rem 0'} h={'1px'} />
-        <NavbarButton
-          active={currentSection === SECTION.AccessControl}
-          handleSectionChange={handleSectionChange}
-          icon={<FiKey size={'1.25rem'} />}
-          label={SECTION.AccessControl}
-        />
-        <NavbarButton
-          active={currentSection === SECTION.Plans}
-          handleSectionChange={handleSectionChange}
-          icon={<FiArchive size={'1.25rem'} />}
-          label={SECTION.Plans}
-        />
-        <NavbarButton
-          active={currentSection === SECTION.Clients}
-          handleSectionChange={handleSectionChange}
-          icon={<FiUsers size={'1.25rem'} />}
-          label={SECTION.Clients}
-        />
+        <TabList border={'none'} display={'flex'} flexDir={'column'}>
+          <NavbarButton icon={<FiKey size={'1.25rem'} />}>
+            {SECTION.AccessControl}
+          </NavbarButton>
+          <NavbarButton icon={<FiArchive size={'1.25rem'} />}>
+            {SECTION.Plans}
+          </NavbarButton>
+          <NavbarButton icon={<FiUsers size={'1.25rem'} />}>
+            {SECTION.Clients}
+          </NavbarButton>
+        </TabList>
       </Flex>
+
       <Flex flexDir={'column'}>
         <Divider bgColor={'gray.300'} m={'1rem 0'} h={'1px'} />
         <NavbarActionBar />

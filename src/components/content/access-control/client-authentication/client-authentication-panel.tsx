@@ -1,23 +1,37 @@
 import { Flex, IconButton } from '@chakra-ui/react';
-import { useState } from 'react';
-import { FiMaximize } from 'react-icons/fi';
-import { ClientAuthenticationInfo } from '../../../../utils/constants';
-import ClientAuthenticationMessage from './client-authentication-message';
-import ClientAuthentication from './client-authentication';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { Dispatch, SetStateAction } from 'react';
+import { FiMaximize } from 'react-icons/fi';
+import {
+  ClientAuthenticationInfo,
+  FaceDetectionBox,
+} from '../../../../utils/constants';
+import ClientAuthentication from './client-authentication';
+import ClientAuthenticationMessage from './client-authentication-message';
 
-const ClientAuthenticationPanel = () => {
-  const [showAccessAuthenticationMessage, setShowAccessAuthenticationMessage] =
-    useState<boolean>(false);
-  const [accessAuthenticationInfo, setAccessAuthenticationInfo] =
-    useState<ClientAuthenticationInfo>({
-      bgColor: 'authGreen',
-      endingDate: undefined,
-      footer: undefined,
-      header: undefined,
-      name: undefined,
-      startingDate: undefined,
-    });
+type ClientAuthenticationPanelProps = {
+  setOpenClientAuth: Dispatch<SetStateAction<boolean>>;
+  isNewWindow: boolean;
+  showAccessAuthenticationMessage: boolean;
+  setShowAccessAuthenticationMessage: Dispatch<SetStateAction<boolean>>;
+  accessAuthenticationInfo: ClientAuthenticationInfo;
+  setAccessAuthenticationInfo: Dispatch<
+    SetStateAction<ClientAuthenticationInfo>
+  >;
+  faceDetectionBox: FaceDetectionBox;
+  setFaceDetectionBox: Dispatch<SetStateAction<FaceDetectionBox>>;
+};
+
+const ClientAuthenticationPanel = ({
+  setOpenClientAuth,
+  isNewWindow,
+  showAccessAuthenticationMessage,
+  setShowAccessAuthenticationMessage,
+  accessAuthenticationInfo,
+  setAccessAuthenticationInfo,
+  faceDetectionBox,
+  setFaceDetectionBox,
+}: ClientAuthenticationPanelProps) => {
   const { bgColor, endingDate, footer, header, name, startingDate } =
     accessAuthenticationInfo;
   const [ref] = useAutoAnimate<HTMLDivElement>();
@@ -36,17 +50,32 @@ const ClientAuthenticationPanel = () => {
       <ClientAuthentication
         setAccessAuthenticationInfo={setAccessAuthenticationInfo}
         setShowAccessAuthenticationMessage={setShowAccessAuthenticationMessage}
+        isNewWindow={isNewWindow}
+        setFaceDetectionBox={setFaceDetectionBox}
       />
-      <IconButton
-        aria-label={'Fullscreen'}
-        bottom={0}
-        icon={<FiMaximize size={'1.25rem'} />}
-        m={'0.5rem'}
-        // onClick={() => setIsOpen(true)}
-        position={'absolute'}
-        right={0}
-        variant={'ghost'}
-      />
+      {!isNewWindow && (
+        <IconButton
+          aria-label={'Fullscreen'}
+          bottom={0}
+          icon={<FiMaximize size={'1.25rem'} />}
+          m={'0.5rem'}
+          onClick={() => setOpenClientAuth(true)}
+          position={'absolute'}
+          right={0}
+          variant={'ghost'}
+        />
+      )}
+      {/* {faceDetectionBox.x ? (
+        <Flex
+          bgColor={'red'}
+          h={`${faceDetectionBox.height}px`}
+          w={`${faceDetectionBox.width}px`}
+          position={'absolute'}
+          top={`${faceDetectionBox.y}px`}
+          left={`${faceDetectionBox.x}px`}
+          objectFit={'cover'}
+        />
+      ) : undefined} */}
       {showAccessAuthenticationMessage ? (
         <ClientAuthenticationMessage
           bgColor={bgColor}

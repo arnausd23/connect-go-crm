@@ -1,25 +1,31 @@
 import { Flex, useToast } from '@chakra-ui/react';
-import { Dispatch, memo, SetStateAction, useRef } from 'react';
-import Webcam from 'react-webcam';
-import { trpc } from '../../../../utils/trpc';
 import * as faceapi from 'face-api.js';
+import { Dispatch, SetStateAction, useRef } from 'react';
+import Webcam from 'react-webcam';
 import { setIntervalAsync } from 'set-interval-async';
 import {
   ClientAuthenticationInfo,
   delay,
+  ERROR_MESSAGE,
+  FaceDetectionBox,
   FACE_MATCH_DISTANCE_THRESHOLD,
 } from '../../../../utils/constants';
+import { trpc } from '../../../../utils/trpc';
 
 type ClientAuthenticationProps = {
   setShowAccessAuthenticationMessage: Dispatch<SetStateAction<boolean>>;
   setAccessAuthenticationInfo: Dispatch<
     SetStateAction<ClientAuthenticationInfo>
   >;
+  isNewWindow: boolean;
+  setFaceDetectionBox: Dispatch<SetStateAction<FaceDetectionBox>>;
 };
 
 const ClientAuthentication = ({
   setShowAccessAuthenticationMessage,
   setAccessAuthenticationInfo,
+  isNewWindow,
+  setFaceDetectionBox,
 }: ClientAuthenticationProps) => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<any>(null);
@@ -47,14 +53,25 @@ const ClientAuthentication = ({
     staleTime: Infinity,
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: !isNewWindow,
     onSuccess: async (urls) => {
       await loadFaceapiModels();
       const faceDescriptors = await loadFaceDescriptors(urls);
-      const faceMatcher: faceapi.FaceMatcher = new faceapi.FaceMatcher(
-        faceDescriptors,
-        FACE_MATCH_DISTANCE_THRESHOLD
-      );
-      await faceDetection(faceMatcher);
+      if (faceDescriptors.length > 0) {
+        const faceMatcher: faceapi.FaceMatcher = new faceapi.FaceMatcher(
+          faceDescriptors,
+          FACE_MATCH_DISTANCE_THRESHOLD
+        );
+        await faceDetection(faceMatcher);
+      } else {
+        toast({
+          description: ERROR_MESSAGE.FailedToLoadModels,
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          variant: 'top-accent',
+        });
+      }
     },
     onError: (error) => {
       toast({
@@ -126,6 +143,13 @@ const ClientAuthentication = ({
             }
           );
           detectionBox.draw(canvasRef.current);
+          // const { x, y, height, width } = detection.detection.box;
+          // console.log(x, y);
+          // var ctx = canvasRef.current.getContext('2d');
+          // ctx.beginPath();
+          // ctx.rect(x, y, width, height);
+          // ctx.stroke();
+          // setFaceDetectionBox({ x, y, width, height });
 
           if (foundMatch) {
             console.log('MATCH:', ci, now, distance);
@@ -141,6 +165,12 @@ const ClientAuthentication = ({
             setShowAccessAuthenticationMessage(false);
           }
         } else {
+          setFaceDetectionBox({
+            x: undefined,
+            y: undefined,
+            width: undefined,
+            height: undefined,
+          });
           const context = canvasRef.current.getContext('2d');
           context.clearRect(
             0,
@@ -168,4 +198,4 @@ const ClientAuthentication = ({
   );
 };
 
-export default memo(ClientAuthentication, () => true);
+export default ClientAuthentication;

@@ -8,6 +8,7 @@ export const enum SECTION {
   Plans = 'Planes',
   Clients = 'Clientes',
 }
+
 export const enum CUSTOM_TAB_LABEL {
   ClientAuthentication = 'Autenticación de clientes',
   AccessHistory = 'Historial de accesos',
@@ -104,4 +105,11 @@ export type ClientsTableInfo = {
   name: string;
   updatedBy: string;
   phoneNumber: string | null;
+};
+
+export type FaceDetectionBox = {
+  x: number | undefined;
+  y: number | undefined;
+  height: number | undefined;
+  width: number | undefined;
 };
