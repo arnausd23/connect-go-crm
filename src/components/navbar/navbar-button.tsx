@@ -40,4 +40,6 @@ const NavbarButton = forwardRef<HTMLElement, TabProps & { icon: ReactNode }>(
   }
 );
 
+NavbarButton.displayName = 'NavbarButton';
+
 export default NavbarButton;
