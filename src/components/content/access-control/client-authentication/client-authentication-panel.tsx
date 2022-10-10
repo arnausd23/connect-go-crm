@@ -2,10 +2,7 @@ import { Flex, IconButton } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Dispatch, SetStateAction } from 'react';
 import { FiMaximize } from 'react-icons/fi';
-import {
-  ClientAuthenticationInfo,
-  FaceDetectionBox,
-} from '../../../../utils/constants';
+import { ClientAuthenticationInfo } from '../../../../utils/constants';
 import ClientAuthentication from './client-authentication';
 import ClientAuthenticationMessage from './client-authentication-message';
 
@@ -18,8 +15,6 @@ type ClientAuthenticationPanelProps = {
   setAccessAuthenticationInfo: Dispatch<
     SetStateAction<ClientAuthenticationInfo>
   >;
-  faceDetectionBox: FaceDetectionBox;
-  setFaceDetectionBox: Dispatch<SetStateAction<FaceDetectionBox>>;
 };
 
 const ClientAuthenticationPanel = ({
@@ -29,8 +24,6 @@ const ClientAuthenticationPanel = ({
   setShowAccessAuthenticationMessage,
   accessAuthenticationInfo,
   setAccessAuthenticationInfo,
-  faceDetectionBox,
-  setFaceDetectionBox,
 }: ClientAuthenticationPanelProps) => {
   const { bgColor, endingDate, footer, header, name, startingDate } =
     accessAuthenticationInfo;
@@ -51,7 +44,6 @@ const ClientAuthenticationPanel = ({
         setAccessAuthenticationInfo={setAccessAuthenticationInfo}
         setShowAccessAuthenticationMessage={setShowAccessAuthenticationMessage}
         isNewWindow={isNewWindow}
-        setFaceDetectionBox={setFaceDetectionBox}
       />
       {!isNewWindow && (
         <IconButton
@@ -65,17 +57,6 @@ const ClientAuthenticationPanel = ({
           variant={'ghost'}
         />
       )}
-      {/* {faceDetectionBox.x ? (
-        <Flex
-          bgColor={'red'}
-          h={`${faceDetectionBox.height}px`}
-          w={`${faceDetectionBox.width}px`}
-          position={'absolute'}
-          top={`${faceDetectionBox.y}px`}
-          left={`${faceDetectionBox.x}px`}
-          objectFit={'cover'}
-        />
-      ) : undefined} */}
       {showAccessAuthenticationMessage ? (
         <ClientAuthenticationMessage
           bgColor={bgColor}

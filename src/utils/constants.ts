@@ -106,10 +106,3 @@ export type ClientsTableInfo = {
   updatedBy: string;
   phoneNumber: string | null;
 };
-
-export type FaceDetectionBox = {
-  x: number | undefined;
-  y: number | undefined;
-  height: number | undefined;
-  width: number | undefined;
-};

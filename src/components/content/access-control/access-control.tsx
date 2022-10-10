@@ -5,7 +5,6 @@ import { FrameStyles, Window } from 'react-mirror';
 import {
   ClientAuthenticationInfo,
   CUSTOM_TAB_LABEL,
-  FaceDetectionBox,
 } from '../../../utils/constants';
 import CustomTab from '../../custom/custom-tab';
 import CustomTabPanel from '../../custom/custom-tab-panel';
@@ -25,12 +24,7 @@ const AccessControl = () => {
       name: undefined,
       startingDate: undefined,
     });
-  const [faceDetectionBox, setFaceDetectionBox] = useState<FaceDetectionBox>({
-    x: undefined,
-    y: undefined,
-    height: undefined,
-    width: undefined,
-  });
+
   return (
     <Flex h={'100%'} w={'100%'}>
       <Tabs variant={'enclosed'} w={'100%'}>
@@ -58,8 +52,6 @@ const AccessControl = () => {
                 }
                 accessAuthenticationInfo={accessAuthenticationInfo}
                 setAccessAuthenticationInfo={setAccessAuthenticationInfo}
-                faceDetectionBox={faceDetectionBox}
-                setFaceDetectionBox={setFaceDetectionBox}
               />
             }
           />
@@ -81,8 +73,6 @@ const AccessControl = () => {
               }
               accessAuthenticationInfo={accessAuthenticationInfo}
               setAccessAuthenticationInfo={setAccessAuthenticationInfo}
-              faceDetectionBox={faceDetectionBox}
-              setFaceDetectionBox={setFaceDetectionBox}
             />
           </Window>
         )}

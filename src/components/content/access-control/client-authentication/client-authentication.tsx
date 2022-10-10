@@ -7,7 +7,6 @@ import {
   ClientAuthenticationInfo,
   delay,
   ERROR_MESSAGE,
-  FaceDetectionBox,
   FACE_MATCH_DISTANCE_THRESHOLD,
 } from '../../../../utils/constants';
 import { trpc } from '../../../../utils/trpc';
@@ -18,14 +17,12 @@ type ClientAuthenticationProps = {
     SetStateAction<ClientAuthenticationInfo>
   >;
   isNewWindow: boolean;
-  setFaceDetectionBox: Dispatch<SetStateAction<FaceDetectionBox>>;
 };
 
 const ClientAuthentication = ({
   setShowAccessAuthenticationMessage,
   setAccessAuthenticationInfo,
   isNewWindow,
-  setFaceDetectionBox,
 }: ClientAuthenticationProps) => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<any>(null);
@@ -143,13 +140,6 @@ const ClientAuthentication = ({
             }
           );
           detectionBox.draw(canvasRef.current);
-          // const { x, y, height, width } = detection.detection.box;
-          // console.log(x, y);
-          // var ctx = canvasRef.current.getContext('2d');
-          // ctx.beginPath();
-          // ctx.rect(x, y, width, height);
-          // ctx.stroke();
-          // setFaceDetectionBox({ x, y, width, height });
 
           if (foundMatch) {
             console.log('MATCH:', ci, now, distance);
@@ -159,18 +149,12 @@ const ClientAuthentication = ({
             });
             setAccessAuthenticationInfo(accessAuthenticationInfo);
             setShowAccessAuthenticationMessage(true);
-            await delay(3000);
+            await delay(2000);
           } else {
             console.log('NO MATCH:', ci, now, distance);
             setShowAccessAuthenticationMessage(false);
           }
         } else {
-          setFaceDetectionBox({
-            x: undefined,
-            y: undefined,
-            width: undefined,
-            height: undefined,
-          });
           const context = canvasRef.current.getContext('2d');
           context.clearRect(
             0,
@@ -181,7 +165,7 @@ const ClientAuthentication = ({
           setShowAccessAuthenticationMessage(false);
         }
       }
-    }, 1000);
+    }, 500);
   };
 
   return (
