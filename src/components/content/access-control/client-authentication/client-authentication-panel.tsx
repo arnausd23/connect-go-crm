@@ -1,6 +1,6 @@
-import { Flex, IconButton } from '@chakra-ui/react';
+import { CircularProgress, Flex, IconButton } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { FiMaximize } from 'react-icons/fi';
 import { ClientAuthenticationInfo } from '../../../../utils/constants';
 import ClientAuthentication from './client-authentication';
@@ -28,6 +28,7 @@ const ClientAuthenticationPanel = ({
   const { bgColor, endingDate, footer, header, name, startingDate } =
     accessAuthenticationInfo;
   const [ref] = useAutoAnimate<HTMLDivElement>();
+  const [isClientAuthReady, setIsClientAuthReady] = useState<boolean>(false);
 
   return (
     <Flex
@@ -44,18 +45,27 @@ const ClientAuthenticationPanel = ({
         setAccessAuthenticationInfo={setAccessAuthenticationInfo}
         setShowAccessAuthenticationMessage={setShowAccessAuthenticationMessage}
         isNewWindow={isNewWindow}
+        isClientAuthReady={isClientAuthReady}
+        setIsClientAuthReady={setIsClientAuthReady}
       />
       {!isNewWindow && (
-        <IconButton
-          aria-label={'Fullscreen'}
-          bottom={0}
-          icon={<FiMaximize size={'1.25rem'} />}
-          m={'0.5rem'}
-          onClick={() => setOpenClientAuth(true)}
-          position={'absolute'}
-          right={0}
-          variant={'ghost'}
-        />
+        <Flex bottom={0} m={'0.5rem'} position={'absolute'} right={0}>
+          {isClientAuthReady ? (
+            <IconButton
+              aria-label={'Fullscreen'}
+              disabled={!isClientAuthReady}
+              icon={<FiMaximize size={'1.25rem'} />}
+              onClick={() => setOpenClientAuth(true)}
+              variant={'ghost'}
+            />
+          ) : (
+            <CircularProgress
+              color={'blue.400'}
+              isIndeterminate={true}
+              size={'2rem'}
+            />
+          )}
+        </Flex>
       )}
       {showAccessAuthenticationMessage ? (
         <ClientAuthenticationMessage

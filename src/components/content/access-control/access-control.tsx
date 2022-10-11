@@ -1,4 +1,5 @@
 import { Flex, TabList, TabPanels, Tabs } from '@chakra-ui/react';
+import Head from 'next/head';
 import { useState } from 'react';
 import { FiClock, FiUserCheck } from 'react-icons/fi';
 import { FrameStyles, Window } from 'react-mirror';
@@ -12,7 +13,7 @@ import AccessHistoryPanel from './access-history/access-history-panel';
 import ClientAuthenticationPanel from './client-authentication/client-authentication-panel';
 
 const AccessControl = () => {
-  const [openClientAuth, setOpenClientAuth] = useState(false);
+  const [openClientAuth, setOpenClientAuth] = useState<boolean>(false);
   const [showAccessAuthenticationMessage, setShowAccessAuthenticationMessage] =
     useState<boolean>(false);
   const [accessAuthenticationInfo, setAccessAuthenticationInfo] =

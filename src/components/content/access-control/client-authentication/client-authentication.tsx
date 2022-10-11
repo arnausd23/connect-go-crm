@@ -1,8 +1,9 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import * as faceapi from 'face-api.js';
-import { Dispatch, SetStateAction, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import Webcam from 'react-webcam';
 import { setIntervalAsync } from 'set-interval-async';
+import { boolean } from 'zod';
 import {
   ClientAuthenticationInfo,
   delay,
@@ -17,12 +18,16 @@ type ClientAuthenticationProps = {
     SetStateAction<ClientAuthenticationInfo>
   >;
   isNewWindow: boolean;
+  isClientAuthReady: boolean;
+  setIsClientAuthReady: Dispatch<SetStateAction<boolean>>;
 };
 
 const ClientAuthentication = ({
   setShowAccessAuthenticationMessage,
   setAccessAuthenticationInfo,
   isNewWindow,
+  isClientAuthReady,
+  setIsClientAuthReady,
 }: ClientAuthenticationProps) => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<any>(null);
@@ -52,6 +57,7 @@ const ClientAuthentication = ({
     refetchOnWindowFocus: false,
     enabled: !isNewWindow,
     onSuccess: async (urls) => {
+      webcamRef.current!.video!.muted = true;
       await loadFaceapiModels();
       const faceDescriptors = await loadFaceDescriptors(urls);
       if (faceDescriptors.length > 0) {
@@ -61,6 +67,7 @@ const ClientAuthentication = ({
         );
         await faceDetection(faceMatcher);
       } else {
+        webcamRef.current!.video!.muted = true;
         toast({
           description: ERROR_MESSAGE.FailedToLoadModels,
           duration: 3000,
@@ -149,6 +156,7 @@ const ClientAuthentication = ({
             });
             setAccessAuthenticationInfo(accessAuthenticationInfo);
             setShowAccessAuthenticationMessage(true);
+            if (!isClientAuthReady) setIsClientAuthReady(true);
             await delay(2000);
           } else {
             console.log('NO MATCH:', ci, now, distance);
@@ -167,6 +175,9 @@ const ClientAuthentication = ({
       }
     }, 500);
   };
+  useEffect(() => {
+    webcamRef.current!.video!.volume = 0;
+  }, []);
 
   return (
     <Flex
@@ -176,7 +187,11 @@ const ClientAuthentication = ({
       position={'relative'}
       w={'100%'}
     >
-      <Webcam audio={false} className={'client-auth-webcam'} ref={webcamRef} />
+      <Webcam
+        audio={!isNewWindow}
+        className={'client-auth-webcam'}
+        ref={webcamRef}
+      />
       <canvas className={'client-auth-canvas'} ref={canvasRef} />
     </Flex>
   );
