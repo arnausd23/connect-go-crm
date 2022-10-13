@@ -1,38 +1,39 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import * as faceapi from 'face-api.js';
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import Webcam from 'react-webcam';
 import { setIntervalAsync } from 'set-interval-async';
-import { boolean } from 'zod';
 import {
-  ClientAuthenticationInfo,
   delay,
   ERROR_MESSAGE,
   FACE_MATCH_DISTANCE_THRESHOLD,
 } from '../../../../utils/constants';
 import { trpc } from '../../../../utils/trpc';
+import { AccessControlContext } from '../access-control';
 
-type ClientAuthenticationProps = {
-  setShowAccessAuthenticationMessage: Dispatch<SetStateAction<boolean>>;
-  setAccessAuthenticationInfo: Dispatch<
-    SetStateAction<ClientAuthenticationInfo>
-  >;
-  isNewWindow: boolean;
-  isClientAuthReady: boolean;
-  setIsClientAuthReady: Dispatch<SetStateAction<boolean>>;
-};
-
-const ClientAuthentication = ({
-  setShowAccessAuthenticationMessage,
-  setAccessAuthenticationInfo,
-  isNewWindow,
-  isClientAuthReady,
-  setIsClientAuthReady,
-}: ClientAuthenticationProps) => {
+const ClientAuthentication = () => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<any>(null);
   const toast = useToast();
   const ctx = trpc.useContext();
+  const ref = useRef<HTMLDivElement>(null);
+  const {
+    isClientAuthReady,
+    setIsClientAuthReady,
+    setAccessAuthenticationInfo,
+    setShowAccessAuthenticationMessage,
+    setShowDetectionBox,
+    setDetectionBoxInfo,
+    isNewWindow,
+    openClientAuth,
+    setNewWindowRef,
+  } = useContext(AccessControlContext);
+
+  useEffect(() => {
+    if (openClientAuth) {
+      setNewWindowRef!(ref);
+    }
+  }, []);
 
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',
@@ -146,7 +147,24 @@ const ClientAuthentication = ({
               lineWidth: 1,
             }
           );
-          detectionBox.draw(canvasRef.current);
+
+          const { height, width, x, y } = detectionBox.box;
+          const { height: canvasHeight, width: canvasWidth } =
+            canvasRef.current;
+          const { offsetHeight, offsetWidth } = faceapi.getContext2dOrThrow(
+            canvasRef.current
+          ).canvas;
+
+          setDetectionBoxInfo!({
+            h: (height / canvasHeight) * offsetHeight,
+            w: (width / canvasWidth) * offsetWidth,
+            x: (x / canvasWidth) * offsetWidth,
+            y: (y / canvasHeight) * offsetHeight,
+            color: detectionBoxColor,
+            originHeight: offsetHeight,
+            originWidth: offsetWidth,
+          });
+          setShowDetectionBox!(true);
 
           if (foundMatch) {
             console.log('MATCH:', ci, now, distance);
@@ -154,23 +172,26 @@ const ClientAuthentication = ({
               ci,
               date: now,
             });
-            setAccessAuthenticationInfo(accessAuthenticationInfo);
-            setShowAccessAuthenticationMessage(true);
-            if (!isClientAuthReady) setIsClientAuthReady(true);
+            setAccessAuthenticationInfo!(accessAuthenticationInfo);
+            setShowAccessAuthenticationMessage!(true);
+            if (!isClientAuthReady) setIsClientAuthReady!(true);
             await delay(2000);
           } else {
             console.log('NO MATCH:', ci, now, distance);
-            setShowAccessAuthenticationMessage(false);
+            setShowAccessAuthenticationMessage!(false);
           }
         } else {
-          const context = canvasRef.current.getContext('2d');
-          context.clearRect(
-            0,
-            0,
-            canvasRef.current.width,
-            canvasRef.current.height
-          );
-          setShowAccessAuthenticationMessage(false);
+          setShowDetectionBox!(false);
+          setDetectionBoxInfo!({
+            h: 0,
+            w: 0,
+            x: 0,
+            y: 0,
+            color: '#ef5350',
+            originHeight: 0,
+            originWidth: 0,
+          });
+          setShowAccessAuthenticationMessage!(false);
         }
       }
     }, 500);
@@ -185,6 +206,7 @@ const ClientAuthentication = ({
       h={'100%'}
       justifyContent={'center'}
       position={'relative'}
+      ref={ref}
       w={'100%'}
     >
       <Webcam

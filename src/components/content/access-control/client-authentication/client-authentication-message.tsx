@@ -1,14 +1,12 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { ClientAuthenticationInfo } from '../../../../utils/constants';
+import { useContext } from 'react';
+import { AccessControlContext } from '../access-control';
 
-const ClientAuthenticationMessage = ({
-  bgColor,
-  endingDate,
-  footer,
-  header,
-  name,
-  startingDate,
-}: ClientAuthenticationInfo) => {
+const ClientAuthenticationMessage = () => {
+  const { accessAuthenticationInfo } = useContext(AccessControlContext);
+  const { bgColor, endingDate, footer, header, name, startingDate } =
+    accessAuthenticationInfo!;
+
   return (
     <Flex
       bgColor={bgColor}

@@ -1,3 +1,5 @@
+import { Dispatch, RefObject, SetStateAction } from 'react';
+
 export const NAV_BAR_WIDTH = 320;
 export const FACE_MATCH_DISTANCE_THRESHOLD = 0.45;
 export const MINUTES_BETWEEN_ACCESS = 1;
@@ -105,4 +107,34 @@ export type ClientsTableInfo = {
   name: string;
   updatedBy: string;
   phoneNumber: string | null;
+};
+
+export type DetectionBoxInfo = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  color: string;
+  originWidth: number;
+  originHeight: number;
+};
+
+export type ClientAuthenticationContext = {
+  isNewWindow?: boolean;
+  openClientAuth?: boolean;
+  setOpenClientAuth?: Dispatch<SetStateAction<boolean>>;
+  showAccessAuthenticationMessage?: boolean;
+  setShowAccessAuthenticationMessage?: Dispatch<SetStateAction<boolean>>;
+  accessAuthenticationInfo?: ClientAuthenticationInfo;
+  setAccessAuthenticationInfo?: Dispatch<
+    SetStateAction<ClientAuthenticationInfo>
+  >;
+  isClientAuthReady?: boolean;
+  setIsClientAuthReady?: Dispatch<SetStateAction<boolean>>;
+  showDetectionBox?: boolean;
+  setShowDetectionBox?: Dispatch<SetStateAction<boolean>>;
+  detectionBoxInfo?: DetectionBoxInfo;
+  setDetectionBoxInfo?: Dispatch<SetStateAction<DetectionBoxInfo>>;
+  newWindowRef?: RefObject<HTMLDivElement> | null;
+  setNewWindowRef?: Dispatch<SetStateAction<RefObject<HTMLDivElement> | null>>;
 };

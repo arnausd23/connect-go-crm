@@ -1,34 +1,21 @@
 import { CircularProgress, Flex, IconButton } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useContext } from 'react';
 import { FiMaximize } from 'react-icons/fi';
-import { ClientAuthenticationInfo } from '../../../../utils/constants';
+import { AccessControlContext } from '../access-control';
 import ClientAuthentication from './client-authentication';
+import ClientAuthenticationDetectionBox from './client-authentication-detection-box';
 import ClientAuthenticationMessage from './client-authentication-message';
 
-type ClientAuthenticationPanelProps = {
-  setOpenClientAuth: Dispatch<SetStateAction<boolean>>;
-  isNewWindow: boolean;
-  showAccessAuthenticationMessage: boolean;
-  setShowAccessAuthenticationMessage: Dispatch<SetStateAction<boolean>>;
-  accessAuthenticationInfo: ClientAuthenticationInfo;
-  setAccessAuthenticationInfo: Dispatch<
-    SetStateAction<ClientAuthenticationInfo>
-  >;
-};
-
-const ClientAuthenticationPanel = ({
-  setOpenClientAuth,
-  isNewWindow,
-  showAccessAuthenticationMessage,
-  setShowAccessAuthenticationMessage,
-  accessAuthenticationInfo,
-  setAccessAuthenticationInfo,
-}: ClientAuthenticationPanelProps) => {
-  const { bgColor, endingDate, footer, header, name, startingDate } =
-    accessAuthenticationInfo;
+const ClientAuthenticationPanel = () => {
+  const {
+    isClientAuthReady,
+    isNewWindow,
+    setOpenClientAuth,
+    showAccessAuthenticationMessage,
+    showDetectionBox,
+  } = useContext(AccessControlContext);
   const [ref] = useAutoAnimate<HTMLDivElement>();
-  const [isClientAuthReady, setIsClientAuthReady] = useState<boolean>(false);
 
   return (
     <Flex
@@ -41,13 +28,7 @@ const ClientAuthenticationPanel = ({
       w={'100%'}
       ref={ref}
     >
-      <ClientAuthentication
-        setAccessAuthenticationInfo={setAccessAuthenticationInfo}
-        setShowAccessAuthenticationMessage={setShowAccessAuthenticationMessage}
-        isNewWindow={isNewWindow}
-        isClientAuthReady={isClientAuthReady}
-        setIsClientAuthReady={setIsClientAuthReady}
-      />
+      <ClientAuthentication />
       {!isNewWindow && (
         <Flex bottom={0} m={'0.5rem'} position={'absolute'} right={0}>
           {isClientAuthReady ? (
@@ -55,7 +36,7 @@ const ClientAuthenticationPanel = ({
               aria-label={'Fullscreen'}
               disabled={!isClientAuthReady}
               icon={<FiMaximize size={'1.25rem'} />}
-              onClick={() => setOpenClientAuth(true)}
+              onClick={() => setOpenClientAuth!(true)}
               variant={'ghost'}
             />
           ) : (
@@ -67,15 +48,9 @@ const ClientAuthenticationPanel = ({
           )}
         </Flex>
       )}
+      {showDetectionBox ? <ClientAuthenticationDetectionBox /> : undefined}
       {showAccessAuthenticationMessage ? (
-        <ClientAuthenticationMessage
-          bgColor={bgColor}
-          endingDate={endingDate}
-          footer={footer}
-          header={header}
-          name={name}
-          startingDate={startingDate}
-        />
+        <ClientAuthenticationMessage />
       ) : undefined}
     </Flex>
   );
