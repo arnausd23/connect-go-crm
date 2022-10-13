@@ -11,7 +11,7 @@ const ClientAuthenticationPanel = () => {
   const {
     isClientAuthReady,
     isNewWindow,
-    setOpenClientAuth,
+    setOpenNewWindow,
     showAccessAuthenticationMessage,
     showDetectionBox,
   } = useContext(AccessControlContext);
@@ -30,13 +30,13 @@ const ClientAuthenticationPanel = () => {
     >
       <ClientAuthentication />
       {!isNewWindow && (
-        <Flex bottom={0} m={'0.5rem'} position={'absolute'} right={0}>
+        <Flex bottom={'0px'} m={'0.5rem'} position={'absolute'} right={'0px'}>
           {isClientAuthReady ? (
             <IconButton
               aria-label={'Fullscreen'}
               disabled={!isClientAuthReady}
               icon={<FiMaximize size={'1.25rem'} />}
-              onClick={() => setOpenClientAuth!(true)}
+              onClick={() => setOpenNewWindow!(true)}
               variant={'ghost'}
             />
           ) : (

@@ -14,7 +14,7 @@ import AccessHistoryPanel from './access-history/access-history-panel';
 import ClientAuthenticationPanel from './client-authentication/client-authentication-panel';
 
 const AccessControl = () => {
-  const [openClientAuth, setOpenClientAuth] = useState<boolean>(false);
+  const [openNewWindow, setOpenNewWindow] = useState<boolean>(false);
   const [showAccessAuthenticationMessage, setShowAccessAuthenticationMessage] =
     useState<boolean>(false);
   const [accessAuthenticationInfo, setAccessAuthenticationInfo] =
@@ -58,8 +58,8 @@ const AccessControl = () => {
               <AccessControlContext.Provider
                 value={{
                   isNewWindow: false,
-                  openClientAuth: openClientAuth,
-                  setOpenClientAuth: setOpenClientAuth,
+                  openNewWindow: openNewWindow,
+                  setOpenNewWindow: setOpenNewWindow,
                   showAccessAuthenticationMessage:
                     showAccessAuthenticationMessage,
                   setShowAccessAuthenticationMessage:
@@ -82,18 +82,18 @@ const AccessControl = () => {
           />
           <CustomTabPanel body={<AccessHistoryPanel />} />
         </TabPanels>
-        {openClientAuth && (
+        {openNewWindow && (
           <Window
             target={CUSTOM_TAB_LABEL.ClientAuthentication}
             features={{ width: 800, height: 600 }}
-            onClose={(): void => setOpenClientAuth(false)}
+            onClose={(): void => setOpenNewWindow(false)}
           >
             <FrameStyles />
             <AccessControlContext.Provider
               value={{
                 isNewWindow: true,
-                openClientAuth: openClientAuth,
-                setOpenClientAuth: setOpenClientAuth,
+                openNewWindow: openNewWindow,
+                setOpenNewWindow: setOpenNewWindow,
                 showAccessAuthenticationMessage:
                   showAccessAuthenticationMessage,
                 setShowAccessAuthenticationMessage:

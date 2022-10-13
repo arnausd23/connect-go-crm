@@ -121,8 +121,8 @@ export type DetectionBoxInfo = {
 
 export type ClientAuthenticationContext = {
   isNewWindow?: boolean;
-  openClientAuth?: boolean;
-  setOpenClientAuth?: Dispatch<SetStateAction<boolean>>;
+  openNewWindow?: boolean;
+  setOpenNewWindow?: Dispatch<SetStateAction<boolean>>;
   showAccessAuthenticationMessage?: boolean;
   setShowAccessAuthenticationMessage?: Dispatch<SetStateAction<boolean>>;
   accessAuthenticationInfo?: ClientAuthenticationInfo;

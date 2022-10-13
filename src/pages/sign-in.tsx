@@ -109,7 +109,7 @@ const SignIn: NextPage = () => {
             <InputRightElement>
               <IconButton
                 aria-label={'See password'}
-                bottom={0}
+                bottom={'0px'}
                 color={'background'}
                 icon={
                   isVisible ? (

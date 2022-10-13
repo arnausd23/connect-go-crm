@@ -11,7 +11,7 @@ const ClientAuthenticationMessage = () => {
     <Flex
       bgColor={bgColor}
       borderRadius={'lg'}
-      bottom={'0'}
+      bottom={'0px'}
       color={'background'}
       flexDir={'column'}
       justifyContent={'space-between'}

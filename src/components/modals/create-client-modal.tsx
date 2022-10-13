@@ -99,7 +99,7 @@ const CreateClientModal = ({ data, isLoading, setData }: CustomModalProps) => {
               />
             </>
           )}
-          <Flex position={'absolute'} bottom={'0'} right={'0'} p={'0.5rem'}>
+          <Flex position={'absolute'} bottom={'0px'} right={'0px'} p={'0.5rem'}>
             {data.photoTaken && data.photoSrc ? (
               <IconButton
                 aria-label={'Retake photo'}

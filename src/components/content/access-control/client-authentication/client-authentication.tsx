@@ -25,12 +25,12 @@ const ClientAuthentication = () => {
     setShowDetectionBox,
     setDetectionBoxInfo,
     isNewWindow,
-    openClientAuth,
+    openNewWindow,
     setNewWindowRef,
   } = useContext(AccessControlContext);
 
   useEffect(() => {
-    if (openClientAuth) {
+    if (openNewWindow) {
       setNewWindowRef!(ref);
     }
   }, []);

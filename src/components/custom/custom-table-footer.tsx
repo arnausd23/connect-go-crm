@@ -33,7 +33,7 @@ const CustomTableFooter = ({
       {exportBody ? (
         <IconButton
           aria-label={'Export table data'}
-          bottom={0}
+          bottom={'0px'}
           color={'white'}
           icon={<FiDownload size={'1.25rem'} />}
           m={'0.5rem'}
@@ -48,7 +48,7 @@ const CustomTableFooter = ({
         <Flex>
           <IconButton
             aria-label={'First page'}
-            bottom={0}
+            bottom={'0px'}
             color={'white'}
             icon={<FiChevronsLeft size={'1.25rem'} />}
             m={'0.5rem'}
@@ -59,7 +59,7 @@ const CustomTableFooter = ({
           />
           <IconButton
             aria-label={'Previous page'}
-            bottom={0}
+            bottom={'0px'}
             color={'white'}
             icon={<FiChevronLeft size={'1.25rem'} />}
             m={'0.5rem'}
@@ -72,7 +72,7 @@ const CustomTableFooter = ({
         <Flex>
           <IconButton
             aria-label={'Next page'}
-            bottom={0}
+            bottom={'0px'}
             color={'white'}
             icon={<FiChevronRight size={'1.25rem'} />}
             m={'0.5rem'}
@@ -83,7 +83,7 @@ const CustomTableFooter = ({
           />
           <IconButton
             aria-label={'Last page'}
-            bottom={0}
+            bottom={'0px'}
             color={'white'}
             icon={<FiChevronsRight size={'1.25rem'} />}
             m={'0.5rem'}

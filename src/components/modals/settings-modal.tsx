@@ -33,7 +33,7 @@ const SettingsModal = ({ data, setData, isLoading }: CustomModalProps) => {
           <InputRightElement>
             <IconButton
               aria-label={'See password'}
-              bottom={0}
+              bottom={'0px'}
               color={'background'}
               icon={
                 isVisible ? (
@@ -68,7 +68,7 @@ const SettingsModal = ({ data, setData, isLoading }: CustomModalProps) => {
           <InputRightElement>
             <IconButton
               aria-label={'See password'}
-              bottom={0}
+              bottom={'0px'}
               color={'background'}
               icon={
                 isVisible ? (
