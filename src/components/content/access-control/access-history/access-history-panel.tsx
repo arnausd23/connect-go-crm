@@ -39,6 +39,7 @@ const AccessHistoryPanel = () => {
       cell: (info) => (
         <AccessHistoryStatusCell
           endingDate={info.getValue().userPlan.endingDate}
+          date={info.getValue().date}
         />
       ),
       header: () => <Flex justifyContent={'flex-end'}>{'Estado'}</Flex>,

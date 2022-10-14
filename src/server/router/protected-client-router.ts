@@ -45,6 +45,9 @@ export const protectedClientRouter = createProtectedRouter()
           user: { select: { name: true } },
           plan: { select: { name: true } },
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       const numberOfUserPlans = await ctx.prisma.userPlan.count();
@@ -69,6 +72,9 @@ export const protectedClientRouter = createProtectedRouter()
           ci: true,
           phoneNumber: true,
           updatedBy: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
         },
       });
 

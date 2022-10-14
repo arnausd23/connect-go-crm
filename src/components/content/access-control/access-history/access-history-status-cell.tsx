@@ -3,15 +3,19 @@ import { differenceInCalendarDays } from 'date-fns';
 
 type AccessHistoryStatusCellProps = {
   endingDate: Date;
+  date: Date;
 };
 const AccessHistoryStatusCell = ({
   endingDate,
+  date,
 }: AccessHistoryStatusCellProps) => {
-  const daysUntilPlanExpires = differenceInCalendarDays(endingDate, new Date());
+  const enterDate = new Date(date.valueOf());
+  enterDate.setHours(0, 0, 0);
+  const daysUntilPlanExpires = differenceInCalendarDays(endingDate, enterDate);
   let status = 'Vigente';
   let bgColor = 'authGreen';
 
-  if (daysUntilPlanExpires <= 3 && daysUntilPlanExpires > 0) {
+  if (daysUntilPlanExpires <= 3 && daysUntilPlanExpires >= 0) {
     status = `Vence ${
       daysUntilPlanExpires === 0
         ? 'hoy'

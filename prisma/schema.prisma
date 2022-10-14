@@ -9,21 +9,23 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 model User {
-    id          String          @id @default(cuid())
-    ci          String          @unique
-    name        String          @default("")
+    id          String     @id @default(cuid())
+    ci          String     @unique
+    name        String     @default("")
     password    String?
     phoneNumber String?
     updatedBy   String
+    createdAt   DateTime   @default(now())
     plans       UserPlan[]
 }
 
 model Plan {
-    id         String      @id @default(cuid())
-    accessType String      @default("Ilimitado")
-    name       String      @unique
+    id         String     @id @default(cuid())
+    accessType String     @default("Ilimitado")
+    name       String     @unique
     price      Int
     updatedBy  String
+    createdAt  DateTime   @default(now())
     users      UserPlan[]
 }
 
@@ -35,6 +37,7 @@ model UserPlan {
     planId        String
     startingDate  DateTime
     updatedBy     String
+    createdAt     DateTime        @default(now())
     user          User            @relation(fields: [userId], references: [id], onDelete:Cascade, onUpdate: Cascade)
     userId        String       
 }
