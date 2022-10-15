@@ -9,7 +9,6 @@ import {
   getClientsSchema,
   getUserPlansSchema,
   IExportUserPlans,
-  paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 import * as trpc from '@trpc/server';
@@ -50,6 +49,8 @@ export const protectedClientRouter = createProtectedRouter()
           startingDate: true,
           endingDate: true,
           updatedBy: true,
+          parking: true,
+          groupClasses: true,
           user: { select: { name: true } },
           plan: { select: { name: true } },
         },
@@ -184,6 +185,8 @@ export const protectedClientRouter = createProtectedRouter()
           startingDate: true,
           endingDate: true,
           updatedBy: true,
+          parking: true,
+          groupClasses: true,
           user: { select: { name: true } },
           plan: { select: { name: true } },
         },
@@ -208,13 +211,23 @@ export const protectedClientRouter = createProtectedRouter()
       });
       const plans: Omit<IExportUserPlans, 'fileName'>[] = [];
       userPlans.forEach((userPlan) => {
-        const { startingDate, endingDate, user, plan, updatedBy } = userPlan;
+        const {
+          startingDate,
+          endingDate,
+          user,
+          plan,
+          updatedBy,
+          parking,
+          groupClasses,
+        } = userPlan;
         const newPlan = {
           userName: user.name,
           userPlan: plan.name,
           startingDate,
           endingDate,
           updatedBy,
+          parking: parking ? 'Sí' : 'No',
+          groupClasses: groupClasses ? 'Sí' : 'No',
         };
         plans.push(newPlan);
       });
@@ -225,14 +238,14 @@ export const protectedClientRouter = createProtectedRouter()
   .mutation('editPlan', {
     input: editUserPlanSchema,
     async resolve({ input, ctx }) {
-      const { id, startingDate, endingDate } = input;
+      const { id, startingDate, endingDate, parking, groupClasses } = input;
       const updatedBy = Object.entries(ctx.session).filter(
         (entry) => entry[0] === 'id'
       )[0]![1] as string;
 
       await ctx.prisma.userPlan.update({
         where: { id },
-        data: { startingDate, endingDate, updatedBy },
+        data: { startingDate, endingDate, updatedBy, parking, groupClasses },
       });
     },
   })
@@ -265,7 +278,6 @@ export const protectedClientRouter = createProtectedRouter()
         await cloudinary.uploader.destroy(`connect-crm/${ci}`);
         await ctx.prisma.user.delete({ where: { id } });
       } catch (error) {
-        console.log(error);
         throw new trpc.TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: ERROR_MESSAGE.SomethingWentWrong,
@@ -317,7 +329,8 @@ export const protectedClientRouter = createProtectedRouter()
   .mutation('assignPlan', {
     input: assignPlanSchema,
     async resolve({ input, ctx }) {
-      const { ci, name, startingDate, endingDate } = input;
+      const { ci, name, startingDate, endingDate, parking, groupClasses } =
+        input;
       const user = await ctx.prisma.user.findFirst({ where: { ci } });
       if (!user) {
         throw new trpc.TRPCError({
@@ -345,6 +358,8 @@ export const protectedClientRouter = createProtectedRouter()
           startingDate,
           endingDate,
           updatedBy,
+          parking,
+          groupClasses,
         },
       });
 

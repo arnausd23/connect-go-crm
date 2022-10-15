@@ -17,7 +17,7 @@ const ClientAuthenticationDetectionBox = () => {
       const newW = (w / originWidth) * clientWidth;
       setBoxInfo({ x: newX, y: newY, h: newH, w: newW });
     }
-  }, [detectionBoxInfo]);
+  }, [detectionBoxInfo, h, w, x, y, originHeight, originWidth, isNewWindow]);
 
   return (
     <Flex

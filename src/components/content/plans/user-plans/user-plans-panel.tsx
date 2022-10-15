@@ -23,6 +23,7 @@ import CustomTable from '../../../custom/custom-table';
 import CustomTableFooter from '../../../custom/custom-table-footer';
 import ExportUserPlansDataModal from '../../../modals/export-user-plans-data-modal';
 import UserPlansActionsCell from './user-plans-actions-cell';
+import UserPlanCheckboxCell from './user-plans-checkbox-cell';
 
 const UserPlansPanel = () => {
   const columnHelper = createColumnHelper<UserPlansTableInfo>();
@@ -47,6 +48,16 @@ const UserPlansPanel = () => {
       id: 'endingDate',
       cell: (info) => info.getValue().toLocaleString('es-BO').split(',')[0],
       header: () => 'Fecha final',
+    }),
+    columnHelper.accessor((row) => row.parking, {
+      id: 'parking',
+      cell: (info) => <UserPlanCheckboxCell checked={info.getValue()} />,
+      header: () => 'Parqueo',
+    }),
+    columnHelper.accessor((row) => row.groupClasses, {
+      id: 'groupClasses',
+      cell: (info) => <UserPlanCheckboxCell checked={info.getValue()} />,
+      header: () => 'Clases grupales',
     }),
     columnHelper.accessor((row) => row, {
       id: 'actions',
@@ -135,6 +146,8 @@ const UserPlansPanel = () => {
           'Fecha inicial',
           'Fecha final',
           'Actualizado por',
+          'Parqueo',
+          'Clases grupales',
         ];
         utils.sheet_add_aoa(worksheet, [headers], {
           origin: 'A1',

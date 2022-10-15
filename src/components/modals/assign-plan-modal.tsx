@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -21,7 +22,7 @@ const AssignPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
     startingDate.setHours(0, 0, 0, 0);
     endingDate.setHours(0, 0, 0, 0);
     setData!({ ...data, startingDate, endingDate });
-  }, []);
+  }, [data, setData]);
 
   const { data: getAllPlansData, isLoading: getAllPlansIsLoading } =
     trpc.useQuery(['plan.getAll', { skip: undefined, take: undefined }], {
@@ -90,6 +91,24 @@ const AssignPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
             disabled={isLoading}
             onChange={(date) => setData!({ ...data, endingDate: date })}
             placeholder={'Fecha final'}
+          />
+        </FormControl>
+      </Flex>
+      <Flex>
+        <FormControl mb={'0.5rem'}>
+          <FormLabel>{'Parqueo'}</FormLabel>
+          <Checkbox
+            isChecked={data.parking}
+            onChange={(e) => setData!({ ...data, parking: e.target.checked })}
+          />
+        </FormControl>
+        <FormControl mb={'0.5rem'}>
+          <FormLabel>{'Clases grupales'}</FormLabel>
+          <Checkbox
+            isChecked={data.groupClasses}
+            onChange={(e) =>
+              setData!({ ...data, groupClasses: e.target.checked })
+            }
           />
         </FormControl>
       </Flex>

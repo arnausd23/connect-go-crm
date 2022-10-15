@@ -29,6 +29,8 @@ export const assignPlanSchema = z.object({
   endingDate: z.date(),
   name: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
   startingDate: z.date(),
+  parking: z.boolean(),
+  groupClasses: z.boolean(),
 });
 
 export const createAccessHistorySchema = z.object({
@@ -61,6 +63,8 @@ export const editUserPlanSchema = z.object({
   id: z.string(),
   startingDate: z.date(),
   endingDate: z.date(),
+  parking: z.boolean(),
+  groupClasses: z.boolean(),
 });
 
 export const editClientSchema = z.object({

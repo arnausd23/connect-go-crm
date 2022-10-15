@@ -39,7 +39,9 @@ model UserPlan {
     updatedBy     String
     createdAt     DateTime        @default(now())
     user          User            @relation(fields: [userId], references: [id], onDelete:Cascade, onUpdate: Cascade)
-    userId        String       
+    userId        String
+    parking       Boolean
+    groupClasses  Boolean       
 }
 
 model AccessHistory {

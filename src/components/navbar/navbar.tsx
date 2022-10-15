@@ -33,6 +33,7 @@ const Navbar = () => {
           w={'70%'}
         >
           <Image
+            alt={''}
             src={'/connect-logo-dark.svg'}
             width={'100%'}
             height={'100%'}

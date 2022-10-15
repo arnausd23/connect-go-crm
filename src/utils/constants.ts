@@ -8,7 +8,7 @@ import {
 
 export const NAV_BAR_WIDTH = 320;
 export const FACE_MATCH_DISTANCE_THRESHOLD = 0.45;
-export const MINUTES_BETWEEN_ACCESS = 1;
+export const MINUTES_BETWEEN_ACCESS = 90;
 export const TABLE_PAGE_SIZE = 10;
 
 export const enum SECTION {
@@ -119,6 +119,8 @@ export type UserPlansTableInfo = {
   plan: {
     name: string;
   };
+  parking: boolean;
+  groupClasses: boolean;
 };
 
 export type ClientsTableInfo = {

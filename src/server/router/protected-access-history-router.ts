@@ -7,7 +7,6 @@ import {
 import {
   createAccessHistorySchema,
   getUserPlansSchema,
-  paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 

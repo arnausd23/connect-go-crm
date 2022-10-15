@@ -33,7 +33,7 @@ const ClientAuthentication = () => {
     if (openNewWindow) {
       setNewWindowRef!(ref);
     }
-  }, []);
+  }, [openNewWindow, setNewWindowRef]);
 
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',
