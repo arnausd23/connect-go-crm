@@ -49,7 +49,9 @@ const ClientAuthenticationPanel = () => {
         </Flex>
       )}
       {showDetectionBox ? <ClientAuthenticationDetectionBox /> : undefined}
-      {true ? <ClientAuthenticationMessage /> : undefined}
+      {showAccessAuthenticationMessage ? (
+        <ClientAuthenticationMessage />
+      ) : undefined}
     </Flex>
   );
 };
