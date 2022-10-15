@@ -6,18 +6,48 @@ import {
 } from '../../utils/constants';
 import {
   createAccessHistorySchema,
+  getUserPlansSchema,
   paginationSchema,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 
 export const protectedAccessHistoryRouter = createProtectedRouter()
   .query('getAll', {
-    input: paginationSchema,
+    input: getUserPlansSchema,
     async resolve({ input, ctx }) {
-      const { skip, take } = input;
+      const { skip, take, userName, planName, startingDate, endingDate } =
+        input;
+
+      const newEndingDate = endingDate
+        ? new Date(endingDate.valueOf())
+        : undefined;
+      newEndingDate?.setHours(23, 59, 59, 999);
+
       const accessHistory = await ctx.prisma.accessHistory.findMany({
-        skip,
+        skip: skip && take ? skip * take : undefined,
         take,
+        where: {
+          userPlan: {
+            user: userName
+              ? {
+                  name: {
+                    contains: userName,
+                  },
+                }
+              : undefined,
+            plan: planName
+              ? {
+                  name: {
+                    contains: planName,
+                  },
+                }
+              : undefined,
+          },
+          date:
+            startingDate || endingDate
+              ? { gte: startingDate, lte: newEndingDate }
+              : undefined,
+        },
         orderBy: { date: 'desc' },
         select: {
           date: true,
@@ -31,7 +61,30 @@ export const protectedAccessHistoryRouter = createProtectedRouter()
         },
       });
 
-      const numberOfAccessHistory = await ctx.prisma.accessHistory.count();
+      const numberOfAccessHistory = await ctx.prisma.accessHistory.count({
+        where: {
+          userPlan: {
+            user: userName
+              ? {
+                  name: {
+                    contains: userName,
+                  },
+                }
+              : undefined,
+            plan: planName
+              ? {
+                  name: {
+                    contains: planName,
+                  },
+                }
+              : undefined,
+          },
+          date:
+            startingDate || endingDate
+              ? { gte: startingDate, lte: newEndingDate }
+              : undefined,
+        },
+      });
       const pageCount = Math.ceil(numberOfAccessHistory / take!);
 
       return { accessHistory, pageCount };

@@ -15,7 +15,7 @@ export const protectedPlanRouter = createProtectedRouter()
     async resolve({ input, ctx }) {
       const { skip, take } = input;
       const plans = await ctx.prisma.plan.findMany({
-        skip,
+        skip: skip && take ? skip * take : undefined,
         take,
       });
       const numberOfPlans = await ctx.prisma.plan.count();

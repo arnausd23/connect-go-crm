@@ -6,6 +6,8 @@ import {
   editUserPlanSchema,
   exportSchema,
   exportUserPlansSchema,
+  getClientsSchema,
+  getUserPlansSchema,
   IExportUserPlans,
   paginationSchema,
 } from '../common/validation/schemas';
@@ -31,11 +33,17 @@ export const protectedClientRouter = createProtectedRouter()
     },
   })
   .query('getPlans', {
-    input: paginationSchema,
+    input: getUserPlansSchema,
     async resolve({ input, ctx }) {
-      const { skip, take } = input;
+      const { skip, take, userName, planName, startingDate, endingDate } =
+        input;
+      const newEndingDate = endingDate
+        ? new Date(endingDate.valueOf())
+        : undefined;
+      newEndingDate?.setHours(23, 59, 59, 999);
+
       const plans = await ctx.prisma.userPlan.findMany({
-        skip,
+        skip: skip && take ? skip * take : undefined,
         take,
         select: {
           id: true,
@@ -45,26 +53,73 @@ export const protectedClientRouter = createProtectedRouter()
           user: { select: { name: true } },
           plan: { select: { name: true } },
         },
+        where: {
+          user: userName
+            ? {
+                name: {
+                  contains: userName,
+                },
+              }
+            : undefined,
+          plan: planName
+            ? {
+                name: {
+                  contains: planName,
+                },
+              }
+            : undefined,
+          startingDate: startingDate ? { gte: startingDate } : undefined,
+          endingDate: endingDate ? { lte: newEndingDate } : undefined,
+        },
         orderBy: {
           createdAt: 'desc',
         },
       });
 
-      const numberOfUserPlans = await ctx.prisma.userPlan.count();
+      const numberOfUserPlans = await ctx.prisma.userPlan.count({
+        where: {
+          user: userName
+            ? {
+                name: {
+                  contains: userName,
+                },
+              }
+            : undefined,
+          plan: planName
+            ? {
+                name: {
+                  contains: planName,
+                },
+              }
+            : undefined,
+          startingDate: startingDate ? { gte: startingDate } : undefined,
+          endingDate: endingDate ? { lte: newEndingDate } : undefined,
+        },
+      });
       const pageCount = Math.ceil(numberOfUserPlans / take!);
 
       return { plans, pageCount };
     },
   })
   .query('getAll', {
-    input: paginationSchema,
+    input: getClientsSchema,
     async resolve({ input, ctx }) {
-      const { skip, take } = input;
+      const { skip, take, name, ci } = input;
       const clients = await ctx.prisma.user.findMany({
-        skip,
+        skip: skip && take ? skip * take : undefined,
         take,
         where: {
           password: null,
+          name: name
+            ? {
+                contains: name,
+              }
+            : undefined,
+          ci: ci
+            ? {
+                contains: ci,
+              }
+            : undefined,
         },
         select: {
           id: true,
@@ -79,7 +134,19 @@ export const protectedClientRouter = createProtectedRouter()
       });
 
       const numberOfClients = await ctx.prisma.user.count({
-        where: { password: null },
+        where: {
+          password: null,
+          name: name
+            ? {
+                contains: name,
+              }
+            : undefined,
+          ci: ci
+            ? {
+                contains: ci,
+              }
+            : undefined,
+        },
       });
       const pageCount = Math.ceil(numberOfClients / take!);
 
@@ -108,6 +175,10 @@ export const protectedClientRouter = createProtectedRouter()
     input: exportUserPlansSchema,
     async resolve({ input, ctx }) {
       const { userName, planName, startingDate, endingDate } = input;
+      const newEndingDate = endingDate
+        ? new Date(endingDate.valueOf())
+        : undefined;
+      newEndingDate?.setHours(23, 59, 59, 999);
       const userPlans = await ctx.prisma.userPlan.findMany({
         select: {
           startingDate: true,
@@ -132,7 +203,7 @@ export const protectedClientRouter = createProtectedRouter()
               }
             : undefined,
           startingDate: startingDate ? { gte: startingDate } : undefined,
-          endingDate: endingDate ? { lte: endingDate } : undefined,
+          endingDate: endingDate ? { lte: newEndingDate } : undefined,
         },
       });
       const plans: Omit<IExportUserPlans, 'fileName'>[] = [];

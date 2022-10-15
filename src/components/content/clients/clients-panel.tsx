@@ -1,4 +1,4 @@
-import { Flex, useDisclosure, useToast } from '@chakra-ui/react';
+import { Button, Flex, Input, useDisclosure, useToast } from '@chakra-ui/react';
 import {
   createColumnHelper,
   PaginationState,
@@ -6,10 +6,19 @@ import {
   getCoreRowModel,
 } from '@tanstack/react-table';
 import { useState, useMemo } from 'react';
+import { FiXSquare } from 'react-icons/fi';
 import { utils, writeFile } from 'xlsx';
-import { IExport } from '../../../server/common/validation/schemas';
-import { ClientsTableInfo, TABLE_PAGE_SIZE } from '../../../utils/constants';
+import {
+  IExport,
+  IGetClients,
+} from '../../../server/common/validation/schemas';
+import {
+  ClientsTableInfo,
+  TABLE_PAGE_SIZE,
+  useDebounce,
+} from '../../../utils/constants';
 import { trpc } from '../../../utils/trpc';
+import CustomDatePicker from '../../custom/custom-date-picker';
 import CustomTable from '../../custom/custom-table';
 import CustomTableFooter from '../../custom/custom-table-footer';
 import ExportDataModal from '../../modals/export-data-modal';
@@ -46,10 +55,24 @@ const ClientsPanel = () => {
     pageSize: TABLE_PAGE_SIZE,
   });
 
-  const defaultData = useMemo(() => [], []);
+  const [getClientsFilters, setGetClientsFilters] = useState<IGetClients>({
+    name: undefined,
+    ci: undefined,
+    skip: undefined,
+    take: undefined,
+  });
 
-  const result = trpc.useQuery(
-    ['client.getAll', { skip: pageIndex, take: pageSize }],
+  const { name, ci } = getClientsFilters;
+
+  const defaultData = useMemo(() => [], []);
+  const debouncedName = useDebounce(name, 500);
+  const debouncedCI = useDebounce(ci, 500);
+
+  const { data } = trpc.useQuery(
+    [
+      'client.getAll',
+      { skip: pageIndex, take: pageSize, name: debouncedName, ci: debouncedCI },
+    ],
     {
       keepPreviousData: true,
     }
@@ -64,9 +87,9 @@ const ClientsPanel = () => {
   );
 
   const table = useReactTable({
-    data: result.data?.clients ?? defaultData,
+    data: data?.clients ?? defaultData,
     columns,
-    pageCount: result.data?.pageCount ?? -1,
+    pageCount: data?.pageCount ?? -1,
     state: {
       pagination,
     },
@@ -132,30 +155,83 @@ const ClientsPanel = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Flex
-      border={'1px solid'}
-      borderColor={'light'}
-      borderRadius={'lg'}
-      flexDir={'column'}
-      h={'100%'}
-      w={'100%'}
-    >
-      <CustomTable table={table} />
-      <CustomTableFooter
-        table={table}
-        exportBody={
-          <ExportDataModal
-            data={exportData}
-            isLoading={isLoading}
-            setData={setExportData}
+    <Flex borderRadius={'lg'} flexDir={'column'} h={'100%'} w={'100%'}>
+      <Flex alignItems={'center'} h={'3rem'} w={'100%'}>
+        <Flex w={'100%'}>
+          <Button
+            fontSize={'14px'}
+            leftIcon={<FiXSquare size={'1.25rem'} />}
+            onClick={() =>
+              setGetClientsFilters({
+                name: undefined,
+                ci: undefined,
+              })
+            }
+            mr={'1px'}
+            w={'100%'}
+          >
+            {'Borrar filtros'}
+          </Button>
+        </Flex>
+        <Flex w={'100%'} ml={'1px'} mr={'1px'}>
+          <Input
+            bgColor={'white'}
+            color={'background'}
+            onChange={({ target }) =>
+              setGetClientsFilters({
+                ...getClientsFilters,
+                name: target.value,
+              })
+            }
+            placeholder={'Nombre'}
+            value={name || ''}
+            variant={'filled'}
+            _focus={{ bgColor: 'white' }}
           />
-        }
-        onClickExport={handleExport}
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
-        isLoading={isLoading}
-      />
+        </Flex>
+        <Flex w={'100%'} ml={'1px'} mr={'1px'}>
+          <Input
+            bgColor={'white'}
+            color={'background'}
+            onChange={({ target }) =>
+              setGetClientsFilters({
+                ...getClientsFilters,
+                ci: target.value,
+              })
+            }
+            placeholder={'CI'}
+            type={'number'}
+            value={ci || ''}
+            variant={'filled'}
+            _focus={{ bgColor: 'white' }}
+          />
+        </Flex>
+      </Flex>
+      <Flex
+        border={'1px solid'}
+        borderColor={'light'}
+        borderRadius={'lg'}
+        flexDir={'column'}
+        h={'100%'}
+        w={'100%'}
+      >
+        <CustomTable table={table} />
+        <CustomTableFooter
+          table={table}
+          exportBody={
+            <ExportDataModal
+              data={exportData}
+              isLoading={isLoading}
+              setData={setExportData}
+            />
+          }
+          onClickExport={handleExport}
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+          isLoading={isLoading}
+        />
+      </Flex>
     </Flex>
   );
 };

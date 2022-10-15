@@ -1,4 +1,10 @@
-import { Dispatch, RefObject, SetStateAction } from 'react';
+import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 
 export const NAV_BAR_WIDTH = 320;
 export const FACE_MATCH_DISTANCE_THRESHOLD = 0.45;
@@ -65,6 +71,20 @@ export const enum SUCCESS_MESSAGE {
 }
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+export function useDebounce<T>(value: T, delay?: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 export type ClientAuthenticationInfo = {
   bgColor: string;

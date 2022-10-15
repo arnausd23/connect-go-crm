@@ -1,24 +1,21 @@
-import {
-  Button,
-  Flex,
-  IconButton,
-  Input,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react';
+import { Button, Flex, Input, useDisclosure, useToast } from '@chakra-ui/react';
 import {
   createColumnHelper,
+  getCoreRowModel,
   PaginationState,
   useReactTable,
-  getCoreRowModel,
 } from '@tanstack/react-table';
-import { useState, useMemo } from 'react';
-import { FiSliders, FiXSquare } from 'react-icons/fi';
+import { useMemo, useState } from 'react';
+import { FiXSquare } from 'react-icons/fi';
 import { utils, writeFile } from 'xlsx';
-import { IExportUserPlans } from '../../../../server/common/validation/schemas';
 import {
-  UserPlansTableInfo,
+  IExportUserPlans,
+  IGetUserPlans,
+} from '../../../../server/common/validation/schemas';
+import {
   TABLE_PAGE_SIZE,
+  useDebounce,
+  UserPlansTableInfo,
 } from '../../../../utils/constants';
 import { trpc } from '../../../../utils/trpc';
 import CustomDatePicker from '../../../custom/custom-date-picker';
@@ -63,10 +60,33 @@ const UserPlansPanel = () => {
     pageSize: TABLE_PAGE_SIZE,
   });
 
-  const defaultData = useMemo(() => [], []);
+  const [getUserPlansFilters, setGetUserPlansFilters] = useState<IGetUserPlans>(
+    {
+      userName: undefined,
+      planName: undefined,
+      startingDate: undefined,
+      endingDate: undefined,
+    }
+  );
 
-  const result = trpc.useQuery(
-    ['client.getPlans', { skip: pageIndex, take: pageSize }],
+  const { userName, planName, startingDate, endingDate } = getUserPlansFilters;
+
+  const defaultData = useMemo(() => [], []);
+  const debouncedUserName = useDebounce(userName, 500);
+  const debouncedPlanName = useDebounce(planName, 500);
+
+  const { data } = trpc.useQuery(
+    [
+      'client.getPlans',
+      {
+        skip: pageIndex,
+        take: pageSize,
+        userName: debouncedUserName,
+        planName: debouncedPlanName,
+        startingDate,
+        endingDate,
+      },
+    ],
     {
       keepPreviousData: true,
     }
@@ -81,9 +101,9 @@ const UserPlansPanel = () => {
   );
 
   const table = useReactTable({
-    data: result.data?.plans ?? defaultData,
+    data: data?.plans ?? defaultData,
     columns,
-    pageCount: result.data?.pageCount ?? -1,
+    pageCount: data?.pageCount ?? -1,
     state: {
       pagination,
     },
@@ -101,7 +121,7 @@ const UserPlansPanel = () => {
     endingDate: undefined,
   });
 
-  const { refetch, isLoading } = trpc.useQuery(
+  const { refetch: exportRefetch, isLoading } = trpc.useQuery(
     ['client.exportPlans', exportData],
     {
       enabled: false,
@@ -157,13 +177,91 @@ const UserPlansPanel = () => {
   );
 
   const handleExport = () => {
-    refetch();
+    exportRefetch();
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex borderRadius={'lg'} flexDir={'column'} h={'100%'} w={'100%'}>
+      <Flex alignItems={'center'} h={'3rem'} w={'100%'} mb={'0.125rem'}>
+        <Flex w={'100%'}>
+          <Button
+            fontSize={'14px'}
+            leftIcon={<FiXSquare size={'1.25rem'} />}
+            onClick={() =>
+              setGetUserPlansFilters({
+                userName: undefined,
+                planName: undefined,
+                startingDate: undefined,
+                endingDate: undefined,
+              })
+            }
+            mr={'1px'}
+            w={'100%'}
+          >
+            {'Borrar filtros'}
+          </Button>
+        </Flex>
+        <Flex w={'100%'} ml={'1px'} mr={'1px'}>
+          <Input
+            bgColor={'white'}
+            color={'background'}
+            onChange={({ target }) =>
+              setGetUserPlansFilters({
+                ...getUserPlansFilters,
+                userName: target.value,
+              })
+            }
+            placeholder={'Nombre'}
+            value={userName || ''}
+            variant={'filled'}
+            _focus={{ bgColor: 'white' }}
+          />
+        </Flex>
+        <Flex w={'100%'} ml={'1px'} mr={'1px'}>
+          <Input
+            bgColor={'white'}
+            color={'background'}
+            onChange={({ target }) =>
+              setGetUserPlansFilters({
+                ...getUserPlansFilters,
+                planName: target.value,
+              })
+            }
+            placeholder={'Plan'}
+            value={planName || ''}
+            variant={'filled'}
+            _focus={{ bgColor: 'white' }}
+          />
+        </Flex>
+        <Flex w={'100%'} ml={'1px'} mr={'1px'}>
+          <CustomDatePicker
+            date={startingDate}
+            disabled={false}
+            onChange={(date) =>
+              setGetUserPlansFilters({
+                ...getUserPlansFilters,
+                startingDate: date,
+              })
+            }
+            placeholder={'Fecha inicial'}
+          />
+        </Flex>
+        <Flex w={'100%'} ml={'1px'}>
+          <CustomDatePicker
+            date={endingDate}
+            disabled={false}
+            onChange={(date) =>
+              setGetUserPlansFilters({
+                ...getUserPlansFilters,
+                endingDate: date,
+              })
+            }
+            placeholder={'Fecha final'}
+          />
+        </Flex>
+      </Flex>
       <Flex
         border={'1px solid'}
         borderColor={'light'}
