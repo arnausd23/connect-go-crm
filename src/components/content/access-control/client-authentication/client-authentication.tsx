@@ -194,7 +194,7 @@ const ClientAuthentication = () => {
           setShowAccessAuthenticationMessage!(false);
         }
       }
-    }, 500);
+    }, 300);
   };
   useEffect(() => {
     webcamRef.current!.video!.volume = 0;
