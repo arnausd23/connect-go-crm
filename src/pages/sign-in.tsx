@@ -73,6 +73,7 @@ const SignIn: NextPage = () => {
           w={'80%'}
         >
           <Image
+            alt={''}
             src={'/connect-logo-light.svg'}
             width={'100%'}
             height={'100%'}
