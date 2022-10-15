@@ -6,10 +6,26 @@ const ClientAuthenticationMessage = () => {
   const { accessAuthenticationInfo } = useContext(AccessControlContext);
   const { bgColor, endingDate, footer, header, name, startingDate } =
     accessAuthenticationInfo!;
+  const borderColor = (bgColor: string) => {
+    switch (bgColor) {
+      case 'authGreen':
+        return '#66bb6a';
+      case 'authYellow':
+        return '#ffca28';
+      case 'authOrange':
+        return '#ff7043';
+      case 'authRed':
+        return '#ef5350';
+      default:
+        return '#66bb6a';
+    }
+  };
 
   return (
     <Flex
       bgColor={bgColor}
+      borderTop={'0.5rem solid'}
+      borderColor={borderColor(bgColor)}
       borderRadius={'lg'}
       bottom={'0px'}
       color={'background'}
