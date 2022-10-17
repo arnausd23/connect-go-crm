@@ -1,4 +1,3 @@
-import { deleteSchema } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 
 export const protectedLabeledFaceDescriptorRouter =

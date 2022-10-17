@@ -2,7 +2,7 @@ import { Flex, useToast } from '@chakra-ui/react';
 import * as faceapi from 'face-api.js';
 import { useContext, useEffect, useRef } from 'react';
 import Webcam from 'react-webcam';
-import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async';
+import { setIntervalAsync } from 'set-interval-async';
 import { SetIntervalContext } from '../../../../pages';
 import {
   delay,
