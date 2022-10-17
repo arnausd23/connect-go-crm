@@ -12,6 +12,7 @@ export const createClientSchema = z.object({
   phoneNumber: z.string(),
   photoSrc: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyPhoto }),
   photoTaken: z.boolean().optional(),
+  labeledFaceDescriptorJson: z.any(),
 });
 
 export const createPlanSchema = z.object({

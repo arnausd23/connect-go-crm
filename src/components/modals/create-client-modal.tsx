@@ -11,7 +11,12 @@ import { FiCamera, FiRotateCcw } from 'react-icons/fi';
 import Webcam from 'react-webcam';
 import { CustomModalProps } from '../custom/custom-modal';
 
-const CreateClientModal = ({ data, isLoading, setData }: CustomModalProps) => {
+const CreateClientModal = ({
+  data,
+  isLoading,
+  setData,
+  imageRef,
+}: CustomModalProps & { imageRef: any }) => {
   const webCamRef = useRef<Webcam>(null);
 
   const handleTakePhoto = () => {
@@ -84,7 +89,8 @@ const CreateClientModal = ({ data, isLoading, setData }: CustomModalProps) => {
             <Image
               src={data.photoSrc}
               objectFit={'contain'}
-              alt='Client photo'
+              alt={'Client photo'}
+              ref={imageRef}
             />
           ) : (
             <>

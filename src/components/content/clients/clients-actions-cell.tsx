@@ -1,6 +1,8 @@
 import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { FiEdit3, FiTrash2 } from 'react-icons/fi';
+import { clearIntervalAsync } from 'set-interval-async';
+import { SetIntervalContext } from '../../../pages';
 import { IEditClient } from '../../../server/common/validation/schemas';
 import { ClientsTableInfo, SUCCESS_MESSAGE } from '../../../utils/constants';
 import { trpc } from '../../../utils/trpc';
@@ -33,6 +35,8 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
     phoneNumber: phoneNumber ?? '',
   });
 
+  const { timer } = useContext(SetIntervalContext);
+
   const { isLoading: editClientIsLoading, mutate: editClientMutate } =
     trpc.useMutation('client.edit', {
       onSuccess: async () => {
@@ -43,6 +47,8 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
+        await clearIntervalAsync(timer!);
+        await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('client.getAll');
         await ctx.invalidateQueries('plan.getAll');
         await ctx.invalidateQueries('client.getPlans');
@@ -84,6 +90,8 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
+        await clearIntervalAsync(timer!);
+        await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('client.getAll');
         await ctx.invalidateQueries('plan.getAll');
         await ctx.invalidateQueries('client.getPlans');

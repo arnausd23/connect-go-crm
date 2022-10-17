@@ -5,16 +5,20 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { ICreateClient } from '../../server/common/validation/schemas';
 import {
+  ERROR_MESSAGE,
   NAVBAR_ACTION_BAR_BUTTON_LABEL,
   SUCCESS_MESSAGE,
 } from '../../utils/constants';
 import { trpc } from '../../utils/trpc';
 import CreateClientModal from '../modals/create-client-modal';
 import CustomModal from '../custom/custom-modal';
+import * as faceapi from 'face-api.js';
+import { SetIntervalContext } from '../../pages';
+import { clearIntervalAsync } from 'set-interval-async';
 
 const NavbarPrimaryActionButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,7 +30,10 @@ const NavbarPrimaryActionButton = () => {
     phoneNumber: '',
     photoSrc: '',
     photoTaken: false,
+    labeledFaceDescriptorJson: undefined,
   });
+  const clientPhotoRef = useRef<HTMLImageElement>();
+  const { timer } = useContext(SetIntervalContext);
   const { isLoading, mutate } = trpc.useMutation('client.create', {
     onSuccess: async () => {
       toast({
@@ -42,8 +49,11 @@ const NavbarPrimaryActionButton = () => {
         phoneNumber: '',
         photoSrc: '',
         photoTaken: false,
+        labeledFaceDescriptorJson: undefined,
       });
+      await clearIntervalAsync(timer!);
       await ctx.invalidateQueries('client.getAll');
+      await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
       onClose();
     },
     onError: (error) => {
@@ -71,8 +81,29 @@ const NavbarPrimaryActionButton = () => {
     },
   });
 
-  const handleCreateClient = () => {
-    mutate(createClientData);
+  const handleCreateClient = async () => {
+    if (createClientData.photoTaken && createClientData.photoSrc) {
+      const detection = await faceapi
+        .detectSingleFace(clientPhotoRef.current!)
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+      if (detection && detection.detection.score > 0.75) {
+        const labeledFaceDescriptor = new faceapi.LabeledFaceDescriptors(
+          createClientData.ci,
+          [detection.descriptor]
+        );
+        const labeledFaceDescriptorJson = labeledFaceDescriptor.toJSON();
+        mutate({ ...createClientData, labeledFaceDescriptorJson });
+      } else {
+        toast({
+          description: ERROR_MESSAGE.FailedDetection,
+          duration: 3000,
+          isClosable: true,
+          status: 'error',
+          variant: 'top-accent',
+        });
+      }
+    }
   };
 
   return (
@@ -124,6 +155,7 @@ const NavbarPrimaryActionButton = () => {
             data={createClientData}
             isLoading={isLoading}
             setData={setCreateClientData}
+            imageRef={clientPhotoRef}
           />
         }
         actionButtonLabel={'Crear'}

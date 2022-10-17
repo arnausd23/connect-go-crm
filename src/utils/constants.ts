@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { SetIntervalAsyncTimer } from 'set-interval-async';
 
 export const NAV_BAR_WIDTH = 320;
 export const FACE_MATCH_DISTANCE_THRESHOLD = 0.45;
@@ -55,6 +56,7 @@ export const enum ERROR_MESSAGE {
   SomethingWentWrong = 'Algo salió mal.',
   UserNotFound = 'Usuario no encontrado.',
   PasswordMismatch = 'Las contraseñas no coinciden.',
+  FailedDetection = 'Porfavor toma otra foto.',
 }
 
 export const enum SUCCESS_MESSAGE {
@@ -159,4 +161,9 @@ export type ClientAuthenticationContext = {
   setDetectionBoxInfo?: Dispatch<SetStateAction<DetectionBoxInfo>>;
   newWindowRef?: RefObject<HTMLDivElement> | null;
   setNewWindowRef?: Dispatch<SetStateAction<RefObject<HTMLDivElement> | null>>;
+};
+
+export type IntervalContext = {
+  timer?: SetIntervalAsyncTimer<[]>;
+  setTimer?: Dispatch<SetStateAction<SetIntervalAsyncTimer<[]>>>;
 };

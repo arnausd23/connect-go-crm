@@ -23,7 +23,6 @@
     "@trpc/server": "^9.27.2",
     "argon2": "^0.29.1",
     "chakra-dayzed-datepicker": "^0.2.3",
-    "cloudinary": "^1.32.0",
     "date-fns": "^2.29.2",
     "dayzed": "^3.2.3",
     "face-api.js": "^0.22.2",

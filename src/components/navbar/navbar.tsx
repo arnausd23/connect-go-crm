@@ -1,7 +1,8 @@
-import { Divider, Flex, TabList } from '@chakra-ui/react';
+import { Button, Divider, Flex, TabList } from '@chakra-ui/react';
 import Image from 'next/image';
 import { FiArchive, FiKey, FiUsers } from 'react-icons/fi';
 import { NAV_BAR_WIDTH, SECTION } from '../../utils/constants';
+import { trpc } from '../../utils/trpc';
 import NavbarActionBar from './navbar-action-bar';
 import NavbarButton from './navbar-button';
 import NavbarPrimaryActionButton from './navbar-primary-action-button';
@@ -9,11 +10,9 @@ import NavbarPrimaryActionButton from './navbar-primary-action-button';
 const Navbar = () => {
   // const { mutate } = trpc.useMutation('auth.signUp');
   // const handleSignUp = () => {
-  //   mutate({ username: 'Mateo.Altamirano', password: 'C0NN3CTmateo' });
+  //   mutate({ username: 'g.mendez', password: 'C0NN3CT22' });
   // };
-  // const handleSectionChange = (section: SECTION) => {
-  //   if (currentSection !== section) setCurrentSection(section);
-  // };
+
   return (
     <Flex
       bgColor={'light'}

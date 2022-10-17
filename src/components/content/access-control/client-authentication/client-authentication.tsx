@@ -2,7 +2,8 @@ import { Flex, useToast } from '@chakra-ui/react';
 import * as faceapi from 'face-api.js';
 import { useContext, useEffect, useRef } from 'react';
 import Webcam from 'react-webcam';
-import { setIntervalAsync } from 'set-interval-async';
+import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async';
+import { SetIntervalContext } from '../../../../pages';
 import {
   delay,
   ERROR_MESSAGE,
@@ -52,15 +53,20 @@ const ClientAuthentication = () => {
     }
   );
 
-  trpc.useQuery(['client.getPhotoUrls'], {
+  trpc.useQuery(['labeledFaceDescriptor.getAll'], {
     staleTime: Infinity,
     retry: false,
     refetchOnWindowFocus: false,
     enabled: !isNewWindow,
-    onSuccess: async (urls) => {
+    onSuccess: async (data) => {
       webcamRef.current!.video!.muted = true;
       await loadFaceapiModels();
-      const faceDescriptors = await loadFaceDescriptors(urls);
+      const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
+      data.forEach((labeledFaceDescriptor) => {
+        faceDescriptors.push(
+          faceapi.LabeledFaceDescriptors.fromJSON(labeledFaceDescriptor.data)
+        );
+      });
       if (faceDescriptors.length > 0) {
         const faceMatcher: faceapi.FaceMatcher = new faceapi.FaceMatcher(
           faceDescriptors,
@@ -97,33 +103,16 @@ const ClientAuthentication = () => {
     ]);
   };
 
-  const loadFaceDescriptors = async (urls: string[]) => {
-    const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
-    for (const url of urls) {
-      const clientPhoto = await faceapi.fetchImage(url);
-      const detection = await faceapi
-        .detectSingleFace(clientPhoto)
-        .withFaceLandmarks()
-        .withFaceDescriptor();
-
-      const ci = url.split('/').pop()?.split('.')[0];
-
-      if (ci && detection)
-        faceDescriptors.push(
-          new faceapi.LabeledFaceDescriptors(ci, [detection.descriptor])
-        );
-    }
-    return faceDescriptors;
-  };
+  const { setTimer } = useContext(SetIntervalContext);
 
   const faceDetection = async (faceMatcher: faceapi.FaceMatcher) => {
-    setIntervalAsync(async () => {
+    const timer = setIntervalAsync(async () => {
       if (webcamRef.current) {
         const detection = await faceapi
           .detectSingleFace(webcamRef.current.video!)
           .withFaceLandmarks()
           .withFaceDescriptor();
-        if (detection && detection.detection.score > 0.95) {
+        if (detection && detection.detection.score > 0.75) {
           console.log('DETECTION SCORE:', detection.detection.score);
           canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
             webcamRef.current.video!
@@ -181,6 +170,7 @@ const ClientAuthentication = () => {
             setShowAccessAuthenticationMessage!(false);
           }
         } else {
+          console.log('NO FACE DETECTED');
           setShowDetectionBox!(false);
           setDetectionBoxInfo!({
             h: 0,
@@ -195,7 +185,9 @@ const ClientAuthentication = () => {
         }
       }
     }, 300);
+    setTimer!(timer);
   };
+
   useEffect(() => {
     webcamRef.current!.video!.volume = 0;
   }, []);

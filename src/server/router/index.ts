@@ -6,6 +6,7 @@ import { protectedClientRouter } from './protected-client-router';
 import { protectedPlanRouter } from './protected-plan-router';
 import { ZodError } from 'zod';
 import { protectedAccessHistoryRouter } from './protected-access-history-router';
+import { protectedLabeledFaceDescriptorRouter } from './protected-labeled-face-descriptor-router';
 
 export const appRouter = createRouter()
   .transformer(superjson)
@@ -13,6 +14,7 @@ export const appRouter = createRouter()
   .merge('client.', protectedClientRouter)
   .merge('plan.', protectedPlanRouter)
   .merge('accessHistory.', protectedAccessHistoryRouter)
+  .merge('labeledFaceDescriptor.', protectedLabeledFaceDescriptorRouter)
   .formatError(({ shape, error }) => {
     return {
       ...shape,

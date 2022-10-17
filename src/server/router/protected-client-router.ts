@@ -13,24 +13,8 @@ import {
 import { createProtectedRouter } from './protected-router';
 import * as trpc from '@trpc/server';
 import { ERROR_MESSAGE } from '../../utils/constants';
-import { v2 as cloudinary } from 'cloudinary';
 
 export const protectedClientRouter = createProtectedRouter()
-  .query('getPhotoUrls', {
-    async resolve() {
-      try {
-        const { resources } = await cloudinary.search
-          .expression('folder:connect-crm/*')
-          .execute();
-        return resources.map((resource: any) => resource.secure_url);
-      } catch (error) {
-        throw new trpc.TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: ERROR_MESSAGE.FailedToLoadModels,
-        });
-      }
-    },
-  })
   .query('getPlans', {
     input: getUserPlansSchema,
     async resolve({ input, ctx }) {
@@ -274,21 +258,14 @@ export const protectedClientRouter = createProtectedRouter()
     input: deleteSchema,
     async resolve({ input, ctx }) {
       const { id, ci } = input;
-      try {
-        await cloudinary.uploader.destroy(`connect-crm/${ci}`);
-        await ctx.prisma.user.delete({ where: { id } });
-      } catch (error) {
-        throw new trpc.TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: ERROR_MESSAGE.SomethingWentWrong,
-        });
-      }
+      await ctx.prisma.labeledFaceDescriptor.delete({ where: { ci } });
+      await ctx.prisma.user.delete({ where: { id } });
     },
   })
   .mutation('create', {
     input: createClientSchema,
     async resolve({ input, ctx }) {
-      const { ci, name, phoneNumber, photoSrc } = input;
+      const { ci, name, phoneNumber, labeledFaceDescriptorJson } = input;
 
       const exists = await ctx.prisma.user.findFirst({ where: { ci } });
 
@@ -299,16 +276,12 @@ export const protectedClientRouter = createProtectedRouter()
         });
       }
 
-      try {
-        await cloudinary.uploader.unsigned_upload(photoSrc, 'connect-crm', {
-          public_id: ci,
-        });
-      } catch {
-        throw new trpc.TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: ERROR_MESSAGE.FailedToSavePhoto,
-        });
-      }
+      await ctx.prisma.labeledFaceDescriptor.create({
+        data: {
+          ci,
+          data: labeledFaceDescriptorJson,
+        },
+      });
 
       const updatedBy = Object.entries(ctx.session).filter(
         (entry) => entry[0] === 'id'

@@ -50,3 +50,9 @@ model AccessHistory {
     userPlan   UserPlan @relation(fields: [userPlanId], references: [id], onDelete:Cascade, onUpdate: Cascade )
     userPlanId String
 }
+
+model LabeledFaceDescriptor {
+    id   String @id @default(cuid())
+    ci   String @unique
+    data Json
+}
