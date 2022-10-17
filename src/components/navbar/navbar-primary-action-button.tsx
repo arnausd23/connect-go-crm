@@ -51,7 +51,7 @@ const NavbarPrimaryActionButton = () => {
         photoTaken: false,
         labeledFaceDescriptorJson: undefined,
       });
-      await clearIntervalAsync(timer!);
+      if (timer) await clearIntervalAsync(timer);
       await ctx.invalidateQueries('client.getAll');
       await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
       onClose();

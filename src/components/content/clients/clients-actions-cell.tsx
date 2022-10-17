@@ -47,7 +47,7 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
-        await clearIntervalAsync(timer!);
+        if (timer) await clearIntervalAsync(timer);
         await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('client.getAll');
         await ctx.invalidateQueries('plan.getAll');
@@ -90,7 +90,7 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
-        await clearIntervalAsync(timer!);
+        if (timer) await clearIntervalAsync(timer);
         await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('client.getAll');
         await ctx.invalidateQueries('plan.getAll');

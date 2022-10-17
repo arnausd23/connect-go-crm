@@ -52,7 +52,7 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
-        await clearIntervalAsync(timer!);
+        if (timer) await clearIntervalAsync(timer);
         await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('client.getPlans');
         await ctx.invalidateQueries('accessHistory.getAll');
@@ -93,7 +93,7 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
-        await clearIntervalAsync(timer!);
+        if (timer) await clearIntervalAsync(timer);
         await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('client.getPlans');
         await ctx.invalidateQueries('accessHistory.getAll');
