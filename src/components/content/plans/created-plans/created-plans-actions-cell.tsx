@@ -52,12 +52,12 @@ const CreatedPlansActionsCell = ({ data }: CreatedPlansActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
+        editPlanOnClose();
         if (timer) await clearIntervalAsync(timer);
         await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('plan.getAll');
         await ctx.invalidateQueries('client.getPlans');
         await ctx.invalidateQueries('accessHistory.getAll');
-        editPlanOnClose();
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {
@@ -94,12 +94,12 @@ const CreatedPlansActionsCell = ({ data }: CreatedPlansActionsCellProps) => {
           status: 'success',
           variant: 'top-accent',
         });
+        deletePlanOnClose();
         if (timer) await clearIntervalAsync(timer);
         await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('plan.getAll');
         await ctx.invalidateQueries('client.getPlans');
         await ctx.invalidateQueries('accessHistory.getAll');
-        deletePlanOnClose();
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {

@@ -76,8 +76,8 @@ const NavbarActionBar = () => {
           parking: false,
           groupClasses: false,
         });
-        await ctx.invalidateQueries('client.getPlans');
         assignPlanOnClose();
+        await ctx.invalidateQueries('client.getPlans');
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {
@@ -118,8 +118,8 @@ const NavbarActionBar = () => {
           name: '',
           price: '',
         });
-        await ctx.invalidateQueries('plan.getAll');
         createPlanOnClose();
+        await ctx.invalidateQueries('plan.getAll');
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {
@@ -155,11 +155,11 @@ const NavbarActionBar = () => {
           status: 'success',
           variant: 'top-accent',
         });
+        settingsOnClose();
         setSettingsData({
           newPassword: '',
           repeatedNewPassword: '',
         });
-        settingsOnClose();
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {

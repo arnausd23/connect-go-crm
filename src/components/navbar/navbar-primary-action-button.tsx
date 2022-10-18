@@ -51,10 +51,10 @@ const NavbarPrimaryActionButton = () => {
         photoTaken: false,
         labeledFaceDescriptorJson: undefined,
       });
+      onClose();
       if (timer) await clearIntervalAsync(timer);
       await ctx.invalidateQueries('client.getAll');
       await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
-      onClose();
     },
     onError: (error) => {
       if (error.data?.zodError?.fieldErrors) {

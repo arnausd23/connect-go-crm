@@ -36,6 +36,12 @@ const ClientAuthentication = () => {
     }
   }, [openNewWindow, setNewWindowRef]);
 
+  useEffect(() => {
+    if (!isNewWindow) {
+      webcamRef && loadFaceapiModels();
+    }
+  }, []);
+
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',
     {
@@ -60,7 +66,6 @@ const ClientAuthentication = () => {
     enabled: !isNewWindow,
     onSuccess: async (data) => {
       webcamRef.current!.video!.muted = true;
-      await loadFaceapiModels();
       const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
       data.forEach((labeledFaceDescriptor) => {
         faceDescriptors.push(
@@ -95,8 +100,8 @@ const ClientAuthentication = () => {
     },
   });
 
-  const loadFaceapiModels = async () => {
-    await Promise.all([
+  const loadFaceapiModels = () => {
+    Promise.all([
       faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
       faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
       faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
@@ -184,7 +189,7 @@ const ClientAuthentication = () => {
           setShowAccessAuthenticationMessage!(false);
         }
       }
-    }, 300);
+    }, 500);
     setTimer!(timer);
   };
 
