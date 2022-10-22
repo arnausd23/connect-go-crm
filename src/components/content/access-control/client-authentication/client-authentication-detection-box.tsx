@@ -1,24 +1,28 @@
 import { Flex } from '@chakra-ui/react';
-import { useContext, useEffect, useState } from 'react';
-import { AccessControlContext } from '../access-control';
+import { useEffect, useState } from 'react';
+import { useStore } from '../../../../utils/fast-context';
 
-const ClientAuthenticationDetectionBox = () => {
-  const { detectionBoxInfo, isNewWindow, newWindowRef } =
-    useContext(AccessControlContext);
-  const { x, y, h, w, color, originHeight, originWidth } = detectionBoxInfo!;
-  const [boxInfo, setBoxInfo] = useState({ x: 0, y: 0, h: 0, w: 0 });
+const ClientAuthenticationDetectionBox = ({
+  isNewWindow,
+}: {
+  isNewWindow: boolean;
+}) => {
+  const [{ newWindowRef, boxInfo }] = useStore((store) => store);
+
+  const { x, y, h, w, color, originHeight, originWidth } = boxInfo;
+  const [info, setInfo] = useState({ x: 0, y: 0, h: 0, w: 0 });
 
   useEffect(() => {
-    if (isNewWindow && newWindowRef?.current) {
+    if (isNewWindow && newWindowRef.current) {
       const { clientHeight, clientWidth } = newWindowRef.current;
       const newX = (x / originWidth) * clientWidth;
       const newY = (y / originHeight) * clientHeight;
       const newH = (h / originHeight) * clientHeight;
       const newW = (w / originWidth) * clientWidth;
-      setBoxInfo({ x: newX, y: newY, h: newH, w: newW });
+      setInfo({ x: newX, y: newY, h: newH, w: newW });
     }
   }, [
-    detectionBoxInfo,
+    boxInfo,
     h,
     w,
     x,

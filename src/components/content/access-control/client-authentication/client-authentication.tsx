@@ -3,44 +3,42 @@ import * as faceapi from 'face-api.js';
 import { useContext, useEffect, useRef } from 'react';
 import Webcam from 'react-webcam';
 import { setIntervalAsync } from 'set-interval-async';
-import { SetIntervalContext } from '../../../../pages';
 import {
   delay,
   ERROR_MESSAGE,
   FACE_MATCH_DISTANCE_THRESHOLD,
 } from '../../../../utils/constants';
+import { useStore } from '../../../../utils/fast-context';
 import { trpc } from '../../../../utils/trpc';
-import { AccessControlContext } from '../access-control';
 
-const ClientAuthentication = () => {
+const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<any>(null);
   const toast = useToast();
   const ctx = trpc.useContext();
   const ref = useRef<HTMLDivElement>(null);
-  const {
-    isClientAuthReady,
-    setIsClientAuthReady,
-    setAccessAuthenticationInfo,
-    setShowAccessAuthenticationMessage,
-    setShowDetectionBox,
-    setDetectionBoxInfo,
-    isNewWindow,
-    openNewWindow,
-    setNewWindowRef,
-  } = useContext(AccessControlContext);
+
+  const [{ openNewWindow, isReadyToOpen }, setStore] = useStore(
+    (store) => store
+  );
+
+  useEffect(() => {
+    if (!isNewWindow) webcamRef && loadFaceapiModels();
+  }, []);
+
+  const loadFaceapiModels = async () => {
+    await Promise.all([
+      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+      faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+    ]);
+  };
 
   useEffect(() => {
     if (openNewWindow) {
-      setNewWindowRef!(ref);
+      setStore({ newWindowRef: ref });
     }
-  }, [openNewWindow, setNewWindowRef]);
-
-  useEffect(() => {
-    if (!isNewWindow) {
-      webcamRef && loadFaceapiModels();
-    }
-  }, []);
+  }, [openNewWindow]);
 
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',
@@ -100,16 +98,6 @@ const ClientAuthentication = () => {
     },
   });
 
-  const loadFaceapiModels = () => {
-    Promise.all([
-      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-      faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-    ]);
-  };
-
-  const { setTimer } = useContext(SetIntervalContext);
-
   const faceDetection = async (faceMatcher: faceapi.FaceMatcher) => {
     const timer = setIntervalAsync(async () => {
       if (webcamRef.current) {
@@ -149,16 +137,18 @@ const ClientAuthentication = () => {
             canvasRef.current
           ).canvas;
 
-          setDetectionBoxInfo!({
-            h: (height / canvasHeight) * offsetHeight,
-            w: (width / canvasWidth) * offsetWidth,
-            x: (x / canvasWidth) * offsetWidth,
-            y: (y / canvasHeight) * offsetHeight,
-            color: detectionBoxColor,
-            originHeight: offsetHeight,
-            originWidth: offsetWidth,
+          setStore({
+            boxInfo: {
+              h: (height / canvasHeight) * offsetHeight,
+              w: (width / canvasWidth) * offsetWidth,
+              x: (x / canvasWidth) * offsetWidth,
+              y: (y / canvasHeight) * offsetHeight,
+              color: detectionBoxColor,
+              originHeight: offsetHeight,
+              originWidth: offsetWidth,
+            },
+            showBox: true,
           });
-          setShowDetectionBox!(true);
 
           if (foundMatch) {
             console.log('MATCH:', ci, now, distance);
@@ -166,31 +156,40 @@ const ClientAuthentication = () => {
               ci,
               date: now,
             });
-            setAccessAuthenticationInfo!(accessAuthenticationInfo);
-            setShowAccessAuthenticationMessage!(true);
-            if (!isClientAuthReady) setIsClientAuthReady!(true);
+            setStore({
+              messageInfo: accessAuthenticationInfo,
+              showMessage: true,
+            });
+            if (!isReadyToOpen)
+              setStore({
+                isReadyToOpen: true,
+              });
             await delay(2000);
           } else {
             console.log('NO MATCH:', ci, now, distance);
-            setShowAccessAuthenticationMessage!(false);
+            setStore({
+              showMessage: false,
+            });
           }
         } else {
           console.log('NO FACE DETECTED');
-          setShowDetectionBox!(false);
-          setDetectionBoxInfo!({
-            h: 0,
-            w: 0,
-            x: 0,
-            y: 0,
-            color: '#ef5350',
-            originHeight: 0,
-            originWidth: 0,
+          setStore({
+            showBox: false,
+            boxInfo: {
+              h: 0,
+              w: 0,
+              x: 0,
+              y: 0,
+              color: '#ef5350',
+              originHeight: 0,
+              originWidth: 0,
+            },
+            showMessage: false,
           });
-          setShowAccessAuthenticationMessage!(false);
         }
       }
     }, 500);
-    setTimer!(timer);
+    setStore({ timer });
   };
 
   useEffect(() => {

@@ -5,23 +5,20 @@ import Content from '../components/content/content';
 import Navbar from '../components/navbar/navbar';
 import { getServerAuthSession } from '../server/common/get-server-auth-session';
 import { IntervalContext } from '../utils/constants';
+import { Provider } from '../utils/fast-context';
 
 const Home: NextPage = () => {
-  const [timer, setTimer] = useState<any>();
-
   return (
     <Flex bgColor={'background'} h={'100vh'} w={'100%'}>
-      <Tabs display='flex' w={'100%'}>
-        <SetIntervalContext.Provider value={{ timer, setTimer }}>
+      <Provider>
+        <Tabs display='flex' w={'100%'}>
           <Navbar />
           <Content />
-        </SetIntervalContext.Provider>
-      </Tabs>
+        </Tabs>
+      </Provider>
     </Flex>
   );
 };
-
-export const SetIntervalContext = createContext<IntervalContext>({});
 
 export default Home;
 

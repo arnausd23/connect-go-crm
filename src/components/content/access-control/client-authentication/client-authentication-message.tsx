@@ -1,11 +1,12 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { useContext } from 'react';
-import { AccessControlContext } from '../access-control';
+import { useStore } from '../../../../utils/fast-context';
 
 const ClientAuthenticationMessage = () => {
-  const { accessAuthenticationInfo } = useContext(AccessControlContext);
+  const [messageInfo] = useStore((store) => store.messageInfo);
+
   const { bgColor, endingDate, footer, header, name, startingDate } =
-    accessAuthenticationInfo!;
+    messageInfo;
+
   const borderColor = (bgColor: string) => {
     switch (bgColor) {
       case 'authGreen':

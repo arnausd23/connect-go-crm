@@ -17,8 +17,8 @@ import { trpc } from '../../utils/trpc';
 import CreateClientModal from '../modals/create-client-modal';
 import CustomModal from '../custom/custom-modal';
 import * as faceapi from 'face-api.js';
-import { SetIntervalContext } from '../../pages';
 import { clearIntervalAsync } from 'set-interval-async';
+import { useStore } from '../../utils/fast-context';
 
 const NavbarPrimaryActionButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,7 +33,8 @@ const NavbarPrimaryActionButton = () => {
     labeledFaceDescriptorJson: undefined,
   });
   const clientPhotoRef = useRef<HTMLImageElement>();
-  const { timer } = useContext(SetIntervalContext);
+  const [timer] = useStore((store) => store.timer);
+
   const { isLoading, mutate } = trpc.useMutation('client.create', {
     onSuccess: async () => {
       toast({

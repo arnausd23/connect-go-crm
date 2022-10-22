@@ -1,11 +1,11 @@
 import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
 import { Plan } from '@prisma/client';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { FiEdit3, FiTrash2 } from 'react-icons/fi';
 import { clearIntervalAsync } from 'set-interval-async';
-import { SetIntervalContext } from '../../../../pages';
 import { IEditPlan } from '../../../../server/common/validation/schemas';
 import { PLAN_ACCESS_TYPE, SUCCESS_MESSAGE } from '../../../../utils/constants';
+import { useStore } from '../../../../utils/fast-context';
 import { trpc } from '../../../../utils/trpc';
 import CustomModal from '../../../custom/custom-modal';
 import DeletePlanModal from '../../../modals/delete-plan-modal';
@@ -40,7 +40,7 @@ const CreatedPlansActionsCell = ({ data }: CreatedPlansActionsCellProps) => {
     accessType,
   });
 
-  const { timer } = useContext(SetIntervalContext);
+  const [timer] = useStore((store) => store.timer);
 
   const { isLoading: editPlanIsLoading, mutate: editPlanMutate } =
     trpc.useMutation('plan.edit', {

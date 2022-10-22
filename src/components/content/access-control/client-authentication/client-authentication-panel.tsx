@@ -1,21 +1,21 @@
 import { CircularProgress, Flex, IconButton } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { useContext } from 'react';
 import { FiMaximize } from 'react-icons/fi';
-import { AccessControlContext } from '../access-control';
+import { useStore } from '../../../../utils/fast-context';
 import ClientAuthentication from './client-authentication';
 import ClientAuthenticationDetectionBox from './client-authentication-detection-box';
 import ClientAuthenticationMessage from './client-authentication-message';
 
-const ClientAuthenticationPanel = () => {
-  const {
-    isClientAuthReady,
-    isNewWindow,
-    setOpenNewWindow,
-    showAccessAuthenticationMessage,
-    showDetectionBox,
-  } = useContext(AccessControlContext);
+const ClientAuthenticationPanel = ({
+  isNewWindow,
+}: {
+  isNewWindow: boolean;
+}) => {
   const [ref] = useAutoAnimate<HTMLDivElement>();
+
+  const [{ showBox, isReadyToOpen, showMessage }, setStore] = useStore(
+    (store) => store
+  );
 
   return (
     <Flex
@@ -28,15 +28,15 @@ const ClientAuthenticationPanel = () => {
       w={'100%'}
       ref={ref}
     >
-      <ClientAuthentication />
+      <ClientAuthentication isNewWindow={isNewWindow} />
       {!isNewWindow && (
         <Flex bottom={'0px'} m={'0.5rem'} position={'absolute'} right={'0px'}>
-          {isClientAuthReady ? (
+          {isReadyToOpen ? (
             <IconButton
               aria-label={'Fullscreen'}
-              disabled={!isClientAuthReady}
+              disabled={!isReadyToOpen}
               icon={<FiMaximize size={'1.25rem'} />}
-              onClick={() => setOpenNewWindow!(true)}
+              onClick={() => setStore({ openNewWindow: true })}
               variant={'ghost'}
             />
           ) : (
@@ -48,10 +48,10 @@ const ClientAuthenticationPanel = () => {
           )}
         </Flex>
       )}
-      {showDetectionBox ? <ClientAuthenticationDetectionBox /> : undefined}
-      {showAccessAuthenticationMessage ? (
-        <ClientAuthenticationMessage />
+      {showBox ? (
+        <ClientAuthenticationDetectionBox isNewWindow={isNewWindow} />
       ) : undefined}
+      {showMessage ? <ClientAuthenticationMessage /> : undefined}
     </Flex>
   );
 };

@@ -1,43 +1,16 @@
 import { Flex, TabList, TabPanels, Tabs } from '@chakra-ui/react';
-import { createContext, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { FiClock, FiUserCheck } from 'react-icons/fi';
 import { FrameStyles, Window } from 'react-mirror';
-import {
-  ClientAuthenticationContext,
-  ClientAuthenticationInfo,
-  CUSTOM_TAB_LABEL,
-  DetectionBoxInfo,
-} from '../../../utils/constants';
+import { CUSTOM_TAB_LABEL } from '../../../utils/constants';
+import { useStore } from '../../../utils/fast-context';
 import CustomTab from '../../custom/custom-tab';
 import CustomTabPanel from '../../custom/custom-tab-panel';
 import AccessHistoryPanel from './access-history/access-history-panel';
 import ClientAuthenticationPanel from './client-authentication/client-authentication-panel';
 
 const AccessControl = () => {
-  const [openNewWindow, setOpenNewWindow] = useState<boolean>(false);
-  const [showAccessAuthenticationMessage, setShowAccessAuthenticationMessage] =
-    useState<boolean>(false);
-  const [accessAuthenticationInfo, setAccessAuthenticationInfo] =
-    useState<ClientAuthenticationInfo>({
-      bgColor: 'authGreen',
-      endingDate: undefined,
-      footer: undefined,
-      header: undefined,
-      name: undefined,
-      startingDate: undefined,
-    });
-  const [isClientAuthReady, setIsClientAuthReady] = useState<boolean>(false);
-  const [showDetectionBox, setShowDetectionBox] = useState<boolean>(false);
-  const [detectionBoxInfo, setDetectionBoxInfo] = useState<DetectionBoxInfo>({
-    x: 0,
-    y: 0,
-    h: 0,
-    w: 0,
-    color: '#ef5350',
-    originHeight: 0,
-    originWidth: 0,
-  });
-  const [newWindowRef, setNewWindowRef] = useState<any>(null);
+  const [openNewWindow, setStore] = useStore((store) => store.openNewWindow);
 
   return (
     <Flex h={'100%'} w={'100%'}>
@@ -54,31 +27,7 @@ const AccessControl = () => {
         </TabList>
         <TabPanels h={'calc(100% - 2.4rem)'}>
           <CustomTabPanel
-            body={
-              <AccessControlContext.Provider
-                value={{
-                  isNewWindow: false,
-                  openNewWindow: openNewWindow,
-                  setOpenNewWindow: setOpenNewWindow,
-                  showAccessAuthenticationMessage:
-                    showAccessAuthenticationMessage,
-                  setShowAccessAuthenticationMessage:
-                    setShowAccessAuthenticationMessage,
-                  accessAuthenticationInfo: accessAuthenticationInfo,
-                  setAccessAuthenticationInfo: setAccessAuthenticationInfo,
-                  isClientAuthReady: isClientAuthReady,
-                  setIsClientAuthReady: setIsClientAuthReady,
-                  showDetectionBox: showDetectionBox,
-                  setShowDetectionBox: setShowDetectionBox,
-                  detectionBoxInfo: detectionBoxInfo,
-                  setDetectionBoxInfo: setDetectionBoxInfo,
-                  newWindowRef: newWindowRef,
-                  setNewWindowRef: setNewWindowRef,
-                }}
-              >
-                <ClientAuthenticationPanel />
-              </AccessControlContext.Provider>
-            }
+            body={<ClientAuthenticationPanel isNewWindow={false} />}
           />
           <CustomTabPanel body={<AccessHistoryPanel />} />
         </TabPanels>
@@ -86,32 +35,10 @@ const AccessControl = () => {
           <Window
             target={CUSTOM_TAB_LABEL.ClientAuthentication}
             features={{ width: 800, height: 600 }}
-            onClose={(): void => setOpenNewWindow(false)}
+            onClose={(): void => setStore({ openNewWindow: false })}
           >
             <FrameStyles />
-            <AccessControlContext.Provider
-              value={{
-                isNewWindow: true,
-                openNewWindow: openNewWindow,
-                setOpenNewWindow: setOpenNewWindow,
-                showAccessAuthenticationMessage:
-                  showAccessAuthenticationMessage,
-                setShowAccessAuthenticationMessage:
-                  setShowAccessAuthenticationMessage,
-                accessAuthenticationInfo: accessAuthenticationInfo,
-                setAccessAuthenticationInfo: setAccessAuthenticationInfo,
-                isClientAuthReady: isClientAuthReady,
-                setIsClientAuthReady: setIsClientAuthReady,
-                showDetectionBox: showDetectionBox,
-                setShowDetectionBox: setShowDetectionBox,
-                detectionBoxInfo: detectionBoxInfo,
-                setDetectionBoxInfo: setDetectionBoxInfo,
-                newWindowRef: newWindowRef,
-                setNewWindowRef: setNewWindowRef,
-              }}
-            >
-              <ClientAuthenticationPanel />
-            </AccessControlContext.Provider>
+            <ClientAuthenticationPanel isNewWindow={true} />
           </Window>
         )}
       </Tabs>
@@ -120,7 +47,3 @@ const AccessControl = () => {
 };
 
 export default AccessControl;
-
-export const AccessControlContext = createContext<ClientAuthenticationContext>(
-  {}
-);
