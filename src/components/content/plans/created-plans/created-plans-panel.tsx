@@ -53,6 +53,7 @@ const CreatedPlansPanel = () => {
     ['plan.getAll', { skip: pageIndex, take: pageSize }],
     {
       keepPreviousData: true,
+      refetchOnWindowFocus: false,
     }
   );
 

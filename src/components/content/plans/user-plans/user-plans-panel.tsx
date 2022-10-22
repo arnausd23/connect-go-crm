@@ -100,6 +100,7 @@ const UserPlansPanel = () => {
     ],
     {
       keepPreviousData: true,
+      refetchOnWindowFocus: false,
     }
   );
 

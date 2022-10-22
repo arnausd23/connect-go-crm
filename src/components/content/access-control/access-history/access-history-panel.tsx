@@ -84,6 +84,7 @@ const AccessHistoryPanel = () => {
     ],
     {
       keepPreviousData: true,
+      refetchOnWindowFocus: false,
     }
   );
 

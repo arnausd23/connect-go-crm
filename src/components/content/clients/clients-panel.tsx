@@ -75,6 +75,7 @@ const ClientsPanel = () => {
     ],
     {
       keepPreviousData: true,
+      refetchOnWindowFocus: false,
     }
   );
 
