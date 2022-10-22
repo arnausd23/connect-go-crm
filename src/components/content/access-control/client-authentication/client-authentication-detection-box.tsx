@@ -13,7 +13,7 @@ const ClientAuthenticationDetectionBox = ({
   const [info, setInfo] = useState({ x: 0, y: 0, h: 0, w: 0 });
 
   useEffect(() => {
-    if (isNewWindow && newWindowRef.current) {
+    if (isNewWindow && newWindowRef?.current) {
       const { clientHeight, clientWidth } = newWindowRef.current;
       const newX = (x / originWidth) * clientWidth;
       const newY = (y / originHeight) * clientHeight;
@@ -35,11 +35,11 @@ const ClientAuthenticationDetectionBox = ({
 
   return (
     <Flex
-      w={`${isNewWindow ? boxInfo.w : w}px`}
-      h={`${isNewWindow ? boxInfo.h : h}px`}
+      w={`${isNewWindow ? info.w : w}px`}
+      h={`${isNewWindow ? info.h : h}px`}
       position={'absolute'}
-      left={`${isNewWindow ? boxInfo.x : x}px`}
-      top={`${isNewWindow ? boxInfo.y : y}px`}
+      left={`${isNewWindow ? info.x : x}px`}
+      top={`${isNewWindow ? info.y : y}px`}
       overflow={'hidden'}
       borderRadius={'sm'}
     >

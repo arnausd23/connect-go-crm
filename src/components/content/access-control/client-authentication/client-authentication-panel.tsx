@@ -1,5 +1,6 @@
 import { CircularProgress, Flex, IconButton } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { useEffect } from 'react';
 import { FiMaximize } from 'react-icons/fi';
 import { useStore } from '../../../../utils/fast-context';
 import ClientAuthentication from './client-authentication';
@@ -17,6 +18,9 @@ const ClientAuthenticationPanel = ({
     (store) => store
   );
 
+  useEffect(() => {
+    console.log('panel rendered');
+  });
   return (
     <Flex
       bgColor={'light'}
