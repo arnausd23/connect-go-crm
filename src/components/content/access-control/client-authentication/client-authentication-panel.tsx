@@ -1,8 +1,11 @@
 import { CircularProgress, Flex, IconButton } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { useEffect } from 'react';
 import { FiMaximize } from 'react-icons/fi';
-import { useStore } from '../../../../utils/fast-context';
+import {
+  useAuthenticationMessageStore,
+  useDetectionBoxStore,
+  useNewWindowStore,
+} from '../../../../utils/fast-context';
 import ClientAuthentication from './client-authentication';
 import ClientAuthenticationDetectionBox from './client-authentication-detection-box';
 import ClientAuthenticationMessage from './client-authentication-message';
@@ -14,13 +17,14 @@ const ClientAuthenticationPanel = ({
 }) => {
   const [ref] = useAutoAnimate<HTMLDivElement>();
 
-  const [{ showBox, isReadyToOpen, showMessage }, setStore] = useStore(
-    (store) => store
+  const [isReadyToOpen, setNewWindowStore] = useNewWindowStore(
+    (store) => store.isReadyToOpen
   );
+  const [showMessage] = useAuthenticationMessageStore(
+    (store) => store.showMessage
+  );
+  const [showBox] = useDetectionBoxStore((store) => store.showBox);
 
-  useEffect(() => {
-    console.log('panel rendered');
-  });
   return (
     <Flex
       bgColor={'light'}
@@ -40,7 +44,7 @@ const ClientAuthenticationPanel = ({
               aria-label={'Fullscreen'}
               disabled={!isReadyToOpen}
               icon={<FiMaximize size={'1.25rem'} />}
-              onClick={() => setStore({ openNewWindow: true })}
+              onClick={() => setNewWindowStore({ isOpen: true })}
               variant={'ghost'}
             />
           ) : (

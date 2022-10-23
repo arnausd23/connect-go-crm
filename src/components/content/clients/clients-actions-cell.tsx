@@ -4,7 +4,7 @@ import { FiEdit3, FiTrash2 } from 'react-icons/fi';
 import { clearIntervalAsync } from 'set-interval-async';
 import { IEditClient } from '../../../server/common/validation/schemas';
 import { ClientsTableInfo, SUCCESS_MESSAGE } from '../../../utils/constants';
-import { useStore } from '../../../utils/fast-context';
+import { useTimerStore } from '../../../utils/fast-context';
 import { trpc } from '../../../utils/trpc';
 import CustomModal from '../../custom/custom-modal';
 import DeleteClientModal from '../../modals/delete-client-modal';
@@ -35,7 +35,7 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
     phoneNumber: phoneNumber ?? '',
   });
 
-  const [timer] = useStore((store) => store.timer);
+  const [timer] = useTimerStore((store) => store.timer);
 
   const { isLoading: editClientIsLoading, mutate: editClientMutate } =
     trpc.useMutation('client.edit', {

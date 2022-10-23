@@ -142,28 +142,3 @@ export type DetectionBoxInfo = {
   originWidth: number;
   originHeight: number;
 };
-
-export type ClientAuthenticationContext = {
-  isNewWindow?: boolean;
-  openNewWindow?: boolean;
-  setOpenNewWindow?: Dispatch<SetStateAction<boolean>>;
-  showAccessAuthenticationMessage?: boolean;
-  setShowAccessAuthenticationMessage?: Dispatch<SetStateAction<boolean>>;
-  accessAuthenticationInfo?: ClientAuthenticationInfo;
-  setAccessAuthenticationInfo?: Dispatch<
-    SetStateAction<ClientAuthenticationInfo>
-  >;
-  isClientAuthReady?: boolean;
-  setIsClientAuthReady?: Dispatch<SetStateAction<boolean>>;
-  showDetectionBox?: boolean;
-  setShowDetectionBox?: Dispatch<SetStateAction<boolean>>;
-  detectionBoxInfo?: DetectionBoxInfo;
-  setDetectionBoxInfo?: Dispatch<SetStateAction<DetectionBoxInfo>>;
-  newWindowRef?: RefObject<HTMLDivElement> | null;
-  setNewWindowRef?: Dispatch<SetStateAction<RefObject<HTMLDivElement> | null>>;
-};
-
-export type IntervalContext = {
-  timer?: SetIntervalAsyncTimer<[]>;
-  setTimer?: Dispatch<SetStateAction<SetIntervalAsyncTimer<[]>>>;
-};

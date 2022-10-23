@@ -1,6 +1,6 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import * as faceapi from 'face-api.js';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Webcam from 'react-webcam';
 import { setIntervalAsync } from 'set-interval-async';
 import {
@@ -8,7 +8,12 @@ import {
   ERROR_MESSAGE,
   FACE_MATCH_DISTANCE_THRESHOLD,
 } from '../../../../utils/constants';
-import { useStore } from '../../../../utils/fast-context';
+import {
+  useAuthenticationMessageStore,
+  useDetectionBoxStore,
+  useNewWindowStore,
+  useTimerStore,
+} from '../../../../utils/fast-context';
 import { trpc } from '../../../../utils/trpc';
 
 const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
@@ -18,9 +23,14 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
   const ctx = trpc.useContext();
   const ref = useRef<HTMLDivElement>(null);
 
-  const [{ openNewWindow, isReadyToOpen }, setStore] = useStore(
+  const [{ isOpen, isReadyToOpen }, setNewWindowStore] = useNewWindowStore(
     (store) => store
   );
+  const [{}, setDetectionBoxStore] = useDetectionBoxStore((store) => store);
+  const [{}, setAuthenticationMessageStore] = useAuthenticationMessageStore(
+    (store) => store
+  );
+  const [{}, setTimerStore] = useTimerStore((store) => store);
 
   useEffect(() => {
     if (!isNewWindow) webcamRef && loadFaceapiModels();
@@ -35,10 +45,10 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
   };
 
   useEffect(() => {
-    if (openNewWindow) {
-      setStore({ newWindowRef: ref });
+    if (isOpen) {
+      setNewWindowStore({ ref });
     }
-  }, [openNewWindow]);
+  }, [isOpen]);
 
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',
@@ -137,7 +147,7 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
             canvasRef.current
           ).canvas;
 
-          setStore({
+          setDetectionBoxStore({
             boxInfo: {
               h: (height / canvasHeight) * offsetHeight,
               w: (width / canvasWidth) * offsetWidth,
@@ -156,24 +166,24 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
               ci,
               date: now,
             });
-            setStore({
+            setAuthenticationMessageStore({
               messageInfo: accessAuthenticationInfo,
               showMessage: true,
             });
             if (!isReadyToOpen)
-              setStore({
+              setNewWindowStore({
                 isReadyToOpen: true,
               });
             await delay(2000);
           } else {
             console.log('NO MATCH:', ci, now, distance);
-            setStore({
+            setAuthenticationMessageStore({
               showMessage: false,
             });
           }
         } else {
           console.log('NO FACE DETECTED');
-          setStore({
+          setDetectionBoxStore({
             showBox: false,
             boxInfo: {
               h: 0,
@@ -184,12 +194,14 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
               originHeight: 0,
               originWidth: 0,
             },
+          });
+          setAuthenticationMessageStore({
             showMessage: false,
           });
         }
       }
     }, 500);
-    setStore({ timer });
+    setTimerStore({ timer });
   };
 
   useEffect(() => {

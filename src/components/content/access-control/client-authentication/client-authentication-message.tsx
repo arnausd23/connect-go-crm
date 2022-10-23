@@ -1,8 +1,10 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { useStore } from '../../../../utils/fast-context';
+import { useAuthenticationMessageStore } from '../../../../utils/fast-context';
 
 const ClientAuthenticationMessage = () => {
-  const [messageInfo] = useStore((store) => store.messageInfo);
+  const [messageInfo] = useAuthenticationMessageStore(
+    (store) => store.messageInfo
+  );
 
   const { bgColor, endingDate, footer, header, name, startingDate } =
     messageInfo;

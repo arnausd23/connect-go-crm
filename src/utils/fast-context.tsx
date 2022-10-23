@@ -83,29 +83,65 @@ interface ClientAuthenticationStore {
   timer: any;
 }
 
-export const { Provider, useStore } =
-  createFastContext<ClientAuthenticationStore>({
-    openNewWindow: false,
+interface DetectionBoxStore {
+  showBox: boolean;
+  boxInfo: DetectionBoxInfo;
+}
+
+interface AuthenticationMessageStore {
+  showMessage: boolean;
+  messageInfo: ClientAuthenticationInfo;
+}
+
+interface NewWindowStore {
+  ref: any;
+  isReadyToOpen: boolean;
+  isOpen: boolean;
+}
+
+interface TimerStore {
+  timer: any;
+}
+
+export const {
+  Provider: DetectionBoxProvider,
+  useStore: useDetectionBoxStore,
+} = createFastContext<DetectionBoxStore>({
+  showBox: false,
+  boxInfo: {
+    x: 0,
+    y: 0,
+    h: 0,
+    w: 0,
+    color: '#ef5350',
+    originHeight: 0,
+    originWidth: 0,
+  },
+});
+
+export const {
+  Provider: AuthenticationMessageProvider,
+  useStore: useAuthenticationMessageStore,
+} = createFastContext<AuthenticationMessageStore>({
+  showMessage: false,
+  messageInfo: {
+    bgColor: 'authGreen',
+    endingDate: undefined,
+    footer: undefined,
+    header: undefined,
+    name: undefined,
+    startingDate: undefined,
+  },
+});
+
+export const { Provider: NewWindowProvider, useStore: useNewWindowStore } =
+  createFastContext<NewWindowStore>({
+    ref: null,
     isReadyToOpen: false,
-    showMessage: false,
-    showBox: false,
-    newWindowRef: null,
-    boxInfo: {
-      x: 0,
-      y: 0,
-      h: 0,
-      w: 0,
-      color: '#ef5350',
-      originHeight: 0,
-      originWidth: 0,
-    },
-    messageInfo: {
-      bgColor: 'authGreen',
-      endingDate: undefined,
-      footer: undefined,
-      header: undefined,
-      name: undefined,
-      startingDate: undefined,
-    },
+    isOpen: false,
+  });
+
+export const { Provider: TimerProvider, useStore: useTimerStore } =
+  createFastContext<TimerStore>({
     timer: null,
   });

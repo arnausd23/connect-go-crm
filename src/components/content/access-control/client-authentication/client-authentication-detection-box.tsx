@@ -1,37 +1,31 @@
 import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useStore } from '../../../../utils/fast-context';
+import {
+  useDetectionBoxStore,
+  useNewWindowStore,
+} from '../../../../utils/fast-context';
 
 const ClientAuthenticationDetectionBox = ({
   isNewWindow,
 }: {
   isNewWindow: boolean;
 }) => {
-  const [{ newWindowRef, boxInfo }] = useStore((store) => store);
+  const [boxInfo] = useDetectionBoxStore((store) => store.boxInfo);
+  const [ref] = useNewWindowStore((store) => store.ref);
 
   const { x, y, h, w, color, originHeight, originWidth } = boxInfo;
   const [info, setInfo] = useState({ x: 0, y: 0, h: 0, w: 0 });
 
   useEffect(() => {
-    if (isNewWindow && newWindowRef?.current) {
-      const { clientHeight, clientWidth } = newWindowRef.current;
+    if (isNewWindow && ref?.current) {
+      const { clientHeight, clientWidth } = ref.current;
       const newX = (x / originWidth) * clientWidth;
       const newY = (y / originHeight) * clientHeight;
       const newH = (h / originHeight) * clientHeight;
       const newW = (w / originWidth) * clientWidth;
       setInfo({ x: newX, y: newY, h: newH, w: newW });
     }
-  }, [
-    boxInfo,
-    h,
-    w,
-    x,
-    y,
-    originHeight,
-    originWidth,
-    isNewWindow,
-    newWindowRef,
-  ]);
+  }, [boxInfo, h, w, x, y, originHeight, originWidth, isNewWindow, ref]);
 
   return (
     <Flex
