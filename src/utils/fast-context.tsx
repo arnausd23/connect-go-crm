@@ -72,17 +72,6 @@ export default function createFastContext<Store>(initialState: Store) {
   };
 }
 
-interface ClientAuthenticationStore {
-  showBox: boolean;
-  boxInfo: DetectionBoxInfo;
-  showMessage: boolean;
-  messageInfo: ClientAuthenticationInfo;
-  openNewWindow: boolean;
-  newWindowRef: any;
-  isReadyToOpen: boolean;
-  timer: any;
-}
-
 interface DetectionBoxStore {
   showBox: boolean;
   boxInfo: DetectionBoxInfo;

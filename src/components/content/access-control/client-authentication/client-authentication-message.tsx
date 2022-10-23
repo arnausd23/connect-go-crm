@@ -2,8 +2,8 @@ import { Flex, Text } from '@chakra-ui/react';
 import { useAuthenticationMessageStore } from '../../../../utils/fast-context';
 
 const ClientAuthenticationMessage = () => {
-  const [messageInfo] = useAuthenticationMessageStore(
-    (store) => store.messageInfo
+  const [{ messageInfo, showMessage }] = useAuthenticationMessageStore(
+    (store) => store
   );
 
   const { bgColor, endingDate, footer, header, name, startingDate } =
@@ -38,6 +38,7 @@ const ClientAuthenticationMessage = () => {
       p={header && '1rem'}
       position={'absolute'}
       shadow={'md'}
+      visibility={showMessage ? 'visible' : 'hidden'}
     >
       <Text fontSize={'22px'} fontWeight={'semibold'}>
         {header}

@@ -34,7 +34,7 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
 
   useEffect(() => {
     if (!isNewWindow) webcamRef && loadFaceapiModels();
-  }, []);
+  }, [isNewWindow]);
 
   const loadFaceapiModels = async () => {
     await Promise.all([
@@ -48,7 +48,7 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
     if (isOpen) {
       setNewWindowStore({ ref });
     }
-  }, [isOpen]);
+  }, [isOpen, setNewWindowStore]);
 
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',

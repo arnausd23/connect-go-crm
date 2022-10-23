@@ -10,7 +10,7 @@ const ClientAuthenticationDetectionBox = ({
 }: {
   isNewWindow: boolean;
 }) => {
-  const [boxInfo] = useDetectionBoxStore((store) => store.boxInfo);
+  const [{ boxInfo, showBox }] = useDetectionBoxStore((store) => store);
   const [ref] = useNewWindowStore((store) => store.ref);
 
   const { x, y, h, w, color, originHeight, originWidth } = boxInfo;
@@ -36,6 +36,7 @@ const ClientAuthenticationDetectionBox = ({
       top={`${isNewWindow ? info.y : y}px`}
       overflow={'hidden'}
       borderRadius={'sm'}
+      visibility={showBox ? 'visible' : 'hidden'}
     >
       <Flex
         borderTop={`3px solid ${color}`}

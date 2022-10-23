@@ -1,11 +1,4 @@
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
-import { SetIntervalAsyncTimer } from 'set-interval-async';
+import { useEffect, useState } from 'react';
 
 export const NAV_BAR_WIDTH = 320;
 export const FACE_MATCH_DISTANCE_THRESHOLD = 0.45;
