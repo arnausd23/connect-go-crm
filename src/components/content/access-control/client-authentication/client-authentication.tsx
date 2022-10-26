@@ -32,10 +32,6 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
   );
   const [{}, setTimerStore] = useTimerStore((store) => store);
 
-  useEffect(() => {
-    if (!isNewWindow) webcamRef && loadFaceapiModels();
-  }, [isNewWindow]);
-
   const loadFaceapiModels = async () => {
     await Promise.all([
       faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
@@ -74,6 +70,7 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
     enabled: !isNewWindow,
     onSuccess: async (data) => {
       webcamRef.current!.video!.muted = true;
+      if (!isReadyToOpen) await loadFaceapiModels()
       const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
       data.forEach((labeledFaceDescriptor) => {
         faceDescriptors.push(
