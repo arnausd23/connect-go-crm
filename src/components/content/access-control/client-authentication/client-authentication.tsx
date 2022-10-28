@@ -1,6 +1,7 @@
-import { Flex, useToast } from '@chakra-ui/react';
+import { Button, Flex, useToast } from '@chakra-ui/react';
 import * as faceapi from 'face-api.js';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { FiUpload } from 'react-icons/fi';
 import Webcam from 'react-webcam';
 import { setIntervalAsync } from 'set-interval-async';
 import {
@@ -41,8 +42,13 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
   };
 
   useEffect(() => {
+    webcamRef.current!.video!.volume = 0;
+  }, []);
+
+  useEffect(() => {
     if (isOpen) {
       setNewWindowStore({ ref });
+      console.log("REF ISOPEN")
     }
   }, [isOpen, setNewWindowStore]);
 
@@ -63,35 +69,38 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
     }
   );
 
-  trpc.useQuery(['labeledFaceDescriptor.getAll'], {
+  const { refetch } = trpc.useQuery(['labeledFaceDescriptor.getAll'], {
     staleTime: Infinity,
     retry: false,
     refetchOnWindowFocus: false,
-    enabled: !isNewWindow,
+    enabled: !isNewWindow && isReadyToOpen,
     onSuccess: async (data) => {
-      webcamRef.current!.video!.muted = true;
-      if (!isReadyToOpen) await loadFaceapiModels()
-      const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
-      data.forEach((labeledFaceDescriptor) => {
-        faceDescriptors.push(
-          faceapi.LabeledFaceDescriptors.fromJSON(labeledFaceDescriptor.data)
-        );
-      });
-      if (faceDescriptors.length > 0) {
-        const faceMatcher: faceapi.FaceMatcher = new faceapi.FaceMatcher(
-          faceDescriptors,
-          FACE_MATCH_DISTANCE_THRESHOLD
-        );
-        await faceDetection(faceMatcher);
+      if(!isNewWindow){
+        console.log('LABELED DESCRIPTORS LOADING')
+        const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
+        data.forEach((labeledFaceDescriptor) => {
+          faceDescriptors.push(
+            faceapi.LabeledFaceDescriptors.fromJSON(labeledFaceDescriptor.data)
+            );
+          });
+          if (faceDescriptors.length > 0) {
+            const faceMatcher: faceapi.FaceMatcher = new faceapi.FaceMatcher(
+              faceDescriptors,
+              FACE_MATCH_DISTANCE_THRESHOLD
+              );
+              await faceDetection(faceMatcher);
+          } else {
+              webcamRef.current!.video!.muted = true;
+              toast({
+                description: ERROR_MESSAGE.FailedToLoadModels,
+                duration: 3000,
+                isClosable: true,
+                status: 'error',
+                variant: 'top-accent',
+              });
+          }
       } else {
-        webcamRef.current!.video!.muted = true;
-        toast({
-          description: ERROR_MESSAGE.FailedToLoadModels,
-          duration: 3000,
-          isClosable: true,
-          status: 'error',
-          variant: 'top-accent',
-        });
+        setNewWindowStore({ ref });
       }
     },
     onError: (error) => {
@@ -199,9 +208,13 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
     setTimerStore({ timer });
   };
 
-  useEffect(() => {
-    webcamRef.current!.video!.volume = 0;
-  }, []);
+  const [modelsLoaded,setModelsLoaded]=useState(false)
+  const handleLoadModels = async ()=>{
+    webcamRef.current!.video!.muted = true;
+    await loadFaceapiModels()
+    setModelsLoaded(true)
+    refetch()
+  }
 
   return (
     <Flex
@@ -218,6 +231,10 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
         ref={webcamRef}
       />
       <canvas className={'client-auth-canvas'} ref={canvasRef} />
+      {!isNewWindow && !modelsLoaded ?
+        <Button fontSize={"14px"} onClick={async ()=> await handleLoadModels()} leftIcon={<FiUpload size={"1.25rem"}/>} position={"absolute"} bottom={"0"} mb={'0.5rem'}>{"Cargar modelos"}</Button>
+        :
+        undefined}
     </Flex>
   );
 };
