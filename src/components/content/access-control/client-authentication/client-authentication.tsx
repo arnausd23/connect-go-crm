@@ -107,19 +107,18 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
 
   const faceDetection = async (faceMatcher: faceapi.FaceMatcher) => {
     const timer = setIntervalAsync(async () => {
-      if (webcamRef.current) {
         const detection = await faceapi
-          .detectSingleFace(webcamRef.current.video!)
+          .detectSingleFace(webcamRef.current!.video!)
           .withFaceLandmarks()
           .withFaceDescriptor();
         if (detection && detection.detection.score > 0.75) {
           console.log('DETECTION SCORE:', detection.detection.score);
           canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
-            webcamRef.current.video!
+            webcamRef.current!.video!
           );
           faceapi.matchDimensions(
             canvasRef.current,
-            webcamRef.current.video!,
+            webcamRef.current!.video!,
             true
           );
           const { distance, label: ci } = faceMatcher.findBestMatch(
@@ -196,7 +195,6 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
             showMessage: false,
           });
         }
-      }
     }, 500);
     setTimerStore({ timer });
   };
