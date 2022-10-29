@@ -90,6 +90,7 @@ interface NewWindowStore {
 
 interface TimerStore {
   timer: any;
+  areModelsLoaded: boolean;
 }
 
 export const {
@@ -133,4 +134,5 @@ export const { Provider: NewWindowProvider, useStore: useNewWindowStore } =
 export const { Provider: TimerProvider, useStore: useTimerStore } =
   createFastContext<TimerStore>({
     timer: null,
+    areModelsLoaded: false,
   });

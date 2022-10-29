@@ -5,7 +5,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { ICreateClient } from '../../server/common/validation/schemas';
 import {
@@ -33,7 +33,7 @@ const NavbarPrimaryActionButton = () => {
     labeledFaceDescriptorJson: undefined,
   });
   const clientPhotoRef = useRef<HTMLImageElement>();
-  const [timer] = useTimerStore((store) => store.timer);
+  const [{ timer, areModelsLoaded }] = useTimerStore((store) => store);
 
   const { isLoading, mutate } = trpc.useMutation('client.create', {
     onSuccess: async () => {
@@ -119,6 +119,7 @@ const NavbarPrimaryActionButton = () => {
     >
       <IconButton
         aria-label={NAVBAR_ACTION_BAR_BUTTON_LABEL.CreateClient}
+        disabled={!areModelsLoaded}
         h={'100%'}
         icon={
           <Flex

@@ -31,7 +31,9 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
   const [{}, setAuthenticationMessageStore] = useAuthenticationMessageStore(
     (store) => store
   );
-  const [{}, setTimerStore] = useTimerStore((store) => store);
+  const [areModelsLoaded, setTimerStore] = useTimerStore(
+    (store) => store.areModelsLoaded
+  );
 
   const loadFaceapiModels = async () => {
     await Promise.all([
@@ -48,7 +50,7 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
   useEffect(() => {
     if (isOpen) {
       setNewWindowStore({ ref });
-      console.log("REF ISOPEN")
+      console.log('REF ISOPEN');
     }
   }, [isOpen, setNewWindowStore]);
 
@@ -73,32 +75,32 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
     staleTime: Infinity,
     retry: false,
     refetchOnWindowFocus: false,
-    enabled: !isNewWindow && isReadyToOpen,
+    enabled: !isNewWindow && areModelsLoaded,
     onSuccess: async (data) => {
-      if(!isNewWindow){
-        console.log('LABELED DESCRIPTORS LOADING')
+      if (!isNewWindow) {
+        console.log('LABELED DESCRIPTORS LOADING');
         const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
         data.forEach((labeledFaceDescriptor) => {
           faceDescriptors.push(
             faceapi.LabeledFaceDescriptors.fromJSON(labeledFaceDescriptor.data)
-            );
+          );
+        });
+        if (faceDescriptors.length > 0) {
+          const faceMatcher: faceapi.FaceMatcher = new faceapi.FaceMatcher(
+            faceDescriptors,
+            FACE_MATCH_DISTANCE_THRESHOLD
+          );
+          await faceDetection(faceMatcher);
+        } else {
+          webcamRef.current!.video!.muted = true;
+          toast({
+            description: ERROR_MESSAGE.FailedToLoadModels,
+            duration: 3000,
+            isClosable: true,
+            status: 'error',
+            variant: 'top-accent',
           });
-          if (faceDescriptors.length > 0) {
-            const faceMatcher: faceapi.FaceMatcher = new faceapi.FaceMatcher(
-              faceDescriptors,
-              FACE_MATCH_DISTANCE_THRESHOLD
-              );
-              await faceDetection(faceMatcher);
-          } else {
-              webcamRef.current!.video!.muted = true;
-              toast({
-                description: ERROR_MESSAGE.FailedToLoadModels,
-                duration: 3000,
-                isClosable: true,
-                status: 'error',
-                variant: 'top-accent',
-              });
-          }
+        }
       } else {
         setNewWindowStore({ ref });
       }
@@ -116,105 +118,100 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
 
   const faceDetection = async (faceMatcher: faceapi.FaceMatcher) => {
     const timer = setIntervalAsync(async () => {
-        const detection = await faceapi
-          .detectSingleFace(webcamRef.current!.video!)
-          .withFaceLandmarks()
-          .withFaceDescriptor();
-        if (detection && detection.detection.score > 0.75) {
-          console.log('DETECTION SCORE:', detection.detection.score);
-          canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
-            webcamRef.current!.video!
-          );
-          faceapi.matchDimensions(
-            canvasRef.current,
-            webcamRef.current!.video!,
-            true
-          );
-          const { distance, label: ci } = faceMatcher.findBestMatch(
-            detection.descriptor
-          );
-          const now = new Date();
-          const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
-          const detectionBoxColor = foundMatch ? '#66bb6a' : '#ef5350';
+      const detection = await faceapi
+        .detectSingleFace(webcamRef.current!.video!)
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+      if (detection && detection.detection.score > 0.75) {
+        console.log('DETECTION SCORE:', detection.detection.score);
+        canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
+          webcamRef.current!.video!
+        );
+        faceapi.matchDimensions(
+          canvasRef.current,
+          webcamRef.current!.video!,
+          true
+        );
+        const { distance, label: ci } = faceMatcher.findBestMatch(
+          detection.descriptor
+        );
+        const now = new Date();
+        const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
+        const detectionBoxColor = foundMatch ? '#66bb6a' : '#ef5350';
 
-          const detectionBox = new faceapi.draw.DrawBox(
-            detection.detection.box,
-            {
-              boxColor: detectionBoxColor,
-              lineWidth: 1,
-            }
-          );
+        const detectionBox = new faceapi.draw.DrawBox(detection.detection.box, {
+          boxColor: detectionBoxColor,
+          lineWidth: 1,
+        });
 
-          const { height, width, x, y } = detectionBox.box;
-          const { height: canvasHeight, width: canvasWidth } =
-            canvasRef.current;
-          const { offsetHeight, offsetWidth } = faceapi.getContext2dOrThrow(
-            canvasRef.current
-          ).canvas;
+        const { height, width, x, y } = detectionBox.box;
+        const { height: canvasHeight, width: canvasWidth } = canvasRef.current;
+        const { offsetHeight, offsetWidth } = faceapi.getContext2dOrThrow(
+          canvasRef.current
+        ).canvas;
 
-          setDetectionBoxStore({
-            boxInfo: {
-              h: (height / canvasHeight) * offsetHeight,
-              w: (width / canvasWidth) * offsetWidth,
-              x: (x / canvasWidth) * offsetWidth,
-              y: (y / canvasHeight) * offsetHeight,
-              color: detectionBoxColor,
-              originHeight: offsetHeight,
-              originWidth: offsetWidth,
-            },
-            showBox: true,
+        setDetectionBoxStore({
+          boxInfo: {
+            h: (height / canvasHeight) * offsetHeight,
+            w: (width / canvasWidth) * offsetWidth,
+            x: (x / canvasWidth) * offsetWidth,
+            y: (y / canvasHeight) * offsetHeight,
+            color: detectionBoxColor,
+            originHeight: offsetHeight,
+            originWidth: offsetWidth,
+          },
+          showBox: true,
+        });
+
+        if (foundMatch) {
+          console.log('MATCH:', ci, now, distance);
+          const accessAuthenticationInfo = await createAccessHistoryMutate({
+            ci,
+            date: now,
           });
-
-          if (foundMatch) {
-            console.log('MATCH:', ci, now, distance);
-            const accessAuthenticationInfo = await createAccessHistoryMutate({
-              ci,
-              date: now,
+          setAuthenticationMessageStore({
+            messageInfo: accessAuthenticationInfo,
+            showMessage: true,
+          });
+          if (!isReadyToOpen)
+            setNewWindowStore({
+              isReadyToOpen: true,
             });
-            setAuthenticationMessageStore({
-              messageInfo: accessAuthenticationInfo,
-              showMessage: true,
-            });
-            if (!isReadyToOpen)
-              setNewWindowStore({
-                isReadyToOpen: true,
-              });
-            await delay(2000);
-          } else {
-            console.log('NO MATCH:', ci, now, distance);
-            setAuthenticationMessageStore({
-              showMessage: false,
-            });
-          }
+          await delay(2000);
         } else {
-          console.log('NO FACE DETECTED');
-          setDetectionBoxStore({
-            showBox: false,
-            boxInfo: {
-              h: 0,
-              w: 0,
-              x: 0,
-              y: 0,
-              color: '#ef5350',
-              originHeight: 0,
-              originWidth: 0,
-            },
-          });
+          console.log('NO MATCH:', ci, now, distance);
           setAuthenticationMessageStore({
             showMessage: false,
           });
         }
+      } else {
+        console.log('NO FACE DETECTED');
+        setDetectionBoxStore({
+          showBox: false,
+          boxInfo: {
+            h: 0,
+            w: 0,
+            x: 0,
+            y: 0,
+            color: '#ef5350',
+            originHeight: 0,
+            originWidth: 0,
+          },
+        });
+        setAuthenticationMessageStore({
+          showMessage: false,
+        });
+      }
     }, 500);
     setTimerStore({ timer });
   };
 
-  const [modelsLoaded,setModelsLoaded]=useState(false)
-  const handleLoadModels = async ()=>{
+  const handleLoadModels = async () => {
+    setTimerStore({ areModelsLoaded: true });
     webcamRef.current!.video!.muted = true;
-    await loadFaceapiModels()
-    setModelsLoaded(true)
-    refetch()
-  }
+    await loadFaceapiModels();
+    refetch();
+  };
 
   return (
     <Flex
@@ -231,10 +228,18 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
         ref={webcamRef}
       />
       <canvas className={'client-auth-canvas'} ref={canvasRef} />
-      {!isNewWindow && !modelsLoaded ?
-        <Button fontSize={"14px"} onClick={async ()=> await handleLoadModels()} leftIcon={<FiUpload size={"1.25rem"}/>} position={"absolute"} bottom={"0"} mb={'0.5rem'}>{"Cargar modelos"}</Button>
-        :
-        undefined}
+      {!isNewWindow && !areModelsLoaded ? (
+        <Button
+          fontSize={'14px'}
+          onClick={async () => await handleLoadModels()}
+          leftIcon={<FiUpload size={'1.25rem'} />}
+          position={'absolute'}
+          bottom={'0'}
+          mb={'0.5rem'}
+        >
+          {'Cargar modelos'}
+        </Button>
+      ) : undefined}
     </Flex>
   );
 };
