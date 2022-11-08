@@ -1,11 +1,12 @@
 import { Flex, Text } from '@chakra-ui/react';
-import { useAuthenticationMessageStore } from '../../../../utils/fast-context';
+import { ClientAuthenticationInfo } from '../../../../utils/constants';
 
-const ClientAuthenticationMessage = () => {
-  const [{ messageInfo, showMessage }] = useAuthenticationMessageStore(
-    (store) => store
-  );
-
+type ClientAuthenticationMessageProps = {
+  messageInfo: ClientAuthenticationInfo;
+};
+const ClientAuthenticationMessage = ({
+  messageInfo,
+}: ClientAuthenticationMessageProps) => {
   const { bgColor, endingDate, footer, header, name, startingDate } =
     messageInfo;
 
@@ -35,38 +36,37 @@ const ClientAuthenticationMessage = () => {
       flexDir={'column'}
       justifyContent={'space-between'}
       m={'1rem'}
-      p={header && '1rem'}
+      p={header && '1.5rem'}
       position={'absolute'}
       shadow={'md'}
-      visibility={showMessage ? 'visible' : 'hidden'}
     >
-      <Text fontSize={'22px'} fontWeight={'semibold'}>
+      <Text fontSize={'28px'} fontWeight={'semibold'}>
         {header}
       </Text>
-      <Text fontSize={'20px'}>{name}</Text>
+      <Text fontSize={'26px'}>{name}</Text>
       <Flex>
         {startingDate && (
           <Flex justifyContent={'center'} mr={'3rem'}>
-            <Text fontSize={'18px'} fontWeight={'semibold'}>
+            <Text fontSize={'24px'} fontWeight={'semibold'}>
               {'Fecha inicial:'}
             </Text>
-            <Text fontSize={'18px'}>
+            <Text fontSize={'24px'}>
               {startingDate.toLocaleString('es-BO').split(',')[0]}
             </Text>
           </Flex>
         )}
         {endingDate && (
           <Flex justifyContent={'center'} ml={'3rem'}>
-            <Text fontSize={'18px'} fontWeight={'semibold'}>
+            <Text fontSize={'24px'} fontWeight={'semibold'}>
               {'Fecha final:'}
             </Text>
-            <Text fontSize={'18px'}>
+            <Text fontSize={'24px'}>
               {endingDate.toLocaleString('es-BO').split(',')[0]}
             </Text>
           </Flex>
         )}
       </Flex>
-      <Text fontSize={'20px'} alignSelf={'end'}>
+      <Text fontSize={'26px'} alignSelf={'end'}>
         {footer}
       </Text>
     </Flex>

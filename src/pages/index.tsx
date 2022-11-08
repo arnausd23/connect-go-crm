@@ -1,19 +1,36 @@
 import { Flex, Tabs } from '@chakra-ui/react';
 import type { GetServerSideProps, NextPage } from 'next';
+import { useEffect } from 'react';
 import Content from '../components/content/content';
 import Navbar from '../components/navbar/navbar';
 import { getServerAuthSession } from '../server/common/get-server-auth-session';
-import { TimerProvider } from '../utils/fast-context';
+import { useTimerStore } from '../utils/fast-context';
+import * as faceapi from 'face-api.js';
 
 const Home: NextPage = () => {
+  const [_, setTimerStore] = useTimerStore((store) => store.areModelsLoaded);
+
+  const loadFaceapiModels = async () => {
+    await Promise.all([
+      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+      faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+    ]);
+  };
+
+  useEffect(() => {
+    (async () => {
+      await loadFaceapiModels();
+      setTimerStore({ areModelsLoaded: true });
+    })();
+  }, []);
+
   return (
     <Flex bgColor={'background'} h={'100vh'} w={'100%'}>
-      <TimerProvider>
-        <Tabs display='flex' w={'100%'}>
-          <Navbar />
-          <Content />
-        </Tabs>
-      </TimerProvider>
+      <Tabs display='flex' w={'100%'}>
+        <Navbar />
+        <Content />
+      </Tabs>
     </Flex>
   );
 };

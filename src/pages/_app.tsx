@@ -10,6 +10,7 @@ import superjson from 'superjson';
 import type { AppRouter } from '../server/router';
 import '../styles/globals.css';
 import { theme } from '../styles/theme';
+import { TimerProvider } from '../utils/fast-context';
 
 const MyApp: AppType = ({
   Component,
@@ -34,7 +35,9 @@ const MyApp: AppType = ({
             crossOrigin='anonymous'
           />
         </Head>
-        <Component {...pageProps} />
+        <TimerProvider>
+          <Component {...pageProps} />
+        </TimerProvider>
       </ChakraProvider>
     </SessionProvider>
   );

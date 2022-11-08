@@ -1,5 +1,6 @@
-import { Flex, useDisclosure, useToast } from '@chakra-ui/react';
+import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
 import { FiFilePlus, FiLogOut, FiSettings, FiUserPlus } from 'react-icons/fi';
+import { TbFaceId } from 'react-icons/tb';
 import {
   NAVBAR_ACTION_BAR_BUTTON_LABEL,
   PLAN_ACCESS_TYPE,
@@ -17,6 +18,7 @@ import {
   ICreatePlan,
   IUpdatePassword,
 } from '../../server/common/validation/schemas';
+import { useTimerStore } from '../../utils/fast-context';
 
 const NavbarActionBar = () => {
   const toast = useToast();
@@ -58,6 +60,7 @@ const NavbarActionBar = () => {
     newPassword: '',
     repeatedNewPassword: '',
   });
+  const [areModelsLoaded] = useTimerStore((store) => store.areModelsLoaded);
   const { mutate: assignPlanMutate, isLoading: assignPlanIsLoading } =
     trpc.useMutation('client.assignPlan', {
       onSuccess: async () => {
@@ -247,6 +250,18 @@ const NavbarActionBar = () => {
         onClose={createPlanOnClose}
         onOpen={createPlanOnOpen}
       />
+      <a
+        target={'_blank'}
+        href={'/client-authentication'}
+        style={{ pointerEvents: !areModelsLoaded ? 'none' : undefined }}
+      >
+        <IconButton
+          aria-label={NAVBAR_ACTION_BAR_BUTTON_LABEL.ClientAuthentication}
+          disabled={!areModelsLoaded}
+          icon={<TbFaceId size={'1.25rem'} />}
+          variant={'ghost'}
+        />
+      </a>
       <NavbarActionBarButton
         actionButtonLabel={'Guardar'}
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.Settings}

@@ -21,6 +21,7 @@ export const enum CUSTOM_TAB_LABEL {
 
 export const enum NAVBAR_ACTION_BAR_BUTTON_LABEL {
   AssignPlan = 'Asignar plan',
+  ClientAuthentication = 'Autenticación de clientes',
   CreateClient = 'Nuevo cliente',
   CreatePlan = 'Nuevo plan',
   Settings = 'Configuración',
@@ -126,12 +127,7 @@ export type ClientsTableInfo = {
   phoneNumber: string | null;
 };
 
-export type DetectionBoxInfo = {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  color: string;
-  originWidth: number;
-  originHeight: number;
-};
+export interface AuthenticationMessageState {
+  showMessage: boolean;
+  messageInfo: ClientAuthenticationInfo;
+}
