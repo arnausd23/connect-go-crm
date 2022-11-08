@@ -177,7 +177,7 @@ const ClientAuthentication = ({ isNewWindow }: { isNewWindow: boolean }) => {
             setNewWindowStore({
               isReadyToOpen: true,
             });
-          await delay(2000);
+          await delay(3500);
         } else {
           console.log('NO MATCH:', ci, now, distance);
           setAuthenticationMessageStore({
