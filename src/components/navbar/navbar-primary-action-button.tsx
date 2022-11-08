@@ -88,7 +88,7 @@ const NavbarPrimaryActionButton = () => {
         .detectSingleFace(clientPhotoRef.current!)
         .withFaceLandmarks()
         .withFaceDescriptor();
-      if (detection && detection.detection.score > 0.75) {
+      if (detection && detection.detection.score > 0.85) {
         const labeledFaceDescriptor = new faceapi.LabeledFaceDescriptors(
           createClientData.ci,
           [detection.descriptor]

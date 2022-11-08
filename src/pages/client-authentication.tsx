@@ -119,7 +119,7 @@ const ClientAuthentication: NextPage = () => {
         .detectSingleFace(webcamRef.current!.video!)
         .withFaceLandmarks()
         .withFaceDescriptor();
-      if (detection && detection.detection.score > 0.75) {
+      if (detection && detection.detection.score > 0.85) {
         console.log('DETECTION SCORE:', detection.detection.score);
         canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
           webcamRef.current!.video!
