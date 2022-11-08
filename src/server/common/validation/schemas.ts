@@ -7,7 +7,7 @@ export const authSchema = z.object({
 });
 
 export const createClientSchema = z.object({
-  ci: z.string().trim().min(7, { message: ERROR_MESSAGE.InvalidCI }),
+  ci: z.string().trim().min(5, { message: ERROR_MESSAGE.InvalidCI }),
   name: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
   phoneNumber: z.string(),
   photoSrc: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyPhoto }),
