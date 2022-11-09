@@ -133,6 +133,7 @@ const ClientAuthentication: NextPage = () => {
           detection.descriptor
         );
         const now = new Date();
+        console.log('DISTANCE', distance);
         const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
         const detectionBoxColor = foundMatch ? '#66bb6a' : '#ef5350';
 
@@ -168,7 +169,7 @@ const ClientAuthentication: NextPage = () => {
         );
         setAuthMessage({ messageInfo, showMessage: false });
       }
-    }, 500);
+    }, 1500);
     setTimerStore({ timer });
   };
 

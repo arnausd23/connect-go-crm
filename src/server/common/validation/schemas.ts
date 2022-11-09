@@ -26,7 +26,7 @@ export const createPlanSchema = z.object({
 });
 
 export const assignPlanSchema = z.object({
-  ci: z.string().trim().min(7, { message: ERROR_MESSAGE.InvalidCI }),
+  ci: z.string().trim().min(5, { message: ERROR_MESSAGE.InvalidCI }),
   endingDate: z.date(),
   name: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
   startingDate: z.date(),
