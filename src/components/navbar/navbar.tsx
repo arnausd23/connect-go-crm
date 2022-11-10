@@ -7,11 +7,6 @@ import NavbarButton from './navbar-button';
 import NavbarPrimaryActionButton from './navbar-primary-action-button';
 
 const Navbar = () => {
-  // const { mutate } = trpc.useMutation('auth.signUp');
-  // const handleSignUp = () => {
-  //   mutate({ username: 'g.mendez', password: 'C0NN3CT22' });
-  // };
-
   return (
     <Flex
       bgColor={'light'}
@@ -57,13 +52,6 @@ const Navbar = () => {
         <NavbarActionBar />
         <Divider bgColor={'gray.300'} m={'1rem 0'} h={'1px'} />
         <NavbarPrimaryActionButton />
-        {/* <Button
-          colorScheme={'blue'}
-          onClick={() => handleSignUp()}
-          variant={'solid'}
-        >
-          {'Sign Up'}
-        </Button> */}
       </Flex>
     </Flex>
   );

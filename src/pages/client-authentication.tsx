@@ -13,6 +13,7 @@ import {
 } from '../utils/constants';
 import { trpc } from '../utils/trpc';
 import { getBaseUrl } from './_app';
+import Image from 'next/image';
 
 const ClientAuthentication: NextPage = () => {
   const webcamRef = useRef<Webcam>(null);
@@ -198,6 +199,29 @@ const ClientAuthentication: NextPage = () => {
         ref={ref}
         w={'100%'}
       >
+        <Flex
+          position={'absolute'}
+          zIndex={999}
+          w={'10rem'}
+          left={'1rem'}
+          top={'1rem'}
+        >
+          <Flex
+            h={'3rem'}
+            alignSelf={'center'}
+            mb={'0.25rem'}
+            position={'relative'}
+            w={'70%'}
+          >
+            <Image
+              alt={''}
+              src={'/connect-logo-dark.svg'}
+              width={'100%'}
+              height={'100%'}
+              layout={'fill'}
+            />
+          </Flex>
+        </Flex>
         <Webcam
           audio={false}
           className={'client-auth-webcam'}
