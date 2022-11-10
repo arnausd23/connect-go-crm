@@ -1,15 +1,13 @@
 import { Flex, Tabs } from '@chakra-ui/react';
 import type { GetServerSideProps, NextPage } from 'next';
-import { useEffect } from 'react';
 import Content from '../components/content/content';
 import Navbar from '../components/navbar/navbar';
 import { getServerAuthSession } from '../server/common/get-server-auth-session';
-import { useTimerStore } from '../utils/fast-context';
 import * as faceapi from 'face-api.js';
+import { trpc } from '../utils/trpc';
+import { getBaseUrl } from './_app';
 
 const Home: NextPage = () => {
-  const [_, setTimerStore] = useTimerStore((store) => store.areModelsLoaded);
-
   const loadFaceapiModels = async () => {
     await Promise.all([
       faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
@@ -17,13 +15,25 @@ const Home: NextPage = () => {
       faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
     ]);
   };
+  const ctx = trpc.useContext();
 
-  useEffect(() => {
-    (async () => {
+  trpc.useQuery(['labeledFaceDescriptor.loadModels'], {
+    staleTime: Infinity,
+    retry: false,
+    refetchOnWindowFocus: false,
+    onSuccess: async () => {
+      window.addEventListener('message', (event) => {
+        if (event.origin.startsWith(getBaseUrl())) {
+          if (!event.data.type) return;
+          if (event.data.type !== 'refetch-access-history') return;
+          ctx.invalidateQueries('accessHistory.getAll');
+        } else {
+          return;
+        }
+      });
       await loadFaceapiModels();
-      setTimerStore({ areModelsLoaded: true });
-    })();
-  }, []);
+    },
+  });
 
   return (
     <Flex bgColor={'background'} h={'100vh'} w={'100%'}>

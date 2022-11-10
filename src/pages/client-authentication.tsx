@@ -1,9 +1,9 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import * as faceapi from 'face-api.js';
 import { NextPage } from 'next';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
-import { setIntervalAsync } from 'set-interval-async';
+import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async';
 import ClientAuthenticationMessage from '../components/content/access-control/client-authentication/client-authentication-message';
 import {
   AuthenticationMessageState,
@@ -11,19 +11,16 @@ import {
   ERROR_MESSAGE,
   FACE_MATCH_DISTANCE_THRESHOLD,
 } from '../utils/constants';
-import { useTimerStore } from '../utils/fast-context';
 import { trpc } from '../utils/trpc';
+import { getBaseUrl } from './_app';
 
 const ClientAuthentication: NextPage = () => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<any>(null);
   const toast = useToast();
-  const ctx = trpc.useContext();
   const ref = useRef<HTMLDivElement>(null);
 
-  const [areModelsLoaded, setTimerStore] = useTimerStore(
-    (store) => store.areModelsLoaded
-  );
+  const [timer, setTimer] = useState<any>(null);
 
   const [{ showMessage, messageInfo }, setAuthMessage] =
     useState<AuthenticationMessageState>({
@@ -46,20 +43,30 @@ const ClientAuthentication: NextPage = () => {
     ]);
   };
 
-  useEffect(() => {
-    webcamRef.current!.video!.volume = 0;
-    (async () => {
+  trpc.useQuery(['labeledFaceDescriptor.loadModels'], {
+    staleTime: Infinity,
+    retry: false,
+    refetchOnWindowFocus: false,
+    onSuccess: async () => {
+      window.addEventListener('message', (event) => {
+        if (event.origin.startsWith(getBaseUrl())) {
+          if (!event.data.type) return;
+          if (event.data.type !== 'refetch-descriptors') return;
+          refetch();
+        } else {
+          return;
+        }
+      });
       await loadFaceapiModels();
-      setTimerStore({ areModelsLoaded: true });
       refetch();
-    })();
-  }, []);
+    },
+  });
 
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
     'accessHistory.create',
     {
-      onSuccess: async () =>
-        await ctx.invalidateQueries('accessHistory.getAll'),
+      onSuccess: () =>
+        window.opener.postMessage({ type: 'refetch-access-history' }),
       onError: (error) => {
         toast({
           description: error.message,
@@ -76,9 +83,19 @@ const ClientAuthentication: NextPage = () => {
     staleTime: Infinity,
     retry: false,
     refetchOnWindowFocus: false,
-    enabled: areModelsLoaded,
+    enabled: false,
     onSuccess: async (data) => {
-      console.log('LABELED DESCRIPTORS LOADING');
+      if (timer) {
+        await clearIntervalAsync(timer);
+        const context = canvasRef.current.getContext('2d');
+        context.clearRect(
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
+        setAuthMessage({ messageInfo, showMessage: false });
+      }
       const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
       data.forEach((labeledFaceDescriptor) => {
         faceDescriptors.push(
@@ -92,7 +109,6 @@ const ClientAuthentication: NextPage = () => {
         );
         await faceDetection(faceMatcher);
       } else {
-        webcamRef.current!.video!.muted = true;
         toast({
           description: ERROR_MESSAGE.FailedToLoadModels,
           duration: 3000,
@@ -133,7 +149,6 @@ const ClientAuthentication: NextPage = () => {
           detection.descriptor
         );
         const now = new Date();
-        console.log('DISTANCE', distance);
         const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
         const detectionBoxColor = foundMatch ? '#66bb6a' : '#ef5350';
 
@@ -169,8 +184,8 @@ const ClientAuthentication: NextPage = () => {
         );
         setAuthMessage({ messageInfo, showMessage: false });
       }
-    }, 1500);
-    setTimerStore({ timer });
+    }, 750);
+    setTimer(timer);
   };
 
   return (

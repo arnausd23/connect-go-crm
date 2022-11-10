@@ -1,13 +1,11 @@
 import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { FiEdit3, FiTrash2 } from 'react-icons/fi';
-import { clearIntervalAsync } from 'set-interval-async';
 import { IEditUserPlan } from '../../../../server/common/validation/schemas';
 import {
   SUCCESS_MESSAGE,
   UserPlansTableInfo,
 } from '../../../../utils/constants';
-import { useTimerStore } from '../../../../utils/fast-context';
 import { trpc } from '../../../../utils/trpc';
 import CustomModal from '../../../custom/custom-modal';
 import DeletePlanModal from '../../../modals/delete-plan-modal';
@@ -40,8 +38,6 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
     groupClasses,
   });
 
-  const [timer] = useTimerStore((store) => store.timer);
-
   const { isLoading: editPlanIsLoading, mutate: editPlanMutate } =
     trpc.useMutation('client.editPlan', {
       onSuccess: async () => {
@@ -53,8 +49,6 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
           variant: 'top-accent',
         });
         editPlanOnClose();
-        if (timer) await clearIntervalAsync(timer);
-        await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('client.getPlans');
         await ctx.invalidateQueries('accessHistory.getAll');
       },
@@ -94,8 +88,6 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
           variant: 'top-accent',
         });
         deletePlanOnClose();
-        if (timer) await clearIntervalAsync(timer);
-        await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
         await ctx.invalidateQueries('client.getPlans');
         await ctx.invalidateQueries('accessHistory.getAll');
       },

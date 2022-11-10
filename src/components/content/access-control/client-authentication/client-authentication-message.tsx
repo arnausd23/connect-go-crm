@@ -40,33 +40,33 @@ const ClientAuthenticationMessage = ({
       position={'absolute'}
       shadow={'md'}
     >
-      <Text fontSize={'28px'} fontWeight={'semibold'}>
+      <Text fontSize={'26px'} fontWeight={'semibold'}>
         {header}
       </Text>
-      <Text fontSize={'26px'}>{name}</Text>
+      <Text fontSize={'24px'}>{name}</Text>
       <Flex>
         {startingDate && (
           <Flex justifyContent={'center'} mr={'3rem'}>
-            <Text fontSize={'24px'} fontWeight={'semibold'}>
+            <Text fontSize={'22px'} fontWeight={'semibold'}>
               {'Fecha inicial:'}
             </Text>
-            <Text fontSize={'24px'}>
+            <Text fontSize={'22px'}>
               {startingDate.toLocaleString('es-BO').split(',')[0]}
             </Text>
           </Flex>
         )}
         {endingDate && (
           <Flex justifyContent={'center'} ml={'3rem'}>
-            <Text fontSize={'24px'} fontWeight={'semibold'}>
+            <Text fontSize={'22px'} fontWeight={'semibold'}>
               {'Fecha final:'}
             </Text>
-            <Text fontSize={'24px'}>
+            <Text fontSize={'22px'}>
               {endingDate.toLocaleString('es-BO').split(',')[0]}
             </Text>
           </Flex>
         )}
       </Flex>
-      <Text fontSize={'26px'} alignSelf={'end'}>
+      <Text fontSize={'24px'} alignSelf={'end'}>
         {footer}
       </Text>
     </Flex>

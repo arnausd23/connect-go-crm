@@ -1,24 +1,25 @@
 import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
+import { signOut } from 'next-auth/react';
+import { useState } from 'react';
 import { FiFilePlus, FiLogOut, FiSettings, FiUserPlus } from 'react-icons/fi';
 import { TbFaceId } from 'react-icons/tb';
+import { getBaseUrl } from '../../pages/_app';
+import {
+  ICreatePlan,
+  IUpdatePassword,
+} from '../../server/common/validation/schemas';
 import {
   NAVBAR_ACTION_BAR_BUTTON_LABEL,
   PLAN_ACCESS_TYPE,
   SUCCESS_MESSAGE,
 } from '../../utils/constants';
+import { trpc } from '../../utils/trpc';
+import { useWindowStore } from '../../utils/windowStore';
 import AssignPlanModal from '../modals/assign-plan-modal';
 import CreatePlanModal from '../modals/create-plan-modal';
 import SettingsModal from '../modals/settings-modal';
 import SignOutModal from '../modals/sign-out-modal';
 import NavbarActionBarButton from './navbar-action-bar-button';
-import { useState } from 'react';
-import { signOut } from 'next-auth/react';
-import { trpc } from '../../utils/trpc';
-import {
-  ICreatePlan,
-  IUpdatePassword,
-} from '../../server/common/validation/schemas';
-import { useTimerStore } from '../../utils/fast-context';
 
 const NavbarActionBar = () => {
   const toast = useToast();
@@ -60,7 +61,7 @@ const NavbarActionBar = () => {
     newPassword: '',
     repeatedNewPassword: '',
   });
-  const [areModelsLoaded] = useTimerStore((store) => store.areModelsLoaded);
+
   const { mutate: assignPlanMutate, isLoading: assignPlanIsLoading } =
     trpc.useMutation('client.assignPlan', {
       onSuccess: async () => {
@@ -205,6 +206,8 @@ const NavbarActionBar = () => {
     signOut({ callbackUrl: '/sign-in' });
   };
 
+  const setNewWindow = useWindowStore((state) => state.setWindow);
+
   return (
     <Flex
       alignItems={'center'}
@@ -250,18 +253,19 @@ const NavbarActionBar = () => {
         onClose={createPlanOnClose}
         onOpen={createPlanOnOpen}
       />
-      <a
-        target={'_blank'}
-        href={'/client-authentication'}
-        style={{ pointerEvents: !areModelsLoaded ? 'none' : undefined }}
-      >
-        <IconButton
-          aria-label={NAVBAR_ACTION_BAR_BUTTON_LABEL.ClientAuthentication}
-          disabled={!areModelsLoaded}
-          icon={<TbFaceId size={'1.25rem'} />}
-          variant={'ghost'}
-        />
-      </a>
+      <IconButton
+        aria-label={NAVBAR_ACTION_BAR_BUTTON_LABEL.ClientAuthentication}
+        icon={<TbFaceId size={'1.25rem'} />}
+        onClick={() => {
+          const clientAuthWindow = window.open(
+            `${getBaseUrl()}/client-authentication`,
+            '_blank',
+            'width=800,height=600'
+          );
+          setNewWindow(clientAuthWindow);
+        }}
+        variant={'ghost'}
+      />
       <NavbarActionBarButton
         actionButtonLabel={'Guardar'}
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.Settings}

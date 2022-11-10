@@ -17,8 +17,7 @@ import { trpc } from '../../utils/trpc';
 import CreateClientModal from '../modals/create-client-modal';
 import CustomModal from '../custom/custom-modal';
 import * as faceapi from 'face-api.js';
-import { clearIntervalAsync } from 'set-interval-async';
-import { useTimerStore } from '../../utils/fast-context';
+import { useWindowStore } from '../../utils/windowStore';
 
 const NavbarPrimaryActionButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,7 +32,7 @@ const NavbarPrimaryActionButton = () => {
     labeledFaceDescriptorJson: undefined,
   });
   const clientPhotoRef = useRef<HTMLImageElement>();
-  const [{ timer, areModelsLoaded }] = useTimerStore((store) => store);
+  const newWindow = useWindowStore((state) => state.window);
 
   const { isLoading, mutate } = trpc.useMutation('client.create', {
     onSuccess: async () => {
@@ -53,9 +52,8 @@ const NavbarPrimaryActionButton = () => {
         labeledFaceDescriptorJson: undefined,
       });
       onClose();
-      if (timer) await clearIntervalAsync(timer);
+      newWindow?.postMessage({ type: 'refetch-descriptors' });
       await ctx.invalidateQueries('client.getAll');
-      await ctx.invalidateQueries('labeledFaceDescriptor.getAll');
     },
     onError: (error) => {
       if (error.data?.zodError?.fieldErrors) {
@@ -119,7 +117,6 @@ const NavbarPrimaryActionButton = () => {
     >
       <IconButton
         aria-label={NAVBAR_ACTION_BAR_BUTTON_LABEL.CreateClient}
-        disabled={!areModelsLoaded}
         h={'100%'}
         icon={
           <Flex
