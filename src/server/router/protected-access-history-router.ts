@@ -3,7 +3,6 @@ import {
   endOfWeek,
   startOfWeek,
   differenceInCalendarDays,
-  isWithinInterval,
   isAfter,
   isBefore,
   addDays,
@@ -123,7 +122,7 @@ export const protectedAccessHistoryRouter = createProtectedRouter()
           freezedStartingDate,
         } = user.plans[0]!;
 
-        let freezedDate = freezedStartingDate
+        const freezedDate = freezedStartingDate
           ? new Date(freezedStartingDate.valueOf())
           : null;
 
@@ -135,11 +134,12 @@ export const protectedAccessHistoryRouter = createProtectedRouter()
           isAfter(date, freezedDate) &&
           isBefore(date, addDays(freezedDate, freezedDays))
         ) {
-          console.log(addDays(freezedDate, freezedDays));
           return {
             bgColor: 'authBlue',
             endingDate,
-            footer: `Tu plan se encuentra congelado`,
+            footer: `Plan congelado hasta el ${addDays(freezedDate, freezedDays)
+              .toLocaleString('es-BO')
+              .substring(0, 10)}`,
             header: 'Lo sentimos',
             name: user.name,
             startingDate,

@@ -112,8 +112,15 @@ const UserPlansPanel = () => {
     [pageIndex, pageSize]
   );
 
+  const plans: any = defaultData;
+  if (data?.plans)
+    data.plans.forEach((plan) => {
+      const newPlan = { ...plan, freezedDays: plan.freezedDays.toString() };
+      plans.push(newPlan);
+    });
+
   const table = useReactTable({
-    data: data?.plans ?? defaultData,
+    data: plans,
     columns,
     pageCount: data?.pageCount ?? -1,
     state: {
