@@ -117,6 +117,8 @@ export type UserPlansTableInfo = {
   };
   parking: boolean;
   groupClasses: boolean;
+  freezedDays: string;
+  freezedStartingDate: Date;
 };
 
 export type ClientsTableInfo = {

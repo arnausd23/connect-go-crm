@@ -35,6 +35,8 @@ export const protectedClientRouter = createProtectedRouter()
           updatedBy: true,
           parking: true,
           groupClasses: true,
+          freezedDays: true,
+          freezedStartingDate: true,
           user: { select: { name: true } },
           plan: { select: { name: true } },
         },
@@ -222,14 +224,32 @@ export const protectedClientRouter = createProtectedRouter()
   .mutation('editPlan', {
     input: editUserPlanSchema,
     async resolve({ input, ctx }) {
-      const { id, startingDate, endingDate, parking, groupClasses } = input;
+      const {
+        id,
+        startingDate,
+        endingDate,
+        parking,
+        groupClasses,
+        freezedDays,
+        freezedStartingDate,
+      } = input;
       const updatedBy = Object.entries(ctx.session).filter(
         (entry) => entry[0] === 'id'
       )[0]![1] as string;
 
+      const parsedFreezedDays: number = freezedDays ? parseInt(freezedDays) : 0;
+
       await ctx.prisma.userPlan.update({
         where: { id },
-        data: { startingDate, endingDate, updatedBy, parking, groupClasses },
+        data: {
+          startingDate,
+          endingDate,
+          updatedBy,
+          parking,
+          groupClasses,
+          freezedDays: parsedFreezedDays,
+          freezedStartingDate,
+        },
       });
     },
   })

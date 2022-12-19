@@ -30,18 +30,20 @@ model Plan {
 }
 
 model UserPlan {
-    id            String          @id @default(cuid())
-    accessHistory AccessHistory[]
-    endingDate    DateTime
-    plan          Plan            @relation(fields: [planId],references: [id], onDelete:Cascade, onUpdate: Cascade)
-    planId        String
-    startingDate  DateTime
-    updatedBy     String
-    createdAt     DateTime        @default(now())
-    user          User            @relation(fields: [userId], references: [id], onDelete:Cascade, onUpdate: Cascade)
-    userId        String
-    parking       Boolean
-    groupClasses  Boolean       
+    id                   String          @id @default(cuid())
+    accessHistory        AccessHistory[]
+    endingDate           DateTime
+    plan                 Plan            @relation(fields: [planId],references: [id], onDelete:Cascade, onUpdate: Cascade)
+    planId               String
+    startingDate         DateTime
+    updatedBy            String
+    createdAt            DateTime        @default(now())
+    user                 User            @relation(fields: [userId], references: [id], onDelete:Cascade, onUpdate: Cascade)
+    userId               String
+    parking              Boolean
+    groupClasses         Boolean
+    freezedDays          Int             @default(0)
+    freezedStartingDate  DateTime?       
 }
 
 model AccessHistory {

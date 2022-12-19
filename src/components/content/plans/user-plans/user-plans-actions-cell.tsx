@@ -16,7 +16,15 @@ type UserPlansActionsCellProps = {
 };
 
 const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
-  const { id, startingDate, endingDate, parking, groupClasses } = data;
+  const {
+    id,
+    startingDate,
+    endingDate,
+    parking,
+    groupClasses,
+    freezedDays,
+    freezedStartingDate,
+  } = data;
   const {
     isOpen: editPlanIsOpen,
     onOpen: editPlanOnOpen,
@@ -36,6 +44,8 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
     endingDate,
     parking,
     groupClasses,
+    freezedDays: freezedDays.toString(),
+    freezedStartingDate: freezedStartingDate ?? new Date(),
   });
 
   const { isLoading: editPlanIsLoading, mutate: editPlanMutate } =
