@@ -20,6 +20,8 @@ const ClientAuthenticationMessage = ({
         return '#ff7043';
       case 'authRed':
         return '#ef5350';
+      case 'authBlue':
+        return '#26c6da';
       default:
         return '#66bb6a';
     }

@@ -1,5 +1,13 @@
 import { PrismaClient } from '@prisma/client';
-import { endOfWeek, startOfWeek, differenceInCalendarDays } from 'date-fns';
+import {
+  endOfWeek,
+  startOfWeek,
+  differenceInCalendarDays,
+  isWithinInterval,
+  isAfter,
+  isBefore,
+  addDays,
+} from 'date-fns';
 import {
   MINUTES_BETWEEN_ACCESS,
   PLAN_ACCESS_TYPE,
@@ -111,7 +119,32 @@ export const protectedAccessHistoryRouter = createProtectedRouter()
           id: userPlanId,
           startingDate,
           endingDate,
+          freezedDays,
+          freezedStartingDate,
         } = user.plans[0]!;
+
+        let freezedDate = freezedStartingDate
+          ? new Date(freezedStartingDate.valueOf())
+          : null;
+
+        freezedDate?.setHours(0, 0, 0, 0);
+
+        if (
+          freezedDays > 0 &&
+          freezedDate &&
+          isAfter(date, freezedDate) &&
+          isBefore(date, addDays(freezedDate, freezedDays))
+        ) {
+          console.log(addDays(freezedDate, freezedDays));
+          return {
+            bgColor: 'authBlue',
+            endingDate,
+            footer: `Tu plan se encuentra congelado`,
+            header: 'Lo sentimos',
+            name: user.name,
+            startingDate,
+          };
+        }
 
         if (plan.accessType === PLAN_ACCESS_TYPE.ThreePerWeek) {
           startOfDate = startOfWeek(date, { weekStartsOn: 1 });
@@ -250,6 +283,8 @@ const getUserWithActivePlans = async (
           id: true,
           startingDate: true,
           endingDate: true,
+          freezedDays: true,
+          freezedStartingDate: true,
           plan: { select: { name: true, accessType: true } },
         },
       },
