@@ -25,6 +25,7 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
     groupClasses,
     freezedDays,
     freezedStartingDate,
+    additionalInfo,
   } = data;
   const {
     isOpen: editPlanIsOpen,
@@ -47,6 +48,7 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
     groupClasses,
     freezedDays: freezedDays.toString(),
     freezedStartingDate: freezedStartingDate ?? new Date(),
+    additionalInfo,
   });
 
   const { isLoading: editPlanIsLoading, mutate: editPlanMutate } =
@@ -159,6 +161,7 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
         }
         actionButtonLabel={'Guardar'}
         onActionClick={() => {
+          console.log('SAVE', additionalInfo, editPlanData.additionalInfo);
           if (
             parseInt(freezedDays) === 0 &&
             parseInt(editPlanData.freezedDays) > 0 &&

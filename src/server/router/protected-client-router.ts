@@ -37,6 +37,7 @@ export const protectedClientRouter = createProtectedRouter()
           groupClasses: true,
           freezedDays: true,
           freezedStartingDate: true,
+          additionalInfo: true,
           user: { select: { name: true } },
           plan: { select: { name: true } },
         },
@@ -232,10 +233,12 @@ export const protectedClientRouter = createProtectedRouter()
         groupClasses,
         freezedDays,
         freezedStartingDate,
+        additionalInfo,
       } = input;
       const updatedBy = Object.entries(ctx.session).filter(
         (entry) => entry[0] === 'id'
       )[0]![1] as string;
+      console.log('SERVER', additionalInfo);
 
       const parsedFreezedDays: number = freezedDays ? parseInt(freezedDays) : 0;
 
@@ -249,6 +252,7 @@ export const protectedClientRouter = createProtectedRouter()
           groupClasses,
           freezedDays: parsedFreezedDays,
           freezedStartingDate,
+          additionalInfo,
         },
       });
     },

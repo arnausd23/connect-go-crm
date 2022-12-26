@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Textarea,
 } from '@chakra-ui/react';
 import CustomDatePicker from '../custom/custom-date-picker';
 import { CustomModalProps } from '../custom/custom-modal';
@@ -86,6 +87,22 @@ const EditUserPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
           />
         </FormControl>
       </Flex>
+      <Divider m={'0.5rem 0'} />
+      <FormControl m={'0.5rem 0'}>
+        <FormLabel>{'Detalles adicionales'}</FormLabel>
+        <Textarea
+          bgColor={'white'}
+          color={'background'}
+          disabled={isLoading}
+          onChange={({ target }) =>
+            setData!({ ...data, additionalInfo: target.value })
+          }
+          resize={'none'}
+          value={data.additionalInfo}
+          variant={'filled'}
+          _focus={{ bgColor: 'white' }}
+        />
+      </FormControl>
     </Flex>
   );
 };

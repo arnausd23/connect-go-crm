@@ -119,6 +119,7 @@ export type UserPlansTableInfo = {
   groupClasses: boolean;
   freezedDays: string;
   freezedStartingDate: Date;
+  additionalInfo: string;
 };
 
 export type ClientsTableInfo = {

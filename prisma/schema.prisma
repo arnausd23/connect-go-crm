@@ -43,7 +43,8 @@ model UserPlan {
     parking              Boolean
     groupClasses         Boolean
     freezedDays          Int             @default(0)
-    freezedStartingDate  DateTime?       
+    freezedStartingDate  DateTime?
+    additionalInfo       String          @default("")
 }
 
 model AccessHistory {

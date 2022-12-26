@@ -68,6 +68,7 @@ export const editUserPlanSchema = z.object({
   groupClasses: z.boolean(),
   freezedDays: z.string(),
   freezedStartingDate: z.date(),
+  additionalInfo: z.string(),
 });
 
 export const editClientSchema = z.object({
