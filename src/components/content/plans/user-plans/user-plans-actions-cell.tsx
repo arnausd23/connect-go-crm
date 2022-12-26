@@ -1,4 +1,5 @@
 import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
+import { addDays } from 'date-fns';
 import { useState } from 'react';
 import { FiEdit3, FiTrash2 } from 'react-icons/fi';
 import { IEditUserPlan } from '../../../../server/common/validation/schemas';
@@ -157,7 +158,19 @@ const UserPlansActionsCell = ({ data }: UserPlansActionsCellProps) => {
           />
         }
         actionButtonLabel={'Guardar'}
-        onActionClick={() => editPlanMutate(editPlanData)}
+        onActionClick={() => {
+          if (
+            parseInt(freezedDays) === 0 &&
+            parseInt(editPlanData.freezedDays) > 0 &&
+            freezedStartingDate === null
+          ) {
+            editPlanData.endingDate = addDays(
+              editPlanData.endingDate,
+              parseInt(editPlanData.freezedDays)
+            );
+          }
+          editPlanMutate(editPlanData);
+        }}
       />
       <CustomModal
         title={'Eliminar plan de cliente'}
