@@ -23,6 +23,8 @@ export const createPlanSchema = z.object({
   ]),
   name: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
   price: z.string(),
+  hasHourRestriction: z.boolean(),
+  restrictionHours: z.array(z.number()).length(2),
 });
 
 export const assignPlanSchema = z.object({
@@ -86,6 +88,8 @@ export const editPlanSchema = z.object({
     PLAN_ACCESS_TYPE.ThreePerWeek,
   ]),
   price: z.string(),
+  hasHourRestriction: z.boolean(),
+  restrictionHours: z.array(z.number()).length(2),
 });
 
 export const deleteSchema = z.object({

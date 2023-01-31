@@ -14,7 +14,14 @@ type CreatedPlansActionsCellProps = {
 };
 
 const CreatedPlansActionsCell = ({ data }: CreatedPlansActionsCellProps) => {
-  const { id, accessType: accessTypeString, name, price: priceNumber } = data;
+  const {
+    id,
+    accessType: accessTypeString,
+    name,
+    price: priceNumber,
+    hasHourRestriction,
+    restrictionHours,
+  } = data;
   const {
     isOpen: editPlanIsOpen,
     onOpen: editPlanOnOpen,
@@ -36,6 +43,10 @@ const CreatedPlansActionsCell = ({ data }: CreatedPlansActionsCellProps) => {
     name,
     price,
     accessType,
+    hasHourRestriction,
+    restrictionHours: restrictionHours
+      ? (restrictionHours as number[])
+      : [15, 18],
   });
 
   const { isLoading: editPlanIsLoading, mutate: editPlanMutate } =

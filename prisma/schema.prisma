@@ -20,13 +20,15 @@ model User {
 }
 
 model Plan {
-    id         String     @id @default(cuid())
-    accessType String     @default("Ilimitado")
-    name       String     @unique
-    price      Int
-    updatedBy  String
-    createdAt  DateTime   @default(now())
-    users      UserPlan[]
+    id                 String     @id @default(cuid())
+    accessType         String     @default("Ilimitado")
+    name               String     @unique
+    price              Int
+    updatedBy          String
+    createdAt          DateTime   @default(now())
+    users              UserPlan[]
+    hasHourRestriction Boolean    @default(false)
+    restrictionHours   Json       @default("[15, 18]")
 }
 
 model UserPlan {

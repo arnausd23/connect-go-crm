@@ -56,6 +56,8 @@ const NavbarActionBar = () => {
     accessType: PLAN_ACCESS_TYPE.Unlimited,
     name: '',
     price: '',
+    hasHourRestriction: false,
+    restrictionHours: [15, 18],
   });
   const [settingsData, setSettingsData] = useState<IUpdatePassword>({
     newPassword: '',
@@ -121,6 +123,8 @@ const NavbarActionBar = () => {
           accessType: PLAN_ACCESS_TYPE.Unlimited,
           name: '',
           price: '',
+          hasHourRestriction: false,
+          restrictionHours: [15, 18],
         });
         createPlanOnClose();
         await ctx.invalidateQueries('plan.getAll');

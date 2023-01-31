@@ -26,7 +26,8 @@ export const protectedPlanRouter = createProtectedRouter()
   .mutation('create', {
     input: createPlanSchema,
     async resolve({ input, ctx }) {
-      const { accessType, name, price } = input;
+      const { accessType, name, price, hasHourRestriction, restrictionHours } =
+        input;
       const parsedPrice: number = price ? parseInt(price) : 0;
 
       const exists = await ctx.prisma.plan.findFirst({ where: { name } });
@@ -48,6 +49,8 @@ export const protectedPlanRouter = createProtectedRouter()
           name,
           price: parsedPrice,
           updatedBy,
+          hasHourRestriction,
+          restrictionHours,
         },
       });
 
@@ -72,7 +75,14 @@ export const protectedPlanRouter = createProtectedRouter()
   .mutation('edit', {
     input: editPlanSchema,
     async resolve({ input, ctx }) {
-      const { id, name, accessType, price } = input;
+      const {
+        id,
+        name,
+        accessType,
+        price,
+        hasHourRestriction,
+        restrictionHours,
+      } = input;
       const parsedPrice: number = price ? parseInt(price) : 0;
 
       const exists = await ctx.prisma.plan.findFirst({ where: { name } });
@@ -90,7 +100,14 @@ export const protectedPlanRouter = createProtectedRouter()
 
       await ctx.prisma.plan.update({
         where: { id },
-        data: { name, accessType, price: parsedPrice, updatedBy },
+        data: {
+          name,
+          accessType,
+          price: parsedPrice,
+          updatedBy,
+          hasHourRestriction,
+          restrictionHours,
+        },
       });
     },
   })

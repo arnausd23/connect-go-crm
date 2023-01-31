@@ -5,7 +5,12 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  RangeSlider,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
+  RangeSliderTrack,
   Select,
+  Switch,
 } from '@chakra-ui/react';
 import { PLAN_ACCESS_TYPE } from '../../utils/constants';
 import { CustomModalProps } from '../custom/custom-modal';
@@ -71,6 +76,50 @@ const EditPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
             _focus={{ bgColor: 'white' }}
           />
         </InputGroup>
+      </FormControl>
+      <FormControl mb={'0.5rem'}>
+        <Flex alignItems={'center'} justifyContent={'space-between'}>
+          <FormLabel>{'Restricción horaria'}</FormLabel>
+          <Switch
+            id={'hour-restriction'}
+            size={'sm'}
+            colorScheme='blue'
+            isChecked={data.hasHourRestriction}
+            onChange={(e) =>
+              setData!({ ...data, hasHourRestriction: e.target.checked })
+            }
+          />
+        </Flex>
+        {data.hasHourRestriction && (
+          <RangeSlider
+            mt={'0.5rem'}
+            colorScheme={'blue'}
+            flex={1}
+            focusThumbOnChange={false}
+            max={22}
+            min={6}
+            onChange={(e) =>
+              setData!({
+                ...data,
+                restrictionHours: e,
+              })
+            }
+            step={1}
+            value={data.restrictionHours}
+          >
+            <RangeSliderTrack>
+              <RangeSliderFilledTrack />
+            </RangeSliderTrack>
+            <Flex>
+              <RangeSliderThumb fontSize={'xs'} index={0}>
+                <Flex mb={'2rem'}>{`${data.restrictionHours[0]}:00`}</Flex>
+              </RangeSliderThumb>
+              <RangeSliderThumb fontSize={'xs'} index={1}>
+                <Flex mt={'2rem'}>{`${data.restrictionHours[1]}:00`}</Flex>
+              </RangeSliderThumb>
+            </Flex>
+          </RangeSlider>
+        )}
       </FormControl>
     </Flex>
   );

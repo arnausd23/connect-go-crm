@@ -95,14 +95,14 @@ const AssignPlanModal = ({ data, isLoading, setData }: CustomModalProps) => {
         </FormControl>
       </Flex>
       <Flex>
-        <FormControl mb={'0.5rem'}>
+        <FormControl mb={'0.5rem'} mr={'0.75rem'}>
           <FormLabel>{'Parqueo'}</FormLabel>
           <Checkbox
             isChecked={data.parking}
             onChange={(e) => setData!({ ...data, parking: e.target.checked })}
           />
         </FormControl>
-        <FormControl mb={'0.5rem'}>
+        <FormControl mb={'0.5rem'} ml={'0.75rem'}>
           <FormLabel>{'Clases grupales'}</FormLabel>
           <Checkbox
             isChecked={data.groupClasses}
