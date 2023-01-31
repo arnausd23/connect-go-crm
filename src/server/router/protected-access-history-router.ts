@@ -148,19 +148,19 @@ export const protectedAccessHistoryRouter = createProtectedRouter()
 
         const currentHours = date.getHours();
         const { hasHourRestriction, restrictionHours } = plan;
+        const hours: number[] = restrictionHours as number[];
         if (
           hasHourRestriction &&
-          restrictionHours &&
-          (currentHours < restrictionHours[0] ||
-            currentHours >= restrictionHours[1])
+          hours &&
+          (currentHours < hours[0]! || currentHours >= hours[1]!)
         ) {
           return {
             bgColor: 'authOrange',
             endingDate: undefined,
-            footer: `Tu plan tiene acceso entre las ${restrictionHours[0]}:00 y las ${restrictionHours[1]}:00 horas`,
+            footer: `Tu plan tiene acceso entre las ${hours[0]}:00 y las ${hours[1]}:00 horas`,
             header: 'Lo sentimos',
             name: user.name,
-            startingDate:undefined,
+            startingDate: undefined,
           };
         }
 
