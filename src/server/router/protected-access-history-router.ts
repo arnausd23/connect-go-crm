@@ -146,6 +146,24 @@ export const protectedAccessHistoryRouter = createProtectedRouter()
           };
         }
 
+        const currentHours = date.getHours();
+        const { hasHourRestriction, restrictionHours } = plan;
+        if (
+          hasHourRestriction &&
+          restrictionHours &&
+          (currentHours < restrictionHours[0] ||
+            currentHours >= restrictionHours[1])
+        ) {
+          return {
+            bgColor: 'authOrange',
+            endingDate: undefined,
+            footer: `Tu plan tiene acceso entre las ${restrictionHours[0]}:00 y las ${restrictionHours[1]}:00 horas`,
+            header: 'Lo sentimos',
+            name: user.name,
+            startingDate:undefined,
+          };
+        }
+
         if (plan.accessType === PLAN_ACCESS_TYPE.ThreePerWeek) {
           startOfDate = startOfWeek(date, { weekStartsOn: 1 });
           endOfDate = endOfWeek(date, { weekStartsOn: 1 });
@@ -285,7 +303,14 @@ const getUserWithActivePlans = async (
           endingDate: true,
           freezedDays: true,
           freezedStartingDate: true,
-          plan: { select: { name: true, accessType: true } },
+          plan: {
+            select: {
+              name: true,
+              accessType: true,
+              hasHourRestriction: true,
+              restrictionHours: true,
+            },
+          },
         },
       },
     },
