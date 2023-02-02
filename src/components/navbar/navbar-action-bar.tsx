@@ -206,7 +206,7 @@ const NavbarActionBar = () => {
     signOut({ callbackUrl: '/sign-in' });
   };
 
-  const setNewWindow = useWindowStore((state) => state.setWindow);
+  const setNewWindow = useWindowStore((state:any) => state.setWindow);
 
   return (
     <Flex
