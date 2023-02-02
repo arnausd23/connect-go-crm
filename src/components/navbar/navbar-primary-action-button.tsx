@@ -32,7 +32,7 @@ const NavbarPrimaryActionButton = () => {
     labeledFaceDescriptorJson: undefined,
   });
   const clientPhotoRef = useRef<HTMLImageElement>();
-  const newWindow = useWindowStore((state) => state.window);
+  const newWindow = useWindowStore((state:any) => state.window);
 
   const { isLoading, mutate } = trpc.useMutation('client.create', {
     onSuccess: async () => {

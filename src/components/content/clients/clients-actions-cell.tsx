@@ -74,7 +74,7 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
         }
       },
     });
-  const newWindow = useWindowStore((state) => state.window);
+  const newWindow = useWindowStore((state:any) => state.window);
 
   const { isLoading: deleteClientIsLoading, mutate: deleteClientMutate } =
     trpc.useMutation('client.delete', {

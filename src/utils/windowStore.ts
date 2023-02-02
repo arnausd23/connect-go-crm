@@ -5,7 +5,7 @@ interface WindowState {
   setWindow: (window: Window | null) => void;
 }
 
-export const useWindowStore = create<WindowState>()((set) => ({
+export const useWindowStore = create<WindowState>()((set:any) => ({
   window: null,
-  setWindow: (window) => set(() => ({ window })),
+  setWindow: (window:any) => set(() => ({ window })),
 }));
