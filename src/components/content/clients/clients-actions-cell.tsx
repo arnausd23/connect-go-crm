@@ -1,13 +1,18 @@
 import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FiEdit3, FiTrash2 } from 'react-icons/fi';
 import { IEditClient } from '../../../server/common/validation/schemas';
-import { ClientsTableInfo, SUCCESS_MESSAGE } from '../../../utils/constants';
+import {
+  ClientsTableInfo,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from '../../../utils/constants';
 import { trpc } from '../../../utils/trpc';
 import { useWindowStore } from '../../../utils/windowStore';
 import CustomModal from '../../custom/custom-modal';
 import DeleteClientModal from '../../modals/delete-client-modal';
 import EditClientModal from '../../modals/edit-client-modal';
+import * as faceapi from 'face-api.js';
 
 type ClientsActionsCellProps = {
   data: ClientsTableInfo;
@@ -32,6 +37,10 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
     id,
     name,
     phoneNumber: phoneNumber ?? '',
+    photoSrc: '',
+    photoTaken: false,
+    labeledFaceDescriptor: undefined,
+    editPhoto: false,
   });
 
   const { isLoading: editClientIsLoading, mutate: editClientMutate } =
@@ -74,7 +83,7 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
         }
       },
     });
-  const newWindow = useWindowStore((state:any) => state.window);
+  const newWindow = useWindowStore((state: any) => state.window);
 
   const { isLoading: deleteClientIsLoading, mutate: deleteClientMutate } =
     trpc.useMutation('client.delete', {
@@ -118,6 +127,35 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
       },
     });
 
+  const clientPhotoRef = useRef<HTMLImageElement>();
+
+  const handleEditClient = async () => {
+    if (editClientData.editPhoto) {
+      if (editClientData.photoTaken && editClientData.photoSrc) {
+        const detection = await faceapi
+          .detectSingleFace(clientPhotoRef.current!)
+          .withFaceLandmarks()
+          .withFaceDescriptor();
+        if (detection && detection.detection.score > 0.85) {
+          editClientMutate({
+            ...editClientData,
+            labeledFaceDescriptor: detection.descriptor,
+          });
+        } else {
+          toast({
+            description: ERROR_MESSAGE.FailedDetection,
+            duration: 3000,
+            isClosable: true,
+            status: 'error',
+            variant: 'top-accent',
+          });
+        }
+      }
+    } else {
+      editClientMutate({ ...editClientData, photoSrc: 'unknown' });
+    }
+  };
+
   return (
     <Flex justifyContent={'flex-end'}>
       <IconButton
@@ -146,10 +184,11 @@ const ClientsActionsCell = ({ data }: ClientsActionsCellProps) => {
             data={editClientData}
             isLoading={editClientIsLoading}
             setData={setEditClientData}
+            imageRef={clientPhotoRef}
           />
         }
         actionButtonLabel={'Guardar'}
-        onActionClick={() => editClientMutate(editClientData)}
+        onActionClick={() => handleEditClient()}
       />
       <CustomModal
         title={'Eliminar cliente'}

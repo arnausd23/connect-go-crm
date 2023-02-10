@@ -77,6 +77,10 @@ export const editClientSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyName }),
   phoneNumber: z.string(),
+  photoSrc: z.string().trim().min(1, { message: ERROR_MESSAGE.EmptyPhoto }),
+  photoTaken: z.boolean().optional(),
+  labeledFaceDescriptor: z.any(),
+  editPhoto: z.boolean(),
 });
 
 export const editPlanSchema = z.object({

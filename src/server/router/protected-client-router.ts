@@ -260,15 +260,33 @@ export const protectedClientRouter = createProtectedRouter()
   .mutation('edit', {
     input: editClientSchema,
     async resolve({ input, ctx }) {
-      const { id, name, phoneNumber } = input;
+      const { id, name, phoneNumber, editPhoto, labeledFaceDescriptor } = input;
       const updatedBy = Object.entries(ctx.session).filter(
         (entry) => entry[0] === 'id'
       )[0]![1] as string;
 
-      await ctx.prisma.user.update({
+      const user = await ctx.prisma.user.update({
         where: { id },
         data: { name, phoneNumber, updatedBy },
       });
+
+      if (editPhoto) {
+        const userLabeledFaceDescriptor =
+          await ctx.prisma.labeledFaceDescriptor.findFirst({
+            where: { ci: user.ci },
+          });
+        const data = userLabeledFaceDescriptor!.data as {
+          label: string;
+          descriptors: any;
+        };
+        const newDescriptors = Array.from(labeledFaceDescriptor);
+        data.descriptors = [...data.descriptors, newDescriptors];
+
+        await ctx.prisma.labeledFaceDescriptor.update({
+          where: { id: userLabeledFaceDescriptor?.id },
+          data: { data },
+        });
+      }
     },
   })
   .mutation('deletePlan', {
