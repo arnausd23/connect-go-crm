@@ -1,4 +1,4 @@
-import { Button, Flex, Input } from '@chakra-ui/react';
+import { Button, Flex, Input, useDisclosure, useToast } from '@chakra-ui/react';
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -7,17 +7,22 @@ import {
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 import { FiXSquare } from 'react-icons/fi';
-import { IGetUserPlans } from '../../../../server/common/validation/schemas';
+import {
+  IExportAccessHistory,
+  IGetUserPlans,
+} from '../../../../server/common/validation/schemas';
 import {
   AccessHistoryTableInfo,
   TABLE_PAGE_SIZE,
   useDebounce,
 } from '../../../../utils/constants';
+import { utils, writeFile } from 'xlsx';
 import { trpc } from '../../../../utils/trpc';
 import CustomDatePicker from '../../../custom/custom-date-picker';
 import CustomTable from '../../../custom/custom-table';
 import CustomTableFooter from '../../../custom/custom-table-footer';
 import AccessHistoryStatusCell from './access-history-status-cell';
+import ExportAccessHistoryDataModal from '../../../modals/export-access-history-data-modal';
 
 const AccessHistoryPanel = () => {
   const columnHelper = createColumnHelper<AccessHistoryTableInfo>();
@@ -107,6 +112,70 @@ const AccessHistoryPanel = () => {
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
   });
+
+  const toast = useToast();
+  const [exportData, setExportData] = useState<IExportAccessHistory>({
+    fileName: '',
+    userName: undefined,
+    planName: undefined,
+    startingDate: undefined,
+    endingDate: undefined,
+  });
+
+  const { refetch: exportRefetch, isLoading } = trpc.useQuery(
+    ['accessHistory.export', exportData],
+    {
+      enabled: false,
+      retry: false,
+      onSuccess(data) {
+        const workbook = utils.book_new();
+        const worksheet = utils.json_to_sheet(data);
+        const headers = ['Nombre', 'Plan', 'Fecha de Acceso'];
+        utils.sheet_add_aoa(worksheet, [headers], {
+          origin: 'A1',
+        });
+        utils.book_append_sheet(workbook, worksheet);
+        writeFile(workbook, `${exportData.fileName}.xlsx`);
+        setExportData({
+          fileName: '',
+          userName: undefined,
+          planName: undefined,
+          startingDate: undefined,
+          endingDate: undefined,
+        });
+        onClose();
+      },
+      onError: (error) => {
+        if (error.data?.zodError?.fieldErrors) {
+          for (const [_, value] of Object.entries(
+            error.data?.zodError?.fieldErrors
+          )) {
+            toast({
+              description: value,
+              duration: 3000,
+              isClosable: true,
+              status: 'error',
+              variant: 'top-accent',
+            });
+          }
+        } else {
+          toast({
+            description: error.message,
+            duration: 3000,
+            isClosable: true,
+            status: 'error',
+            variant: 'top-accent',
+          });
+        }
+      },
+    }
+  );
+
+  const handleExport = () => {
+    exportRefetch();
+  };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex borderRadius={'lg'} flexDir={'column'} h={'100%'} w={'100%'}>
@@ -199,12 +268,18 @@ const AccessHistoryPanel = () => {
         <CustomTable table={table} />
         <CustomTableFooter
           table={table}
-          exportBody={undefined}
-          onClickExport={() => undefined}
-          isOpen={false}
-          onOpen={() => undefined}
-          onClose={() => undefined}
-          isLoading={false}
+          exportBody={
+            <ExportAccessHistoryDataModal
+              data={exportData}
+              isLoading={isLoading}
+              setData={setExportData}
+            />
+          }
+          onClickExport={handleExport}
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+          isLoading={isLoading}
         />
       </Flex>
     </Flex>

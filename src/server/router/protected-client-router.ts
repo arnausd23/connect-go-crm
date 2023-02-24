@@ -238,7 +238,6 @@ export const protectedClientRouter = createProtectedRouter()
       const updatedBy = Object.entries(ctx.session).filter(
         (entry) => entry[0] === 'id'
       )[0]![1] as string;
-      console.log('SERVER', additionalInfo);
 
       const parsedFreezedDays: number = freezedDays ? parseInt(freezedDays) : 0;
 

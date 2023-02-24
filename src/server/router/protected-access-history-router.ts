@@ -13,7 +13,9 @@ import {
 } from '../../utils/constants';
 import {
   createAccessHistorySchema,
+  exportAccessHistorySchema,
   getUserPlansSchema,
+  IExportAccessHistory,
 } from '../common/validation/schemas';
 import { createProtectedRouter } from './protected-router';
 
@@ -94,6 +96,67 @@ export const protectedAccessHistoryRouter = createProtectedRouter()
       const pageCount = Math.ceil(numberOfAccessHistory / take!);
 
       return { accessHistory, pageCount };
+    },
+  })
+  .query('export', {
+    input: exportAccessHistorySchema,
+    async resolve({ input, ctx }) {
+      const { userName, planName, startingDate, endingDate } = input;
+
+      const newEndingDate = endingDate
+        ? new Date(endingDate.valueOf())
+        : undefined;
+      newEndingDate?.setHours(23, 59, 59, 999);
+
+      const accessHistory = await ctx.prisma.accessHistory.findMany({
+        where: {
+          userPlan: {
+            user: userName
+              ? {
+                  name: {
+                    contains: userName,
+                  },
+                }
+              : undefined,
+            plan: planName
+              ? {
+                  name: {
+                    contains: planName,
+                  },
+                }
+              : undefined,
+          },
+          date:
+            startingDate || endingDate
+              ? { gte: startingDate, lte: newEndingDate }
+              : undefined,
+        },
+        orderBy: { date: 'desc' },
+        select: {
+          date: true,
+          userPlan: {
+            select: {
+              user: { select: { name: true } },
+              plan: { select: { name: true } },
+            },
+          },
+        },
+      });
+
+      const accessData: Omit<IExportAccessHistory, 'fileName'> &
+        { accessDate: Date }[] = [];
+
+      accessHistory.forEach((access) => {
+        const { userPlan, date } = access;
+        const newAccess = {
+          userName: userPlan.user.name,
+          userPlan: userPlan.plan.name,
+          accessDate: date,
+        };
+        accessData.push(newAccess);
+      });
+
+      return accessData;
     },
   })
   .mutation('create', {

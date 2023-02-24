@@ -30,20 +30,16 @@ const CustomTableFooter = ({
 }: CustomTableFooterProps) => {
   return (
     <Flex alignItems={'center'} justifyContent={'space-between'}>
-      {exportBody ? (
-        <IconButton
-          aria-label={'Export table data'}
-          bottom={'0px'}
-          color={'white'}
-          icon={<FiDownload size={'1.25rem'} />}
-          m={'0.5rem'}
-          onClick={() => onOpen()}
-          variant={'ghost'}
-          _hover={{ color: 'background', bg: 'gray.100' }}
-        />
-      ) : (
-        <Flex />
-      )}
+      <IconButton
+        aria-label={'Export table data'}
+        bottom={'0px'}
+        color={'white'}
+        icon={<FiDownload size={'1.25rem'} />}
+        m={'0.5rem'}
+        onClick={() => onOpen()}
+        variant={'ghost'}
+        _hover={{ color: 'background', bg: 'gray.100' }}
+      />
       <Flex>
         <Flex>
           <IconButton
