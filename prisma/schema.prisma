@@ -54,6 +54,8 @@ model UserPlan {
     additionalInfo       String          @default("")
     plan                 Plan            @relation("PlanUsers", fields: [planId], references: [id])
     user                 User            @relation("UserPlans", fields: [userId], references: [id])
+    paymentDate         DateTime
+    paymentType         String
 }
 
 model AccessHistory {

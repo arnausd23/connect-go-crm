@@ -1,25 +1,25 @@
-import { Flex, IconButton, useDisclosure, useToast } from '@chakra-ui/react';
-import { signOut } from 'next-auth/react';
-import { useState } from 'react';
-import { FiFilePlus, FiLogOut, FiSettings, FiUserPlus } from 'react-icons/fi';
-import { TbFaceId } from 'react-icons/tb';
-import { getBaseUrl } from '../../pages/_app';
+import { Flex, IconButton, useDisclosure, useToast } from "@chakra-ui/react";
+import { signOut } from "next-auth/react";
+import { useState } from "react";
+import { FiFilePlus, FiLogOut, FiSettings, FiUserPlus } from "react-icons/fi";
+import { TbFaceId } from "react-icons/tb";
+import { getBaseUrl } from "../../pages/_app";
 import {
   ICreatePlan,
   IUpdatePassword,
-} from '../../server/common/validation/schemas';
+} from "../../server/common/validation/schemas";
 import {
   NAVBAR_ACTION_BAR_BUTTON_LABEL,
   PLAN_ACCESS_TYPE,
   SUCCESS_MESSAGE,
-} from '../../utils/constants';
-import { trpc } from '../../utils/trpc';
-import { useWindowStore } from '../../utils/windowStore';
-import AssignPlanModal from '../modals/assign-plan-modal';
-import CreatePlanModal from '../modals/create-plan-modal';
-import SettingsModal from '../modals/settings-modal';
-import SignOutModal from '../modals/sign-out-modal';
-import NavbarActionBarButton from './navbar-action-bar-button';
+} from "../../utils/constants";
+import { trpc } from "../../utils/trpc";
+import { useWindowStore } from "../../utils/windowStore";
+import AssignPlanModal from "../modals/assign-plan-modal";
+import CreatePlanModal from "../modals/create-plan-modal";
+import SettingsModal from "../modals/settings-modal";
+import SignOutModal from "../modals/sign-out-modal";
+import NavbarActionBarButton from "./navbar-action-bar-button";
 
 const NavbarActionBar = () => {
   const toast = useToast();
@@ -45,46 +45,46 @@ const NavbarActionBar = () => {
     onClose: signOutPlanOnClose,
   } = useDisclosure();
   const [assignPlanData, setAssignPlanData] = useState({
-    ci: '',
+    ci: "",
     endingDate: new Date(),
-    name: '',
+    name: "",
     startingDate: new Date(),
     parking: false,
     groupClasses: false,
   });
   const [createPlanData, setCreatePlanData] = useState<ICreatePlan>({
     accessType: PLAN_ACCESS_TYPE.Unlimited,
-    name: '',
-    price: '',
+    name: "",
+    price: "",
     hasHourRestriction: false,
     restrictionHours: [15, 18],
     disp: "Ambos",
   });
   const [settingsData, setSettingsData] = useState<IUpdatePassword>({
-    newPassword: '',
-    repeatedNewPassword: '',
+    newPassword: "",
+    repeatedNewPassword: "",
   });
 
   const { mutate: assignPlanMutate, isLoading: assignPlanIsLoading } =
-    trpc.useMutation('client.assignPlan', {
+    trpc.useMutation("client.assignPlan", {
       onSuccess: async () => {
         toast({
           description: SUCCESS_MESSAGE.PlanAssigned,
           duration: 3000,
           isClosable: true,
-          status: 'success',
-          variant: 'top-accent',
+          status: "success",
+          variant: "top-accent",
         });
         setAssignPlanData({
-          ci: '',
+          ci: "",
           endingDate: new Date(),
-          name: '',
+          name: "",
           startingDate: new Date(),
           parking: false,
           groupClasses: false,
         });
         assignPlanOnClose();
-        await ctx.invalidateQueries('client.getPlans');
+        await ctx.invalidateQueries("client.getPlans");
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {
@@ -95,8 +95,8 @@ const NavbarActionBar = () => {
               description: value,
               duration: 3000,
               isClosable: true,
-              status: 'error',
-              variant: 'top-accent',
+              status: "error",
+              variant: "top-accent",
             });
           }
         } else {
@@ -104,32 +104,32 @@ const NavbarActionBar = () => {
             description: error.message,
             duration: 3000,
             isClosable: true,
-            status: 'error',
-            variant: 'top-accent',
+            status: "error",
+            variant: "top-accent",
           });
         }
       },
     });
   const { mutate: createPlanMutate, isLoading: createPlanIsLoading } =
-    trpc.useMutation('plan.create', {
+    trpc.useMutation("plan.create", {
       onSuccess: async () => {
         toast({
           description: SUCCESS_MESSAGE.PlanCreated,
           duration: 3000,
           isClosable: true,
-          status: 'success',
-          variant: 'top-accent',
+          status: "success",
+          variant: "top-accent",
         });
         setCreatePlanData({
           accessType: PLAN_ACCESS_TYPE.Unlimited,
-          name: '',
-          price: '',
+          name: "",
+          price: "",
           hasHourRestriction: false,
           restrictionHours: [15, 18],
           disp: "Ambos",
         });
         createPlanOnClose();
-        await ctx.invalidateQueries('plan.getAll');
+        await ctx.invalidateQueries("plan.getAll");
       },
       onError: (error) => {
         if (error.data?.zodError?.fieldErrors) {
@@ -140,8 +140,8 @@ const NavbarActionBar = () => {
               description: value,
               duration: 3000,
               isClosable: true,
-              status: 'error',
-              variant: 'top-accent',
+              status: "error",
+              variant: "top-accent",
             });
           }
         } else {
@@ -149,26 +149,26 @@ const NavbarActionBar = () => {
             description: error.message,
             duration: 3000,
             isClosable: true,
-            status: 'error',
-            variant: 'top-accent',
+            status: "error",
+            variant: "top-accent",
           });
         }
       },
     });
   const { mutate: updatePasswordMutate, isLoading: updatePasswordIsLoading } =
-    trpc.useMutation('auth.updatePassword', {
+    trpc.useMutation("auth.updatePassword", {
       onSuccess: async () => {
         toast({
           description: SUCCESS_MESSAGE.PasswordUpdated,
           duration: 3000,
           isClosable: true,
-          status: 'success',
-          variant: 'top-accent',
+          status: "success",
+          variant: "top-accent",
         });
         settingsOnClose();
         setSettingsData({
-          newPassword: '',
-          repeatedNewPassword: '',
+          newPassword: "",
+          repeatedNewPassword: "",
         });
       },
       onError: (error) => {
@@ -180,8 +180,8 @@ const NavbarActionBar = () => {
               description: value,
               duration: 3000,
               isClosable: true,
-              status: 'error',
-              variant: 'top-accent',
+              status: "error",
+              variant: "top-accent",
             });
           }
         } else {
@@ -189,8 +189,8 @@ const NavbarActionBar = () => {
             description: error.message,
             duration: 3000,
             isClosable: true,
-            status: 'error',
-            variant: 'top-accent',
+            status: "error",
+            variant: "top-accent",
           });
         }
       },
@@ -209,26 +209,26 @@ const NavbarActionBar = () => {
   };
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: '/sign-in' });
+    signOut({ callbackUrl: "/sign-in" });
   };
 
   const setNewWindow = useWindowStore((state: any) => state.setWindow);
 
   return (
     <Flex
-      alignItems={'center'}
-      bgColor={'white'}
-      borderRadius={'lg'}
-      color={'background'}
-      h={'3rem'}
-      justifyContent={'space-between'}
-      p={'0 1rem'}
-      shadow={'md'}
+      alignItems={"center"}
+      bgColor={"white"}
+      borderRadius={"lg"}
+      color={"background"}
+      h={"3rem"}
+      justifyContent={"space-between"}
+      p={"0 1rem"}
+      shadow={"md"}
     >
       <NavbarActionBarButton
-        actionButtonLabel={'Asignar'}
+        actionButtonLabel={"Asignar"}
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.AssignPlan}
-        icon={<FiUserPlus size={'1.25rem'} />}
+        icon={<FiUserPlus size={"1.25rem"} />}
         isLoading={assignPlanIsLoading}
         isOpen={assignPlanIsOpen}
         modalBody={
@@ -243,9 +243,9 @@ const NavbarActionBar = () => {
         onOpen={assignPlanOnOpen}
       />
       <NavbarActionBarButton
-        actionButtonLabel={'Crear'}
+        actionButtonLabel={"Crear"}
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.CreatePlan}
-        icon={<FiFilePlus size={'1.25rem'} />}
+        icon={<FiFilePlus size={"1.25rem"} />}
         isLoading={createPlanIsLoading}
         isOpen={createPlanIsOpen}
         modalBody={
@@ -261,21 +261,21 @@ const NavbarActionBar = () => {
       />
       <IconButton
         aria-label={NAVBAR_ACTION_BAR_BUTTON_LABEL.ClientAuthentication}
-        icon={<TbFaceId size={'1.25rem'} />}
+        icon={<TbFaceId size={"1.25rem"} />}
         onClick={() => {
           const clientAuthWindow = window.open(
             `${getBaseUrl()}/client-authentication`,
-            '_blank',
-            'width=800,height=600'
+            "_blank",
+            "width=800,height=600"
           );
           setNewWindow(clientAuthWindow);
         }}
-        variant={'ghost'}
+        variant={"ghost"}
       />
       <NavbarActionBarButton
-        actionButtonLabel={'Guardar'}
+        actionButtonLabel={"Guardar"}
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.Settings}
-        icon={<FiSettings size={'1.25rem'} />}
+        icon={<FiSettings size={"1.25rem"} />}
         isLoading={updatePasswordIsLoading}
         isOpen={settingsIsOpen}
         modalBody={
@@ -290,9 +290,9 @@ const NavbarActionBar = () => {
         onOpen={settingsOnOpen}
       />
       <NavbarActionBarButton
-        actionButtonLabel={'Cerrar'}
+        actionButtonLabel={"Cerrar"}
         ariaLabel={NAVBAR_ACTION_BAR_BUTTON_LABEL.SignOut}
-        icon={<FiLogOut size={'1.25rem'} />}
+        icon={<FiLogOut size={"1.25rem"} />}
         isLoading={false}
         isOpen={signOutPlanIsOpen}
         modalBody={<SignOutModal />}
