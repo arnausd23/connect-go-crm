@@ -1,0 +1,94 @@
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id          String     @id @default(cuid()) @map("_id") // Use cuid() for unique string IDs
+    ci          String     @unique
+    name        String     @default("")
+    password    String?
+    phoneNumber String?
+    email       String?    // Campo de email opcional
+    updatedBy   String
+    createdAt   DateTime   @default(now())
+    plans       UserPlan[] @relation("UserPlans") // Define relation name for consistency
+    updatedAt   DateTime    @updatedAt
+    activityIDs String[]  @default([]) // Default empty array
+    image       String?   @default("") // Default empty string for image
+}
+
+
+model Plan {
+  id                 String     @id @default(cuid()) @map("_id") // Use cuid() for unique string IDs
+  accessType         String     @default("Ilimitado")
+  name               String     @unique
+  price              Int
+  updatedBy          String
+  createdAt          DateTime   @default(now())
+  users              UserPlan[] @relation("PlanUsers") // Define relation name for consistency
+  hasHourRestriction Boolean    @default(false)
+  restrictionHours   Json       @default("[15, 18]")
+  disp               String     // En qué gimnasio está disponible el plan
+}
+
+
+model UserPlan {
+    id                   String          @id @default(cuid()) @map("_id") // Use cuid() for unique string IDs
+    accessHistory        AccessHistory[] @relation("UserPlanAccessHistory") // Define relation name
+    endingDate           DateTime
+    planId               String
+    startingDate         DateTime
+    updatedBy            String
+    createdAt            DateTime        @default(now())
+    userId               String
+    parking              Boolean
+    groupClasses         Boolean
+    freezedDays          Int             @default(0)
+    freezedStartingDate  DateTime?
+    additionalInfo       String          @default("")
+    plan                 Plan            @relation("PlanUsers", fields: [planId], references: [id])
+    user                 User            @relation("UserPlans", fields: [userId], references: [id])
+}
+
+model AccessHistory {
+  id         String   @id @default(cuid()) @map("_id") 
+  date       DateTime
+  userPlan   UserPlan @relation("UserPlanAccessHistory", fields: [userPlanId], references: [id])
+  userPlanId String
+  sucursal String   // Sucursal a la que se ingresa
+}
+
+model LabeledFaceDescriptor {
+    id   String @id @default(cuid()) @map("_id") // Use cuid() for unique string IDs
+    ci   String @unique
+    data Json
+}
+
+model Activities {
+  id String @id @default(auto()) @map ("_id") @db.ObjectId
+  name String
+  type String
+  seats Int
+  createdAt DateTime
+  activityDate DateTime
+  dayOfWeek Int
+  isRecurrent Boolean
+  activityDateStart String
+  activityDateEnd String
+  plans String[]
+  location String
+  userIDs String[] @unique
+  gymName String
+}
+
+model Location {
+  id String @id @default(auto()) @map ("_id") @db.ObjectId
+  name String
+  gymName String
+}
