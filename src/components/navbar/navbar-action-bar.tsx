@@ -51,6 +51,8 @@ const NavbarActionBar = () => {
     startingDate: new Date(),
     parking: false,
     groupClasses: false,
+    paymentDate: new Date(),
+    paymentType: "",
   });
   const [createPlanData, setCreatePlanData] = useState<ICreatePlan>({
     accessType: PLAN_ACCESS_TYPE.Unlimited,
@@ -82,6 +84,8 @@ const NavbarActionBar = () => {
           startingDate: new Date(),
           parking: false,
           groupClasses: false,
+          paymentDate: new Date(),
+          paymentType: "",
         });
         assignPlanOnClose();
         await ctx.invalidateQueries("client.getPlans");
