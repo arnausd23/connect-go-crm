@@ -1,19 +1,19 @@
-import { Flex, useToast } from '@chakra-ui/react';
-import * as faceapi from 'face-api.js';
-import { NextPage } from 'next';
-import { useRef, useState } from 'react';
-import Webcam from 'react-webcam';
-import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async';
-import ClientAuthenticationMessage from '../components/content/access-control/client-authentication/client-authentication-message';
+import { Flex, useToast } from "@chakra-ui/react";
+import * as faceapi from "face-api.js";
+import { NextPage } from "next";
+import { useRef, useState } from "react";
+import Webcam from "react-webcam";
+import { clearIntervalAsync, setIntervalAsync } from "set-interval-async";
+import ClientAuthenticationMessage from "../components/content/access-control/client-authentication/client-authentication-message";
 import {
   AuthenticationMessageState,
   delay,
   ERROR_MESSAGE,
   FACE_MATCH_DISTANCE_THRESHOLD,
-} from '../utils/constants';
-import { trpc } from '../utils/trpc';
-import { getBaseUrl } from './_app';
-import Image from 'next/image';
+} from "../utils/constants";
+import { trpc } from "../utils/trpc";
+import { getBaseUrl } from "./_app";
+import Image from "next/image";
 
 const ClientAuthentication: NextPage = () => {
   const webcamRef = useRef<Webcam>(null);
@@ -27,7 +27,7 @@ const ClientAuthentication: NextPage = () => {
     useState<AuthenticationMessageState>({
       showMessage: false,
       messageInfo: {
-        bgColor: 'authGreen',
+        bgColor: "authGreen",
         endingDate: undefined,
         footer: undefined,
         header: undefined,
@@ -38,21 +38,21 @@ const ClientAuthentication: NextPage = () => {
 
   const loadFaceapiModels = async () => {
     await Promise.all([
-      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-      faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+      faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+      faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+      faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
     ]);
   };
 
-  trpc.useQuery(['labeledFaceDescriptor.loadModels'], {
+  trpc.useQuery(["labeledFaceDescriptor.loadModels"], {
     staleTime: Infinity,
     retry: false,
     refetchOnWindowFocus: false,
     onSuccess: async () => {
-      window.addEventListener('message', (event) => {
+      window.addEventListener("message", (event) => {
         if (event.origin.startsWith(getBaseUrl())) {
           if (!event.data.type) return;
-          if (event.data.type !== 'refetch-descriptors') return;
+          if (event.data.type !== "refetch-descriptors") return;
           refetch();
         } else {
           return;
@@ -64,23 +64,23 @@ const ClientAuthentication: NextPage = () => {
   });
 
   const { mutateAsync: createAccessHistoryMutate } = trpc.useMutation(
-    'accessHistory.create',
+    "accessHistory.create",
     {
       onSuccess: () =>
-        window.opener.postMessage({ type: 'refetch-access-history' }),
+        window.opener.postMessage({ type: "refetch-access-history" }),
       onError: (error) => {
         toast({
           description: error.message,
           duration: 3000,
           isClosable: true,
-          status: 'error',
-          variant: 'top-accent',
+          status: "error",
+          variant: "top-accent",
         });
       },
     }
   );
 
-  const { refetch } = trpc.useQuery(['labeledFaceDescriptor.getAll'], {
+  const { refetch } = trpc.useQuery(["labeledFaceDescriptor.getAll"], {
     staleTime: Infinity,
     retry: false,
     refetchOnWindowFocus: false,
@@ -88,7 +88,7 @@ const ClientAuthentication: NextPage = () => {
     onSuccess: async (data) => {
       if (timer) {
         await clearIntervalAsync(timer);
-        const context = canvasRef.current.getContext('2d');
+        const context = canvasRef.current.getContext("2d");
         context.clearRect(
           0,
           0,
@@ -99,6 +99,7 @@ const ClientAuthentication: NextPage = () => {
       }
       const faceDescriptors: faceapi.LabeledFaceDescriptors[] = [];
       data.forEach((labeledFaceDescriptor) => {
+        if (!labeledFaceDescriptor.data) return;
         faceDescriptors.push(
           faceapi.LabeledFaceDescriptors.fromJSON(labeledFaceDescriptor.data)
         );
@@ -114,8 +115,8 @@ const ClientAuthentication: NextPage = () => {
           description: ERROR_MESSAGE.FailedToLoadModels,
           duration: 3000,
           isClosable: true,
-          status: 'error',
-          variant: 'top-accent',
+          status: "error",
+          variant: "top-accent",
         });
       }
     },
@@ -124,8 +125,8 @@ const ClientAuthentication: NextPage = () => {
         description: error.message,
         duration: 3000,
         isClosable: true,
-        status: 'error',
-        variant: 'top-accent',
+        status: "error",
+        variant: "top-accent",
       });
     },
   });
@@ -137,7 +138,7 @@ const ClientAuthentication: NextPage = () => {
         .withFaceLandmarks()
         .withFaceDescriptor();
       if (detection && detection.detection.score > 0.85) {
-        console.log('DETECTION SCORE:', detection.detection.score);
+        console.log("DETECTION SCORE:", detection.detection.score);
         canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
           webcamRef.current!.video!
         );
@@ -151,7 +152,7 @@ const ClientAuthentication: NextPage = () => {
         );
         const now = new Date();
         const foundMatch: boolean = distance < FACE_MATCH_DISTANCE_THRESHOLD;
-        const detectionBoxColor = foundMatch ? '#66bb6a' : '#ef5350';
+        const detectionBoxColor = foundMatch ? "#66bb6a" : "#ef5350";
 
         const detectionBox = new faceapi.draw.DrawBox(detection.detection.box, {
           boxColor: detectionBoxColor,
@@ -160,7 +161,7 @@ const ClientAuthentication: NextPage = () => {
         detectionBox.draw(canvasRef.current);
 
         if (foundMatch) {
-          console.log('MATCH:', ci, now, distance);
+          console.log("MATCH:", ci, now, distance);
           const accessAuthenticationInfo = await createAccessHistoryMutate({
             ci,
             date: now,
@@ -171,12 +172,12 @@ const ClientAuthentication: NextPage = () => {
           });
           await delay(3500);
         } else {
-          console.log('NO MATCH:', ci, now, distance);
+          console.log("NO MATCH:", ci, now, distance);
           setAuthMessage({ messageInfo, showMessage: false });
         }
       } else {
-        console.log('NO FACE DETECTED');
-        const context = canvasRef.current.getContext('2d');
+        console.log("NO FACE DETECTED");
+        const context = canvasRef.current.getContext("2d");
         context.clearRect(
           0,
           0,
@@ -190,44 +191,44 @@ const ClientAuthentication: NextPage = () => {
   };
 
   return (
-    <Flex bgColor={'background'} h={'100vh'} w={'100%'}>
+    <Flex bgColor={"background"} h={"100vh"} w={"100%"}>
       <Flex
-        bgColor={'light'}
-        h={'100%'}
-        justifyContent={'center'}
-        position={'relative'}
+        bgColor={"light"}
+        h={"100%"}
+        justifyContent={"center"}
+        position={"relative"}
         ref={ref}
-        w={'100%'}
+        w={"100%"}
       >
         <Flex
-          position={'absolute'}
+          position={"absolute"}
           zIndex={999}
-          w={'10rem'}
-          left={'1rem'}
-          top={'1rem'}
+          w={"10rem"}
+          left={"1rem"}
+          top={"1rem"}
         >
           <Flex
-            h={'3rem'}
-            alignSelf={'center'}
-            mb={'0.25rem'}
-            position={'relative'}
-            w={'70%'}
+            h={"3rem"}
+            alignSelf={"center"}
+            mb={"0.25rem"}
+            position={"relative"}
+            w={"70%"}
           >
             <Image
-              alt={''}
-              src={'/connect-logo-dark.svg'}
-              width={'100%'}
-              height={'100%'}
-              layout={'fill'}
+              alt={""}
+              src={"/connect-logo-dark.svg"}
+              width={"100%"}
+              height={"100%"}
+              layout={"fill"}
             />
           </Flex>
         </Flex>
         <Webcam
           audio={false}
-          className={'client-auth-webcam'}
+          className={"client-auth-webcam"}
           ref={webcamRef}
         />
-        <canvas className={'client-auth-canvas'} ref={canvasRef} />
+        <canvas className={"client-auth-canvas"} ref={canvasRef} />
         {showMessage ? (
           <ClientAuthenticationMessage messageInfo={messageInfo} />
         ) : undefined}
