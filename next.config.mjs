@@ -29,7 +29,7 @@ export default defineNextConfig({
     return [
       {
         source: '/api/:path*',
-        destination: '/api/:path*',
+        destination: '/connect/api/:path*',
       },
     ];
   },
