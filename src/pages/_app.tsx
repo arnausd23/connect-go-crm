@@ -1,37 +1,36 @@
-// src/pages/_app.tsx
-import { ChakraProvider } from '@chakra-ui/react';
-import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
-import { loggerLink } from '@trpc/client/links/loggerLink';
-import { withTRPC } from '@trpc/next';
-import { SessionProvider } from 'next-auth/react';
-import type { AppType } from 'next/dist/shared/lib/utils';
-import Head from 'next/head';
-import superjson from 'superjson';
-import type { AppRouter } from '../server/router';
-import '../styles/globals.css';
-import { theme } from '../styles/theme';
+import { ChakraProvider } from "@chakra-ui/react";
+import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
+import { loggerLink } from "@trpc/client/links/loggerLink";
+import { withTRPC } from "@trpc/next";
+import { SessionProvider } from "next-auth/react";
+import type { AppType } from "next/dist/shared/lib/utils";
+import Head from "next/head";
+import superjson from "superjson";
+import type { AppRouter } from "../server/router";
+import "../styles/globals.css";
+import { theme } from "../styles/theme";
 
 const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
+}: any) => {
   return (
     <SessionProvider session={session}>
       <ChakraProvider theme={theme}>
         <Head>
           <title>Connect CRM</title>
-          <meta name='description' content='Connect CRM' />
-          <link rel='icon' href='/favicon.ico' />
-          <link rel='preconnect' href='https://fonts.googleapis.com' />
+          <meta name="description" content="Connect CRM" />
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
-            rel='preconnect'
-            href='https://fonts.gstatic.com'
-            crossOrigin='anonymous'
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
           />
           <link
-            href='https://fonts.googleapis.com/css2?family=Poppins&display=swap'
-            rel='stylesheet'
-            crossOrigin='anonymous'
+            href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+            rel="stylesheet"
+            crossOrigin="anonymous"
           />
         </Head>
         <Component {...pageProps} />
@@ -41,7 +40,7 @@ const MyApp: AppType = ({
 };
 
 export const getBaseUrl = () => {
-  if (typeof window !== 'undefined') return ''; // browser should use relative url
+  if (typeof window !== "undefined") return ""; // browser should use relative url
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
@@ -58,8 +57,8 @@ export default withTRPC<AppRouter>({
       links: [
         loggerLink({
           enabled: (opts) =>
-            process.env.NODE_ENV === 'development' ||
-            (opts.direction === 'down' && opts.result instanceof Error),
+            process.env.NODE_ENV === "development" ||
+            (opts.direction === "down" && opts.result instanceof Error),
         }),
         httpBatchLink({ url }),
       ],
