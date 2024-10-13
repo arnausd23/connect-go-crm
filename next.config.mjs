@@ -23,5 +23,6 @@ export default defineNextConfig({
 
     return config;
   },
-  basePath: '/connect'
+  basePath: '/connect',
+  assetPrefix: '/connect',
 });
