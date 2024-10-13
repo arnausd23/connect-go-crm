@@ -7,7 +7,7 @@ let win;
 function checkServer() {
   return new Promise((resolve, reject) => {
     const client = new net.Socket();
-    client.connect(3000, 'localhost', () => {
+    client.connect(3001, 'localhost', () => {
       client.end();
       resolve();
     });
