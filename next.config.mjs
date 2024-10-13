@@ -26,11 +26,14 @@ export default defineNextConfig({
   basePath: '/connect',
   assetPrefix: '/connect',
   async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: '/connect/api/:path*',
-      },
-    ];
+    return {
+      beforeFiles: [
+
+        {
+          source: '/api/:path*',
+          destination: 'https://healthandfitnessconnect.com/connect/api/:path*',
+        },
+      ]
+    }
   },
 });
