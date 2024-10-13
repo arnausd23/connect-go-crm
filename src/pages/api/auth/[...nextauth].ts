@@ -21,18 +21,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith("/")) {
-        // Ensure the base path is included for relative URLs
-        return `${baseUrl}${
-          url.startsWith("/connect") ? "" : "/connect"
-        }${url}`;
-      }
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
-    },
   },
   pages: {
     signIn: "/sign-in",

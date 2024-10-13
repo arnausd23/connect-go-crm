@@ -29,8 +29,8 @@ export default defineNextConfig({
     return [
       {
         source: '/api/:path*',
-        destination: '/connect/api/:path*',
+        destination: '/api/:path*',
       },
-    ]
+    ];
   },
 });
