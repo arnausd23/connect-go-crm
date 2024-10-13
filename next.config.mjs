@@ -23,4 +23,5 @@ export default defineNextConfig({
 
     return config;
   },
+  basePath: '/connect'
 });
