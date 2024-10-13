@@ -25,4 +25,12 @@ export default defineNextConfig({
   },
   basePath: '/connect',
   assetPrefix: '/connect',
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: '/connect/api/:path*',
+      },
+    ]
+  },
 });
